@@ -1,12 +1,4 @@
-import { Inter } from "next/font/google"
-
-const inter = Inter
-(
-    {
-        subsets: ["latin"],
-        variable: "--font-inter"
-    }
-);
+import { inter } from "../fonts/inter";
 
 export const ExpositionText = () =>
     <div className="w-screen flex flex-row justify-center gap-[215px]">
