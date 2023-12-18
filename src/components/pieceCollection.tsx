@@ -30,7 +30,7 @@ import piece3 from "../../public/pieces/ZH.png";
 import piece1 from "../../public/pieces/Banrisul Grande Banco do Sul.png";
 import { Piece } from "./piece";
 
-export const PieceCollection = (props: {className?: string}) =>
+export const PieceCollection = () =>
 (
     <>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0">
