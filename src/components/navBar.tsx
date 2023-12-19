@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { useBreakpoint } from "../hooks/tailwind";
 
 export const NavBar = () =>
 {
