@@ -3,7 +3,7 @@ import { BottomBar } from "../components/bottomBar";
 import { ExpositionText } from "../components/expositionText";
 import { Favicon } from "../components/favicon";
 import { Hero } from "../components/hero";
-import { HorizontalCenter } from "../components/horizontalCenter";
+import { VerticalCenterBox } from "../components/verticalCenterBox";
 import { PieceCollection } from "../components/pieceCollection";
 import { Scaffold } from "../components/scaffold";
 
@@ -19,14 +19,10 @@ const Home = () =>
             <Hero/>
             <ExpositionText/>
             <div className="pt-28">
-                <HorizontalCenter>
-                    <PieceCollection/>
-                </HorizontalCenter>
+                <PieceCollection/>
             </div>
             <div className="pt-20 pb-24">
-                <HorizontalCenter>
-                    <BottomBar/>
-                </HorizontalCenter>
+                <BottomBar/>
             </div>
         </Scaffold>
     </>
