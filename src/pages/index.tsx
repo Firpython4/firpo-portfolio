@@ -77,11 +77,13 @@ async function getPieces(subCollection: { parent: Dirent, sub: Dirent[] })
         if (firstMarkdownFileDirent)
         {
             const firstMarkdownFile = firstMarkdownFileDirent.name;
-            const contentFile: Buffer = await fileSystem.readFile(getPath(firstMarkdownFileDirent));
+            const contentFile = await fileSystem.readFile(getPath(firstMarkdownFileDirent));
             const matterResult = matter(contentFile).data.title as unknown;
             if (typeof(matterResult) === "string")
             {
-                return subCollection.sub.filter(isFilePredicate).filter(isImagePredicate).map(getPiece(parentDirectoryPath, matterResult.replaceAll("\\n", "\n")));
+                const literalNewLine = "\\n";
+                const newLineChar = "\n";
+                return subCollection.sub.filter(isFilePredicate).filter(isImagePredicate).map(getPiece(parentDirectoryPath, matterResult.replaceAll(literalNewLine, newLineChar)));
             }
             
             throw new Error(`Wrong matter format in ${firstMarkdownFile}`)
@@ -97,7 +99,7 @@ async function getPieces(subCollection: { parent: Dirent, sub: Dirent[] })
     }
 }
 
-export const getStaticProps = (async (_context: GetStaticPropsContext<ParsedUrlQuery, string | false | object | undefined>) =>
+export const getStaticProps = (async () =>
 {
     const directoryEntries = await getWorksDirectoryEntities();
     const directories = directoryEntries.filter(dirent => dirent.isDirectory())
