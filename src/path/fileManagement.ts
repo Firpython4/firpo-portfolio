@@ -1,7 +1,7 @@
 import { type Dirent, promises as fileSystem } from "node:fs";
 import path from "node:path";
-import { publicFolderValue, worksPath } from "../config";
-import { StringWithInnerSubstring } from "../typeSafety";
+import { type PublicFolder, publicFolderValue, worksPath } from "../config";
+import { type StringWithInnerSubstring } from "../typeSafety";
 
 export function getSubdirectories(directories: Dirent[])
 {
@@ -48,7 +48,7 @@ export function getFirstMarkdownFile(directoryEntries: Dirent[])
     .filter((dirent: Dirent) => path.extname(getPath(dirent)).toLowerCase() === ".md")[0];
 }
 
-export const absoluteToRelativePath = (imagePath: StringWithInnerSubstring<"public">) => (imagePath.split(path.join(publicFolderValue)))[1]!;
+export const absoluteToRelativePath = (imagePath: StringWithInnerSubstring<PublicFolder>) => (imagePath.split(path.join(publicFolderValue)))[1]!;
 
 export const removeMarkdownExtension = (name: string) => name.replace(".md", "");
 
