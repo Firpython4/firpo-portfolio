@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+:root
+{
+	--small-font: 7px;
+	--medium-font: 17px;
+	--large-font: 43px;
+}
+
 @media (min-width: 640px)
 {
 	:root
