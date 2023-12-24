@@ -3,10 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 //TODO: make alt required
-export const Piece = (props: {image: StaticImageData, title: string, imageAlt: string, link: string}) =>
+export const Piece = (props: {image: StaticImageData | string, title: string, imageAlt?: string, link: string}) =>
 {
+    const image = props.image;
     return (
-        <Link className="relative h-[205px] group" href={"/"}>
+        <Link className="relative h-[205px] group" href={props.link}>
             <div className="opacity-0
                             group-hover:opacity-100
                             transition-opacity
@@ -22,10 +23,14 @@ export const Piece = (props: {image: StaticImageData, title: string, imageAlt: s
                             font-medium
                             text-white
                             text-center
-                            text-[24px]">
-                Banrisul. <br/> O Grande Banco do Sul
+                            text-[24px]
+                            whitespace-pre-wrap">
+                {props.title}
             </div>
-            <Image width={364} height={205} src={props.image.src} alt={props.imageAlt}/>;
+            {
+                typeof image === "string" ? <Image width={364} height={205} src={image} alt={props.imageAlt}/>
+                                                  : <Image width={364} height={205} src={image.src} alt={props.imageAlt}/>
+            }
         </Link>
     )
 }

@@ -1,12 +1,26 @@
+import matter from "gray-matter";
+import type { GetStaticProps, GetStaticPropsContext } from "next";
 import Head from "next/head";
+import { type Dirent, promises as fileSystem } from "node:fs";
+import type { ParsedUrlQuery } from "node:querystring";
 import { BottomBar } from "../components/bottomBar";
 import { ExpositionText } from "../components/expositionText";
 import { Favicon } from "../components/favicon";
 import { Hero } from "../components/hero";
 import { PieceCollection } from "../components/pieceCollection";
 import { Scaffold } from "../components/scaffold";
+import {
+    absoluteToRelativePath, getFirstMarkdownFile,
+    getPath,
+    getWorksDirectoryEntities, getSubdirectories,
+    isFilePredicate,
+    isImagePredicate
+} from "../path/fileManagement";
+import { promiseFullfilledPredicate, promiseRejectedPredicate } from "../promises/promisePredicates";
+import { type PieceType } from "../types/pieceType";
+import { includesInner } from "../typeSafety";
 
-const Home = () =>
+const Home = (props: HomeProps) =>
 (
     <>
         <Head>
@@ -18,7 +32,7 @@ const Home = () =>
             <Hero/>
             <ExpositionText/>
             <div className="pt-28">
-                <PieceCollection/>
+                <PieceCollection images={props.pieces}/>
             </div>
             <div className="pt-20 pb-24">
                 <BottomBar/>
@@ -26,5 +40,87 @@ const Home = () =>
         </Scaffold>
     </>
 );
+
+interface HomeProps
+{
+    pieces: PieceType[]
+}
+
+function getCallbackfn(parentDirectoryPath: `${string}public${string}`, title: string)
+{
+    return (imageDirent: Dirent) =>
+    {
+        const imagePath = getPath(imageDirent);
+        if (includesInner(imagePath, "public"))
+        {
+            const link: string = absoluteToRelativePath(parentDirectoryPath).replaceAll("\\", "/");
+            return ({
+                image: absoluteToRelativePath(imagePath),
+                link: link,
+                title: title
+            });
+        }
+        else
+        {
+            throw new Error(`${imagePath} is not located in public`);
+        }
+    };
+}
+
+async function getPieces(subCollection: { parent: Dirent, sub: Dirent[] })
+{
+    const parentDirectoryPath = getPath(subCollection.parent);
+    if (includesInner(parentDirectoryPath, "public"))
+    {
+        const firstMarkdownFileDirent = getFirstMarkdownFile(subCollection.sub);
+        if (firstMarkdownFileDirent)
+        {
+            const firstMarkdownFile = firstMarkdownFileDirent.name;
+            const contentFile: Buffer = await fileSystem.readFile(getPath(firstMarkdownFileDirent));
+            const matterResult = matter(contentFile).data.title as unknown;
+            if (typeof(matterResult) === "string")
+            {
+                return subCollection.sub.filter(isFilePredicate).filter(isImagePredicate).map(getCallbackfn(parentDirectoryPath, matterResult.replaceAll("\\n", "\n")));
+            }
+            
+            throw new Error(`Wrong matter format in ${firstMarkdownFile}`)
+        }
+        else
+        {
+            throw new Error(`Unable to find first markdown file at ${subCollection.sub.toString()}`)
+        }
+    }
+    else
+    {
+        throw new Error(`${parentDirectoryPath} is not located in public`)
+    }
+}
+
+export const getStaticProps = (async (_context: GetStaticPropsContext<ParsedUrlQuery, string | false | object | undefined>) =>
+{
+    const directoryEntries: Dirent[] = await getWorksDirectoryEntities();
+    const directories: Dirent[] = directoryEntries.filter(dirent => dirent.isDirectory())
+    const subDirectories = await Promise.allSettled(getSubdirectories(directories));
+    const fulfilledSubdirectories = subDirectories.filter(promiseFullfilledPredicate).map(promise => promise.value);
+    const rejectedSubdirectories: PromiseRejectedResult[] = subDirectories.filter(promiseRejectedPredicate);
+    
+    if (rejectedSubdirectories.length > 0)
+    {
+        throw new Error(`Some subdirectory reads failed: ${rejectedSubdirectories.toString()}`)
+    }
+    
+    const piecePromises = await Promise.allSettled(fulfilledSubdirectories.map(getPieces));
+    const promiseRejectedResults: PromiseRejectedResult[] = piecePromises.filter(promiseRejectedPredicate);
+    if (promiseRejectedResults.length > 0)
+    {
+        throw new Error("Some pieces failed to resolve: " + JSON.stringify(promiseRejectedResults))
+    }
+    return {
+        props: {
+            pieces: piecePromises.filter(promiseFullfilledPredicate).map(promise => promise.value).flat()
+        }
+    }
+    
+}) satisfies GetStaticProps<HomeProps>
 
 export default Home
