@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 //TODO: make alt required
-export const Piece = (props: {image: StaticImageData | string, title: string, imageAlt?: string, link: string}) =>
+export const Piece = (props: {image: StaticImageData | string, title: string, link: string}) =>
 {
     const image = props.image;
     return (
@@ -28,8 +28,8 @@ export const Piece = (props: {image: StaticImageData | string, title: string, im
                 {props.title}
             </div>
             {
-                typeof image === "string" ? <Image width={364} height={205} src={image} alt={props.imageAlt}/>
-                                                  : <Image width={364} height={205} src={image.src} alt={props.imageAlt}/>
+                typeof image === "string" ? <Image width={364} height={205} src={image} alt={props.title}/>
+                                                  : <Image width={364} height={205} src={image.src} alt={props.title}/>
             }
         </Link>
     )
