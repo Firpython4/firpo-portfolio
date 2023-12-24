@@ -3,7 +3,6 @@ import { BottomBar } from "../components/bottomBar";
 import { ExpositionText } from "../components/expositionText";
 import { Favicon } from "../components/favicon";
 import { Hero } from "../components/hero";
-import { VerticalCenterBox } from "../components/verticalCenterBox";
 import { PieceCollection } from "../components/pieceCollection";
 import { Scaffold } from "../components/scaffold";
 

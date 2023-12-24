@@ -6,6 +6,11 @@ export default {
   content: ["./src/**/*.tsx"],
   theme: {
     extend: {
+      fontSize: {
+        "small": "var(--small-font)",
+        "medium": "var(--medium-font)",
+        "large": "var(--large-font)",
+      },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
         inter: ["var(--font-inter)"],
