@@ -46,7 +46,7 @@ interface HomeProps
     pieces: PieceType[]
 }
 
-function getCallbackfn(parentDirectoryPath: `${string}public${string}`, title: string)
+function getPiece(parentDirectoryPath: `${string}public${string}`, title: string)
 {
     return (imageDirent: Dirent) =>
     {
@@ -80,7 +80,7 @@ async function getPieces(subCollection: { parent: Dirent, sub: Dirent[] })
             const matterResult = matter(contentFile).data.title as unknown;
             if (typeof(matterResult) === "string")
             {
-                return subCollection.sub.filter(isFilePredicate).filter(isImagePredicate).map(getCallbackfn(parentDirectoryPath, matterResult.replaceAll("\\n", "\n")));
+                return subCollection.sub.filter(isFilePredicate).filter(isImagePredicate).map(getPiece(parentDirectoryPath, matterResult.replaceAll("\\n", "\n")));
             }
             
             throw new Error(`Wrong matter format in ${firstMarkdownFile}`)
@@ -98,11 +98,11 @@ async function getPieces(subCollection: { parent: Dirent, sub: Dirent[] })
 
 export const getStaticProps = (async (_context: GetStaticPropsContext<ParsedUrlQuery, string | false | object | undefined>) =>
 {
-    const directoryEntries: Dirent[] = await getWorksDirectoryEntities();
-    const directories: Dirent[] = directoryEntries.filter(dirent => dirent.isDirectory())
+    const directoryEntries = await getWorksDirectoryEntities();
+    const directories = directoryEntries.filter(dirent => dirent.isDirectory())
     const subDirectories = await Promise.allSettled(getSubdirectories(directories));
     const fulfilledSubdirectories = subDirectories.filter(promiseFullfilledPredicate).map(promise => promise.value);
-    const rejectedSubdirectories: PromiseRejectedResult[] = subDirectories.filter(promiseRejectedPredicate);
+    const rejectedSubdirectories = subDirectories.filter(promiseRejectedPredicate);
     
     if (rejectedSubdirectories.length > 0)
     {
@@ -110,10 +110,10 @@ export const getStaticProps = (async (_context: GetStaticPropsContext<ParsedUrlQ
     }
     
     const piecePromises = await Promise.allSettled(fulfilledSubdirectories.map(getPieces));
-    const promiseRejectedResults: PromiseRejectedResult[] = piecePromises.filter(promiseRejectedPredicate);
+    const promiseRejectedResults = piecePromises.filter(promiseRejectedPredicate);
     if (promiseRejectedResults.length > 0)
     {
-        throw new Error("Some pieces failed to resolve: " + JSON.stringify(promiseRejectedResults))
+        throw new Error(`Some pieces failed to resolve: ${JSON.stringify(promiseRejectedResults)}`)
     }
     return {
         props: {
