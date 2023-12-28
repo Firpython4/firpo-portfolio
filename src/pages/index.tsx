@@ -1,25 +1,26 @@
 import matter from "gray-matter";
-import type { GetStaticProps, GetStaticPropsContext } from "next";
+import type { GetStaticProps  } from "next";
 import Head from "next/head";
 import { type Dirent, promises as fileSystem } from "node:fs";
-import type { ParsedUrlQuery } from "node:querystring";
-import { BottomBar } from "../components/bottomBar";
-import { ExpositionText } from "../components/expositionText";
-import { Favicon } from "../components/favicon";
-import { Hero } from "../components/hero";
-import { PieceCollection } from "../components/pieceCollection";
-import { Scaffold } from "../components/scaffold";
-import { publicFolderValue } from "../config";
+import { BottomBar } from "~/components/bottomBar";
+import { ExpositionText } from "~/components/expositionText";
+import { Favicon } from "~/components/favicon";
+import { Hero } from "~/components/hero";
+import { PieceCollection } from "~/components/pieceCollection";
+import { Scaffold } from "~/components/scaffold";
+import { publicFolderValue } from "~/config";
 import {
     absoluteToRelativePath, getFirstMarkdownFile,
     getPath,
     getWorksDirectoryEntities, getSubdirectories,
     isFilePredicate,
     isImagePredicate
-} from "../path/fileManagement";
-import { promiseFullfilledPredicate, promiseRejectedPredicate } from "../promises/promisePredicates";
-import { type PieceType } from "../types/pieceType";
-import { includesInner } from "../typeSafety";
+} from "~/cms/fileManagement";
+import { promiseFullfilledPredicate, promiseRejectedPredicate } from "~/promises/promisePredicates";
+import { type PieceType } from "~/types/pieceType";
+import { includesInner } from "~/typeSafety";
+import path from "node:path";
+import {orderByConfig} from "~/cms/ordering";
 
 const Home = (props: HomeProps) =>
 (
@@ -47,7 +48,12 @@ interface HomeProps
     pieces: PieceType[]
 }
 
-function getPiece(parentDirectoryPath: `${string}public${string}`, title: string)
+function getExtension(imageDirent: Dirent)
+{
+    return path.extname(getPath(imageDirent));
+}
+
+function getPiece(parentDirectoryPath: `${string}public${string}`, collectionTitle: string)
 {
     return (imageDirent: Dirent) =>
     {
@@ -58,7 +64,8 @@ function getPiece(parentDirectoryPath: `${string}public${string}`, title: string
             return ({
                 image: absoluteToRelativePath(imagePath),
                 link: link,
-                title: title
+                collectionTitle: collectionTitle,
+                title: imageDirent.name.replace(getExtension(imageDirent), "")
             });
         }
         else
@@ -81,7 +88,7 @@ async function getPieces(subCollection: { parent: Dirent, sub: Dirent[] })
             const matterResult = matter(contentFile).data.title as unknown;
             if (typeof(matterResult) === "string")
             {
-                const literalNewLine = "\\n";
+                const literalNewLine = "\\r\\n";
                 const newLineChar = "\n";
                 return subCollection.sub.filter(isFilePredicate).filter(isImagePredicate).map(getPiece(parentDirectoryPath, matterResult.replaceAll(literalNewLine, newLineChar)));
             }
@@ -123,9 +130,14 @@ export const getStaticProps = (async () =>
     {
         throw new Error(`Some pieces failed to resolve: ${JSON.stringify(promiseRejectedResults)}`)
     }
+
+    const pieces = piecePromises.filter(promiseFullfilledPredicate).map(valueMapper).flat();
+    
+    await orderByConfig(pieces);
+    
     return {
         props: {
-            pieces: piecePromises.filter(promiseFullfilledPredicate).map(valueMapper).flat()
+            pieces: pieces
         }
     }
     
