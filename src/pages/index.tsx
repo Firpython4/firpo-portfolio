@@ -14,7 +14,7 @@ import {
     getPath,
     getWorksDirectoryEntities, getSubdirectories,
     isFilePredicate,
-    isImagePredicate
+    isImagePredicate, isUrlPredicate
 } from "~/cms/fileManagement";
 import { promiseFullfilledPredicate, promiseRejectedPredicate } from "~/promises/promisePredicates";
 import { type PieceType } from "~/types/pieceType";
@@ -43,74 +43,6 @@ const Home = (props: HomeProps) =>
     </>
 );
 
-interface HomeProps
-{
-    pieces: PieceType[]
-}
-
-function getExtension(imageDirent: Dirent)
-{
-    return path.extname(getPath(imageDirent));
-}
-
-function getPiece(parentDirectoryPath: `${string}public${string}`, collectionTitle: string)
-{
-    return (imageDirent: Dirent) =>
-    {
-        const imagePath = getPath(imageDirent);
-        if (includesInner(imagePath, "public"))
-        {
-            const link: string = absoluteToRelativePath(parentDirectoryPath).replaceAll("\\", "/");
-            return ({
-                image: absoluteToRelativePath(imagePath),
-                link: link,
-                collectionTitle: collectionTitle,
-                title: imageDirent.name.replace(getExtension(imageDirent), "")
-            });
-        }
-        else
-        {
-            throw new Error(`${imagePath} is not located in public`);
-        }
-    };
-}
-
-async function getPieces(subCollection: { parent: Dirent, sub: Dirent[] })
-{
-    const parentDirectoryPath = getPath(subCollection.parent);
-    if (includesInner(parentDirectoryPath, publicFolderValue))
-    {
-        const firstMarkdownFileDirent = getFirstMarkdownFile(subCollection.sub);
-        if (firstMarkdownFileDirent)
-        {
-            const firstMarkdownFile = firstMarkdownFileDirent.name;
-            const contentFile = await fileSystem.readFile(getPath(firstMarkdownFileDirent));
-            const matterResult = matter(contentFile).data.title as unknown;
-            if (typeof(matterResult) === "string")
-            {
-                const literalNewLine = "\\r\\n";
-                const newLineChar = "\n";
-                return subCollection.sub.filter(isFilePredicate).filter(isImagePredicate).map(getPiece(parentDirectoryPath, matterResult.replaceAll(literalNewLine, newLineChar)));
-            }
-            
-            throw new Error(`Wrong matter format in ${firstMarkdownFile}`)
-        }
-        else
-        {
-            throw new Error(`Unable to find first markdown file at ${subCollection.sub.toString()}`)
-        }
-    }
-    else
-    {
-        throw new Error(`${parentDirectoryPath} is not located in public`)
-    }
-}
-
-function valueMapper<T>(from: {value: T})
-{
-    return from.value
-}
-
 export const getStaticProps = (async () =>
 {
     const directoryEntries = await getWorksDirectoryEntities();
@@ -134,7 +66,7 @@ export const getStaticProps = (async () =>
     const pieces = piecePromises.filter(promiseFullfilledPredicate).map(valueMapper).flat();
     
     await orderByConfig(pieces);
-    
+
     return {
         props: {
             pieces: pieces
@@ -142,5 +74,93 @@ export const getStaticProps = (async () =>
     }
     
 }) satisfies GetStaticProps<HomeProps>
+
+type HomeProps = {
+    pieces: PieceType[]
+}
+
+function getExtension(imageDirent: Dirent)
+{
+    return path.extname(getPath(imageDirent));
+}
+
+async function getVideoUrl(imageOrUrlPath: `${string}public${string}`)
+{
+    return (await fileSystem.readFile(imageOrUrlPath)).toString();
+}
+
+function getPiece(parentDirectoryPath: `${string}public${string}`, collectionTitle: string)
+{
+    return async (mediaDirent: Dirent) => {
+        const imageOrUrlPath = getPath(mediaDirent);
+        const extension = path.extname(imageOrUrlPath);
+        if (includesInner(imageOrUrlPath, "public")) {
+            const link: string = absoluteToRelativePath(parentDirectoryPath).replaceAll("\\", "/");
+            const shared = {
+                linkToCollection: link,
+                collectionTitle: collectionTitle,
+                title: mediaDirent.name.replace(getExtension(mediaDirent), "")
+            };
+            if (extension === ".url") {
+                return {
+                    type: "video" as const,
+                    url: await getVideoUrl(imageOrUrlPath),
+                    ...shared
+                };
+            } else if (extension === ".png" || extension === ".jpg") {
+                return {
+                    type: "image" as const,
+                    url: absoluteToRelativePath(imageOrUrlPath),
+                    ...shared
+                };
+            } else {
+                throw new Error(`Unsupported file format: ${imageOrUrlPath}`)
+            }
+        } else {
+            throw new Error(`${imageOrUrlPath} is not located in public`);
+        }
+    };
+}
+
+async function getPieces(subCollection: { parent: Dirent, sub: Dirent[] })
+{
+    const parentDirectoryPath = getPath(subCollection.parent);
+    if (includesInner(parentDirectoryPath, publicFolderValue))
+    {
+        const firstMarkdownFileDirent = getFirstMarkdownFile(subCollection.sub);
+        if (firstMarkdownFileDirent)
+        {
+            const firstMarkdownFile = firstMarkdownFileDirent.name;
+            const contentFile = await fileSystem.readFile(getPath(firstMarkdownFileDirent));
+            const matterResult = matter(contentFile).data.title as unknown;
+            if (typeof(matterResult) === "string")
+            {
+                const literalNewLine = "\\r\\n";
+                const newLineChar = "\n";
+                const result = await Promise.allSettled(subCollection.sub.filter(isFilePredicate)
+                    .filter(dirent => isImagePredicate(dirent) || isUrlPredicate(dirent))
+                    .map(getPiece(parentDirectoryPath, matterResult.replaceAll(literalNewLine, newLineChar))));
+
+                return result.filter(promiseFullfilledPredicate).map(valueMapper);
+
+            }
+
+            throw new Error(`Wrong matter format in ${firstMarkdownFile}`)
+        }
+        else
+        {
+            throw new Error(`Unable to find first markdown file at ${subCollection.sub.toString()}`)
+        }
+    }
+    else
+    {
+        throw new Error(`${parentDirectoryPath} is not located in public`)
+    }
+}
+
+function valueMapper<T>(from: {value: T})
+{
+    return from.value
+}
 
 export default Home

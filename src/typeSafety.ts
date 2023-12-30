@@ -6,3 +6,5 @@ export function includesInner<Str extends string>(stringValue: string, searchStr
 }
 
 export type NonEmptyString = Exclude<string, ''>
+
+type Brand<K, T> = K & { __brand: T }

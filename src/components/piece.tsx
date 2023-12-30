@@ -1,13 +1,18 @@
-import { type StaticImageData } from "next/image";
 import Image from "next/image";
 import Link from "next/link";
+import {type PieceType} from "~/types/pieceType";
 
-//TODO: make alt required
-export const Piece = (props: {image: StaticImageData | string, title: string, link: string}) =>
+import dynamic from 'next/dynamic'
+import {useRef} from "react";
+import {useHover} from "usehooks-ts";
+
+const ReactPlayer = dynamic(() => import("react-player/youtube"), { ssr: false });
+
+export const Piece = (props: {piece: PieceType}) =>
 {
-    const image = props.image;
+    const piece = props.piece;
     return (
-        <Link className="relative h-[205px] group" href={props.link}>
+        <Link className="relative h-[205px] group" href={piece.linkToCollection}>
             <div className="opacity-0
                             group-hover:opacity-100
                             transition-opacity
@@ -25,12 +30,28 @@ export const Piece = (props: {image: StaticImageData | string, title: string, li
                             text-center
                             text-[24px]
                             whitespace-pre-wrap">
-                {props.title}
+                {piece.title}
             </div>
-            {
-                typeof image === "string" ? <Image width={364} height={205} src={image} alt={props.title}/>
-                                                  : <Image width={364} height={205} src={image.src} alt={props.title}/>
-            }
+            <PieceThumbnail piece={piece}/>
         </Link>
     )
 }
+
+const PieceThumbnail = (props: {piece: PieceType}) =>
+{
+    const piece = props.piece;
+    if (piece.type === "image")
+    {
+        return <Image width={364} height={205} src={piece.url} alt={piece.title}/>
+    }
+    else
+    {
+        const ref = useRef(null);
+        const isHovering = useHover(ref);
+        return (<>
+            <ReactPlayer ref={ref} width={364} height={205} url={piece.url} alt={piece.title} muted={true} playing={isHovering} loop={true}/>
+            <source src={piece.url} type="video"/>
+        </>)
+    }
+}
+
