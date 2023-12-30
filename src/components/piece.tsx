@@ -2,11 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 import {type PieceType} from "~/types/pieceType";
 
-import dynamic from 'next/dynamic'
 import {useRef} from "react";
 import {useHover} from "usehooks-ts";
-
-const ReactPlayer = dynamic(() => import("react-player/youtube"), { ssr: false });
+import dynamic from 'next/dynamic'
+import {VideoPlayer} from "~/components/videoPlayer";
+import YouTube, {type YouTubeProps} from "react-youtube";
+const ReactPlayer = dynamic(() => import("react-player/lazy"), { ssr: false });
 
 export const Piece = (props: {piece: PieceType}) =>
 {
@@ -37,6 +38,18 @@ export const Piece = (props: {piece: PieceType}) =>
     )
 }
 
+const opts = {
+    playerVars: {
+        autoplay: 1,
+        controls: 0,
+        disablekb: 1,
+        loop: 1,
+        modestbranding: 1,
+        rel: 0,
+        showinfo: 0,
+    }
+}
+
 const PieceThumbnail = (props: {piece: PieceType}) =>
 {
     const piece = props.piece;
@@ -48,9 +61,12 @@ const PieceThumbnail = (props: {piece: PieceType}) =>
     {
         const ref = useRef(null);
         const isHovering = useHover(ref);
-        return (<>
-            <ReactPlayer ref={ref} width={364} height={205} url={piece.url} alt={piece.title} muted={true} playing={isHovering} loop={true}/>
-            <source src={piece.url} type="video"/>
+        return (
+        <>
+            <YouTube ref={ref}
+                         className="w-[364px] h-[205px]"
+                         videoId={piece.url}
+                         opts={opts}/>
         </>)
     }
 }
