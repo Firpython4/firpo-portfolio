@@ -8,17 +8,17 @@ import { Favicon } from "~/components/favicon";
 import { Hero } from "~/components/hero";
 import { PieceCollection } from "~/components/pieceCollection";
 import { Scaffold } from "~/components/scaffold";
-import { publicFolderValue } from "~/config";
+import {type PublicFolder, publicFolderValue} from "~/config";
 import {
     absoluteToRelativePath, getFirstMarkdownFile,
     getPath,
     getWorksDirectoryEntities, getSubdirectories,
     isFilePredicate,
-    isImagePredicate, isUrlPredicate
+    isImagePredicate, isUrlPredicate, getExtension, getVideoUrl
 } from "~/cms/fileManagement";
-import { promiseFullfilledPredicate, promiseRejectedPredicate } from "~/promises/promisePredicates";
+import {promiseFullfilledPredicate, promiseRejectedPredicate, valueMapper} from "~/promises/promisePredicates";
 import { type PieceType } from "~/types/pieceType";
-import { includesInner } from "~/typeSafety";
+import {includesInner, type StringWithInnerSubstring} from "~/typeSafety";
 import path from "node:path";
 import {orderByConfig} from "~/cms/ordering";
 
@@ -79,16 +79,22 @@ type HomeProps = {
     pieces: PieceType[]
 }
 
-function getPiece(parentDirectoryPath: `${string}public${string}`, collectionTitle: string)
+function replaceNewLineWithNewLineLiterals(collectionTitle: string)
 {
-    return async (mediaDirent: Dirent) => {
+    return collectionTitle.replace("\\n", "\n");
+}
+
+function getPiece(parentDirectoryPath: StringWithInnerSubstring<PublicFolder>, collectionTitle: string)
+{
+    return async (mediaDirent: Dirent) =>
+    {
         const imageOrUrlPath = getPath(mediaDirent);
         const extension = path.extname(imageOrUrlPath);
         if (includesInner(imageOrUrlPath, "public")) {
             const link: string = absoluteToRelativePath(parentDirectoryPath).replaceAll("\\", "/");
             const shared = {
                 linkToCollection: link,
-                collectionTitle: collectionTitle,
+                collectionTitle: replaceNewLineWithNewLineLiterals(collectionTitle),
                 title: mediaDirent.name.replace(getExtension(mediaDirent), "")
             };
             if (extension === ".url") {
@@ -97,16 +103,22 @@ function getPiece(parentDirectoryPath: `${string}public${string}`, collectionTit
                     url: await getVideoUrl(imageOrUrlPath),
                     ...shared
                 };
-            } else if (extension === ".png" || extension === ".jpg") {
+            }
+            else if (extension === ".png" || extension === ".jpg")
+            {
                 return {
                     type: "image" as const,
                     url: absoluteToRelativePath(imageOrUrlPath),
                     ...shared
                 };
-            } else {
+            }
+            else
+            {
                 throw new Error(`Unsupported file format: ${imageOrUrlPath}`)
             }
-        } else {
+        }
+        else
+        {
             throw new Error(`${imageOrUrlPath} is not located in public`);
         }
     };
