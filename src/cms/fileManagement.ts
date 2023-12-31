@@ -1,7 +1,7 @@
 import { type Dirent, promises as fileSystem } from "node:fs";
 import path from "node:path";
 import { type PublicFolder, publicFolderValue, worksPath} from "~/config";
-import { type StringWithInnerSubstring } from "~/typeSafety";
+import {includesInner, type StringWithInnerSubstring} from "~/typeSafety";
 
 export function getSubdirectories(directories: Dirent[])
 {
@@ -30,12 +30,38 @@ export const isUrlPredicate = (dirent: Dirent) =>
     return extension === ".url";
 };
 
-export function filterImagesAndUrls(directoryEntries: Dirent[])
+async function toImageOrUrl(dirent: Dirent)
 {
-    return directoryEntries
+    const path = getPath(dirent);
+    if (includesInner(path, publicFolderValue))
+    {
+        if (isImagePredicate(dirent))
+        {
+            return {
+                type: "image" as const,
+                path: absoluteToRelativePath(path)
+            }
+        }
+        else if (isUrlPredicate(dirent))
+        {
+            return {
+                type: "video" as const,
+                url: await getVideoUrl(path)
+            }
+        }
+
+        throw new Error(`Unsupported file format: ${path}`)
+    }
+
+    throw new Error(`${path} is not contained in the public folder`)
+}
+
+export async function filterImagesAndUrls(directoryEntries: Dirent[])
+{
+    return await Promise.allSettled(directoryEntries
         .filter(isFilePredicate)
         .filter(dirent => isImagePredicate(dirent) || isUrlPredicate(dirent))
-        .map(getPath);
+        .map(toImageOrUrl));
 }
 
 export async function getWorksDirectoryEntities()
@@ -68,3 +94,14 @@ export function getPath(dirent: Dirent)
 {
     return path.join(dirent.path, dirent.name);
 }
+
+export function getExtension(imageDirent: Dirent)
+{
+    return path.extname(getPath(imageDirent));
+}
+
+export async function getVideoUrl(imageOrUrlPath: `${string}public${string}`)
+{
+    return (await fileSystem.readFile(imageOrUrlPath)).toString();
+}
+

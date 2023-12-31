@@ -1,4 +1,6 @@
 export type StringWithInnerSubstring<Str extends string> = `${NonEmptyString}${Str}${NonEmptyString}`;
+export type StringWithPrefix<Str extends string> = `${NonEmptyString}${Str}`;
+export type StringWithSuffix<Str extends string> = `${Str}${NonEmptyString}`;
 
 export function includesInner<Str extends string>(stringValue: string, searchString: Str): stringValue is StringWithInnerSubstring<Str>
 {

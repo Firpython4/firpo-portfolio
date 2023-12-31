@@ -79,16 +79,6 @@ type HomeProps = {
     pieces: PieceType[]
 }
 
-function getExtension(imageDirent: Dirent)
-{
-    return path.extname(getPath(imageDirent));
-}
-
-async function getVideoUrl(imageOrUrlPath: `${string}public${string}`)
-{
-    return (await fileSystem.readFile(imageOrUrlPath)).toString();
-}
-
 function getPiece(parentDirectoryPath: `${string}public${string}`, collectionTitle: string)
 {
     return async (mediaDirent: Dirent) => {
@@ -156,11 +146,6 @@ async function getPieces(subCollection: { parent: Dirent, sub: Dirent[] })
     {
         throw new Error(`${parentDirectoryPath} is not located in public`)
     }
-}
-
-function valueMapper<T>(from: {value: T})
-{
-    return from.value
 }
 
 export default Home

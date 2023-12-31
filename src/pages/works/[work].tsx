@@ -7,23 +7,38 @@ import { type Dirent, promises as fileSystem } from "node:fs";
 import { type ParsedUrlQuery } from "node:querystring";
 import { remark } from "remark";
 import html from "remark-html";
-import { Scaffold } from "../../components/scaffold";
+import { Scaffold } from "~/components/scaffold";
 import "@total-typescript/ts-reset";
-import { VerticalCenterBox } from "../../components/verticalCenterBox";
-import { type PublicFolder, publicFolderValue } from "../../config";
+import { VerticalCenterBox } from "~/components/verticalCenterBox";
+const ReactPlayerComponent = dynamic(() => import("react-player/youtube"), { ssr: false });
 import {
     absoluteToRelativePath,
     getFirstMarkdownFile,
     filterImagesAndUrls,
     getWorksDirectoryEntities, removeMarkdownExtension, getPath, getWorkDirectory
 } from "~/cms/fileManagement";
-import { includesInner, type StringWithInnerSubstring } from "../../typeSafety";
+import { includesInner, type StringWithInnerSubstring } from "~/typeSafety";
+import {promiseFullfilledPredicate, promiseRejectedPredicate, valueMapper} from "~/promises/promisePredicates";
+import type {YouTubeConfig} from "react-player/youtube";
+import dynamic from "next/dynamic";
+
+type ImageWorkType = {
+    type: "image",
+    path: string
+}
+
+type VideoWorkType = {
+    type: "video",
+    url: string
+}
+
+type ImageOrVideoUrlWork = ImageWorkType | VideoWorkType;
 
 interface WorkProps
 {
-    title: string,
+    collectionTitle: string,
     contentHtml: string,
-    imagePaths: string[]
+    works: ImageOrVideoUrlWork[]
 }
 
 export const getStaticPaths = (async () =>
@@ -51,10 +66,11 @@ export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQu
     {
         const directoryEntries = await getWorkDirectory(context.params.work);
 
-        const imagePaths: string[] = filterImagesAndUrls(directoryEntries);
-        
-        const filteredPaths: StringWithInnerSubstring<PublicFolder>[] = imagePaths.filter((imagePath: string) => includesInner(imagePath, publicFolderValue)) as StringWithInnerSubstring<"public">[];
-        
+        const imagePaths = await filterImagesAndUrls(directoryEntries);
+
+        const fulfilledFilePaths = imagePaths.filter(promiseFullfilledPredicate).map(valueMapper);
+        const rejectedFilePaths = imagePaths.filter(promiseRejectedPredicate);
+
         const content: Dirent | undefined = getFirstMarkdownFile(directoryEntries)
         
         if (content)
@@ -70,7 +86,7 @@ export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQu
                 props: {
                     collectionTitle: removeMarkdownExtension(content.name),
                     contentHtml: contentHtml,
-                    imagePaths: filteredPaths.map(absoluteToRelativePath).filter((element: string | undefined) => element !== undefined) 
+                    works: fulfilledFilePaths
                 }
             }
         }
@@ -96,18 +112,46 @@ const WorkShowcase = (props: InferGetStaticPropsType<typeof getStaticProps>) =>
         </Link>
         <VerticalCenterBox className="space-y-[16px] pt-[88px]">
             <h2 className="font-extrabold font-inter text-[17px] text-neutral-700 text-center">
-                {props.title}
+                {props.collectionTitle}
             </h2>
                 <div className="font-inter text-[17px] text-neutral-700 text-center" dangerouslySetInnerHTML={dangerouslySetInnerHTML}>
             </div>
         </VerticalCenterBox>
         <VerticalCenterBox className="pt-[74px] pb-[156px] space-y-[128px]">
-            {props.imagePaths.map((imagePath: string) =>
-                (
-                  <div key={imagePath}>
-                      <Image src={imagePath} width={512} height={512} alt={imagePath}/>
-                  </div>
-                ))}
+            {props.works.map((work) =>
+                {
+                    if (work.type === "image")
+                    {
+                        return (
+                          <div key={work.path}>
+                              <Image src={work.path} width={512} height={512} alt={work.path}/>
+                          </div>
+                        );
+                    }
+                    else
+                    {
+
+                        const config: YouTubeConfig = {
+                            playerVars: {
+                                controls: 0,
+                                disablekb: 1,
+                                modestbranding: 1,
+                                showinfo: 0
+                            }
+                        };
+                        return (
+                            <ReactPlayerComponent
+                                width={364}
+                                height={205}
+                                url={piece.url}
+                                controls={false}
+                                muted={true}
+                                loop={true}
+                                playing={props.shouldPlay}
+                                config={config}/>
+                        )
+                    }
+                }}
         </VerticalCenterBox>
         <Link href="/" className="w-responsive-screen pl-[411px] pb-[74px]">
             <BackIcon/>
