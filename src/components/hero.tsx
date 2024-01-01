@@ -73,10 +73,14 @@ const HeroContent = () =>
                              lg:top-[20%]
                              xl:top-[27.22%]"/>
         <NavBar className="absolute
-                           right-[21.56%]
-                           top-[8%]
-                           sm:top-[10%]
-                           md:top-[10%]
+                           right-[12%]
+                           sm:right-[14%]
+                           md:right-[16%]
+                           lg:right-[18%]
+                           xl:right-[21.56%]
+                           top-[3%]
+                           sm:top-[5%]
+                           md:top-[8%]
                            lg:top-[10%]
                            xl:top-[13.61%]"/>
     </>
