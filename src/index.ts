@@ -2,12 +2,12 @@ import {includesInner, type StringWithInnerSubstring} from "~/typeSafety";
 import {type PublicFolder, publicFolderValue} from "~/config";
 import {type Dirent, promises as fileSystem} from "node:fs";
 import {
-    absoluteToRelativePath,
+    absoluteToRelativePath, exists,
     getExtension,
     getFirstMarkdownFile,
     getPath, getSubdirectories,
     getVideoUrl, getWorksDirectoryEntities,
-    isFile, isImage, isVideoUrl, isVideoWithThumbnail
+    isFile
 } from "~/cms/fileManagement";
 import path from "node:path";
 import matter from "gray-matter";
@@ -60,11 +60,44 @@ async function asVideo(mediaDirent: Dirent, shared: PieceSharedType)
     }
 }
 
+async function asVideoWithThumbnail(mediaDirent: Dirent, shared: PieceSharedType)
+{
+    const piecePath = getPath(mediaDirent);
+    const videoUrlPath = path.join(piecePath, `${mediaDirent.name}.url`)
+    const pngThumbnailPath = path.join(piecePath, `${mediaDirent.name}.png`)
+    const jpgThumbnailPath = path.join(piecePath, `${mediaDirent.name}.jpg`)
+    if (includesInner(piecePath, publicFolderValue) && includesInner(videoUrlPath, publicFolderValue))
+    {
+        if (await (exists(videoUrlPath)))
+        {
+            let thumbnailUrl: string | undefined = undefined;
+            if ((await exists(pngThumbnailPath)) && includesInner(pngThumbnailPath, publicFolderValue))
+            {
+                thumbnailUrl = absoluteToRelativePath(pngThumbnailPath);
+            }
+            if ((await (exists(jpgThumbnailPath))) && includesInner(jpgThumbnailPath, publicFolderValue))
+            {
+                thumbnailUrl = absoluteToRelativePath(jpgThumbnailPath);
+            }
+            if (!thumbnailUrl)
+            {
+                return undefined;
+            }
+            return {
+                type: "video" as const,
+                url: await getVideoUrl(videoUrlPath),
+                thumbnailUrl: thumbnailUrl,
+                title: mediaDirent.name,
+                ...shared
+            };
+        }
+    }
+}
 
 function getPiece(parentDirectoryPath: StringWithInnerSubstring<PublicFolder>, collectionTitle: string)
 {
     type PieceProvider = (mediaDirent: Dirent, shared: PieceSharedType, parentDirectoryPath: StringWithInnerSubstring<PublicFolder>, collectionTitle: string) => Promise<PieceType | undefined>;
-    const providers: PieceProvider[] = [asImage, asVideo]
+    const providers: PieceProvider[] = [asImage, asVideo, asVideoWithThumbnail]
     return async (mediaDirent: Dirent) =>
     {
         const link: string = absoluteToRelativePath(parentDirectoryPath).replaceAll("\\", "/");
@@ -72,6 +105,7 @@ function getPiece(parentDirectoryPath: StringWithInnerSubstring<PublicFolder>, c
             linkToCollection: link,
             collectionTitle: replaceNewLineWithNewLineLiterals(collectionTitle),
         };
+
         for (const provider of providers)
         {
             const piece = await provider(mediaDirent, shared, parentDirectoryPath, collectionTitle);
@@ -83,11 +117,6 @@ function getPiece(parentDirectoryPath: StringWithInnerSubstring<PublicFolder>, c
         
         throw new Error(`Unsupported file format: ${getPath(mediaDirent)}`)
     };
-}
-
-function isPiece(dirent: Dirent)
-{
-    return isImage(dirent) || isVideoUrl(dirent) || isVideoWithThumbnail(dirent);
 }
 
 async function getPieces(subCollection: { parent: Dirent, sub: Dirent[] })
@@ -106,7 +135,6 @@ async function getPieces(subCollection: { parent: Dirent, sub: Dirent[] })
                 const literalNewLine = "\\r\\n";
                 const newLineChar = "\n";
                 const result = await Promise.allSettled(subCollection.sub.filter(isFile)
-                    .filter(isPiece)
                     .map(getPiece(parentDirectoryPath, matterResult.replaceAll(literalNewLine, newLineChar))));
 
                 return result.filter(promiseFullfilledPredicate).map(valueMapper);
