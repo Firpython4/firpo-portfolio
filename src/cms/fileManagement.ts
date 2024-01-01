@@ -2,6 +2,7 @@ import { type Dirent, promises as fileSystem } from "node:fs";
 import path from "node:path";
 import { type PublicFolder, publicFolderValue, worksPath} from "~/config";
 import {includesInner, type StringWithInnerSubstring} from "~/typeSafety";
+import {promiseFullfilledPredicate, valueMapper} from "~/promises/promisePredicates";
 
 export function getSubdirectories(directories: Dirent[])
 {
@@ -15,19 +16,33 @@ export function getSubdirectories(directories: Dirent[])
                            });
 }
 
-export const isFilePredicate = (dirent: Dirent) => dirent.isFile();
+export const isFile = (dirent: Dirent) => dirent.isFile();
 
-export const isImagePredicate = (dirent: Dirent) =>
+export const isDirectory = (dirent: Dirent) => dirent.isDirectory();
+
+export const isImage = (dirent: Dirent) =>
 {
     const extension = path.extname(getPath(dirent)).toLowerCase();
     return extension === ".png"
         || extension === ".jpg";
 };
 
-export const isUrlPredicate = (dirent: Dirent) =>
+export const isVideoUrl = (dirent: Dirent) =>
 {
     const extension = path.extname(getPath(dirent)).toLowerCase();
     return extension === ".url";
+};
+
+const identityMapper = (value: boolean) => value;
+
+export const isVideoWithThumbnail = async (dirent: Dirent) =>
+{
+    const hasVideoUrl = exists(path.join(getPath(dirent), `${dirent.name}.url`));
+    const hasPngThumbnail = exists(path.join(getPath(dirent), `${dirent.name}.jpg`));
+    const hasJpgThumbnail = exists(path.join(getPath(dirent), `${dirent.name}.png`));
+
+    const result = (await Promise.allSettled([hasVideoUrl, hasPngThumbnail, hasJpgThumbnail])).filter(promiseFullfilledPredicate).map(valueMapper);
+    return result.every(identityMapper);
 };
 
 async function toImageOrUrl(dirent: Dirent)
@@ -35,14 +50,14 @@ async function toImageOrUrl(dirent: Dirent)
     const path = getPath(dirent);
     if (includesInner(path, publicFolderValue))
     {
-        if (isImagePredicate(dirent))
+        if (isImage(dirent))
         {
             return {
                 type: "image" as const,
                 path: absoluteToRelativePath(path)
             }
         }
-        else if (isUrlPredicate(dirent))
+        else if (isVideoUrl(dirent))
         {
             return {
                 type: "video" as const,
@@ -59,8 +74,8 @@ async function toImageOrUrl(dirent: Dirent)
 export async function filterImagesAndUrls(directoryEntries: Dirent[])
 {
     return await Promise.allSettled(directoryEntries
-        .filter(isFilePredicate)
-        .filter(dirent => isImagePredicate(dirent) || isUrlPredicate(dirent))
+        .filter(isFile)
+        .filter(dirent => isImage(dirent) || isVideoUrl(dirent))
         .map(toImageOrUrl));
 }
 
@@ -105,3 +120,15 @@ export async function getVideoUrl(imageOrUrlPath: `${string}public${string}`)
     return (await fileSystem.readFile(imageOrUrlPath)).toString();
 }
 
+async function exists(path: string)
+{
+    try
+    {
+        await fileSystem.access(path);
+        return true;
+    }
+    catch (error)
+    {
+        return false;
+    }
+}
