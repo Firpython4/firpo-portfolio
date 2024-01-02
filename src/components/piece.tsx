@@ -14,7 +14,7 @@ export const Piece = (props: {piece: PieceType}) =>
     const ref = useRef(null);
     const isHovering = useHover(ref);
     return (
-        <Link className="relative max-w-[364px] max-h-[205px] group overflow-hidden flex items-center" href={piece.linkToCollection} ref={ref}>
+        <Link className="relative aspect-[364/205] max-w-[364px] max-h-[205px] group overflow-hidden flex items-center" href={piece.linkToCollection} ref={ref}>
             <div className="opacity-0
                             group-hover:opacity-100
                             transition-opacity
