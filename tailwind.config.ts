@@ -35,6 +35,12 @@ export default {
                      },
                      '.w-responsive-screen': {
                        width: ['100vw /* fallback for Opera, IE and etc. */', '100svw']
+                     },
+                     '.max-h-responsive-screen': {
+                       "max-height": ['100vh /* fallback for Opera, IE and etc. */', '100svh']
+                     },
+                     '.max-w-responsive-screen': {
+                       "max-width": ['100vw /* fallback for Opera, IE and etc. */', '100svw']
                      }
                    })
     })
