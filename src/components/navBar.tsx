@@ -7,6 +7,7 @@ export const NavBar = (props: {className?: string}) =>
     return (
         <div className={`${props.className} flex flex-row gap-x-[8px] sm:gap-x-[12px] md:gap-x-[18px] lg:gap-x-[22px] xl:gap-x-[26px]`}>
             <div className="relative
+                            text-
                             w-[14px]
                             h-[14px]
                             mobile_sm:w-[16px]

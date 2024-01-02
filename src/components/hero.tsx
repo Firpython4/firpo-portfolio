@@ -29,7 +29,7 @@ const HeroTitle = () =>
 
 const HeroSubtitle = () =>
 (
-    <h3 className="w-[120px]
+    <h3 className="w-[30svw]
                    mobile_md:w-[160px]
                    mobile_lg:w-[200px]
                    sm:w-[280px]
@@ -59,7 +59,7 @@ const HeroText = (props: {className?: string}) =>
         gap-y-2
         mobile_lg:gap-y-3
         sm:gap-y-4
-        md:gap-y-6
+        md:gap-y-5
         lg:gap-y-8
         xl:gap-y-10
         ${props.className}`}>
@@ -82,25 +82,26 @@ const HeroContent = () =>
         <HeroText className="absolute
                              w-[23%]
                              right-[21%]
-                             top-[5%]
-                             mobile_lg:top-[8%]
-                             sm:top-[16%]
-                             md:top-[18%]
+                             top-[26%]
+                             mobile_lg:top-[13%]
+                             sm:top-[14%]
+                             md:top-[16%]
                              lg:top-[20%]
-                             xl:top-[27.22%]"/>
+                             xl:top-[27%]"/>
         <NavBar className="absolute
                            right-[0%]
-                           max-mobile_lg:left-[5%]
+                           max-mobile_lg:left-[16px]
                            mobile_lg:right-[5%]
                            sm:right-[14%]
                            md:right-[16%]
                            lg:right-[18%]
                            xl:right-[21.56%]
-                           top-[3%]
+                           top-[16px]
+                           mobile_lg:top-[4%]
                            sm:top-[5%]
                            md:top-[6%]
                            lg:top-[10%]
-                           xl:top-[13.61%]"/>
+                           xl:top-[12.6%]"/>
     </>
 );
 
