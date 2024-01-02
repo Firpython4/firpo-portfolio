@@ -6,8 +6,8 @@ import {
     getExtension,
     getFirstMarkdownFile,
     getPath, getSubdirectories,
-    getVideoUrl, getWorksDirectoryEntities,
-    isFile, removeExtension
+    getVideoUrl, getAllCollections,
+    removeExtension
 } from "~/cms/fileManagement";
 import path from "node:path";
 import matter from "gray-matter";
@@ -115,12 +115,11 @@ function getPiece(parentDirectoryPath: StringWithInnerSubstring<PublicFolder>, c
     };
 }
 
-async function getPieces(subCollection: { parent: Dirent, sub: Dirent[] })
+export async function getPieces(subCollection: { path: string, directoryEntities: Dirent[] })
 {
-    const parentDirectoryPath = getPath(subCollection.parent);
-    if (includesInner(parentDirectoryPath, publicFolderValue))
+    if (includesInner(subCollection.path, publicFolderValue))
     {
-        const firstMarkdownFileDirent = getFirstMarkdownFile(subCollection.sub);
+        const firstMarkdownFileDirent = getFirstMarkdownFile(subCollection.directoryEntities);
         if (firstMarkdownFileDirent)
         {
             const firstMarkdownFile = firstMarkdownFileDirent.name;
@@ -130,8 +129,8 @@ async function getPieces(subCollection: { parent: Dirent, sub: Dirent[] })
             {
                 const literalNewLine = "\\r\\n";
                 const newLineChar = "\n";
-                const result = await Promise.allSettled(subCollection.sub
-                    .map(getPiece(parentDirectoryPath, matterResult.replaceAll(literalNewLine, newLineChar))));
+                const result = await Promise.allSettled(subCollection.directoryEntities
+                    .map(getPiece(subCollection.path, matterResult.replaceAll(literalNewLine, newLineChar))));
 
                 return result.filter(promiseFullfilledPredicate).map(valueMapper);
 
@@ -141,18 +140,18 @@ async function getPieces(subCollection: { parent: Dirent, sub: Dirent[] })
         }
         else
         {
-            throw new Error(`Unable to find first markdown file at ${subCollection.sub.toString()}`)
+            throw new Error(`Unable to find first markdown file at ${subCollection.directoryEntities.toString()}`)
         }
     }
     else
     {
-        throw new Error(`${parentDirectoryPath} is not located in public`)
+        throw new Error(`${subCollection.path} is not located in public`)
     }
 }
 
 export async function getIndexProps()
 {
-    const directoryEntries = await getWorksDirectoryEntities();
+    const directoryEntries = await getAllCollections();
     const directories = directoryEntries.filter(dirent => dirent.isDirectory())
     const subDirectories = await Promise.allSettled(getSubdirectories(directories));
     const fulfilledSubdirectories = subDirectories.filter(promiseFullfilledPredicate).map(promise => promise.value);

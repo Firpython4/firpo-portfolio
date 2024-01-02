@@ -1,16 +1,17 @@
-import { type Dirent, promises as fileSystem } from "node:fs";
+import {type Dirent, promises as fileSystem} from "node:fs";
 import path from "node:path";
-import { type PublicFolder, publicFolderValue, worksPath} from "~/config";
+import {collectionsPath, type PublicFolder, publicFolderValue} from "~/config";
 import {includesInner, type StringWithInnerSubstring} from "~/typeSafety";
 
 export function getSubdirectories(directories: Dirent[])
 {
     return directories.map(async directoryEntity =>
                            {
-                               const directoryEntities: Dirent[] = await fileSystem.readdir(getPath(directoryEntity), {withFileTypes: true});
+                               const path = getPath(directoryEntity);
+                               const directoryEntities: Dirent[] = await fileSystem.readdir(path, {withFileTypes: true});
                                return {
-                                   parent: directoryEntity,
-                                   sub: directoryEntities
+                                   path: path,
+                                   directoryEntities: directoryEntities
                                }
                            });
 }
@@ -56,22 +57,14 @@ async function toImageOrUrl(dirent: Dirent)
     throw new Error(`${path} is not contained in the public folder`)
 }
 
-export async function filterImagesAndUrls(directoryEntries: Dirent[])
+export async function getAllCollections()
 {
-    return await Promise.allSettled(directoryEntries
-        .filter(isFile)
-        .filter(dirent => isImage(dirent) || isVideoUrl(dirent))
-        .map(toImageOrUrl));
+    return await fileSystem.readdir(path.join(process.cwd(), collectionsPath), {withFileTypes: true});
 }
 
-export async function getWorksDirectoryEntities()
+export async function readCollectionDirectory(collection: string)
 {
-    return await fileSystem.readdir(path.join(process.cwd(), worksPath), {withFileTypes: true});
-}
-
-export async function getWorkDirectory(work: string)
-{
-    return await fileSystem.readdir(path.join(process.cwd(), worksPath, work), {withFileTypes: true});
+    return await fileSystem.readdir(path.join(process.cwd(), collectionsPath, collection), {withFileTypes: true});
 }
 
 export async function getFileRelative(filePath: string)
