@@ -28,7 +28,7 @@ const HeroTitle = () =>
 
 const HeroSubtitle = () =>
 (
-    <h3 className="w-[140px]
+    <h3 className="w-[120px]
                    mobile_md:w-[160px]
                    mobile_lg:w-[200px]
                    sm:w-[280px]
@@ -39,7 +39,9 @@ const HeroSubtitle = () =>
                    text-medium
                    not-italic
                    font-bold
-                   leading-[20px]
+                   leading-[14px]
+                   mobile_sm:leading-[16px]
+                   mobile_md:leading-[20px]
                    mobile_lg:leading-[25px]
                    sm:leading-[30px]
                    md:leading-[40px]
@@ -53,10 +55,11 @@ const HeroText = (props: {className?: string}) =>
 (
     <div className={`flex
         flex-col
-        gap-y-1
-        sm:gap-y-2
-        md:gap-y-3
-        lg:gap-y-5
+        gap-y-2
+        mobile_lg:gap-y-3
+        sm:gap-y-4
+        md:gap-y-6
+        lg:gap-y-8
         xl:gap-y-10
         ${props.className}`}>
         <HeroTitle/>
@@ -78,13 +81,15 @@ const HeroContent = () =>
                              w-[23%]
                              right-[21%]
                              top-[5%]
-                             mobile_lg:top-[6%]
+                             mobile_lg:top-[8%]
                              sm:top-[12%]
                              md:top-[16%]
                              lg:top-[20%]
                              xl:top-[27.22%]"/>
         <NavBar className="absolute
-                           right-[12%]
+                           right-[0%]
+                           max-mobile_lg:left-[5%]
+                           mobile_lg:right-[5%]
                            sm:right-[14%]
                            md:right-[16%]
                            lg:right-[18%]
@@ -101,7 +106,7 @@ export const Hero = () =>
 (
     <VerticalCenterBox className="w-responsive-screen overflow-hidden">
         <div className="relative w-responsive-screen h-responsive-screen">
-            <HeroBackground className="relative top-[-11%]"/>
+            <HeroBackground className="relative top-[-2%] lg:top-[-11%]"/>
             <HeroContent/>
         </div>
     </VerticalCenterBox>
