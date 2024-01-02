@@ -43,17 +43,26 @@ export const Piece = (props: {piece: PieceType}) =>
     )
 }
 
-const opts = {
-    playerVars: {
-        autoplay: 1,
-        controls: 0,
-        disablekb: 1,
-        loop: 1,
-        modestbranding: 1,
-        rel: 0,
-        showinfo: 0,
-    }
-}
+const PreviewVideo = (props: { url: string, playing: boolean }) =>
+{
+    const config: YouTubeConfig = {
+        playerVars: {
+            controls: 0,
+            disablekb: 1,
+            modestbranding: 1,
+            showinfo: 0
+        }
+    };
+    return <ReactPlayerComponent
+        width={364}
+        height={205}
+        url={props.url}
+        controls={false}
+        muted={true}
+        loop={true}
+        playing={props.playing}
+        config={config}/>;
+};
 
 const PieceThumbnail = (props: {piece: PieceType, shouldPlay: boolean}) =>
 {
@@ -65,25 +74,25 @@ const PieceThumbnail = (props: {piece: PieceType, shouldPlay: boolean}) =>
     }
     else if (piece.type === "video")
     {
-        const config: YouTubeConfig = {
-             playerVars: {
-                 controls: 0,
-                 disablekb: 1,
-                 modestbranding: 1,
-                 showinfo: 0
-             }
-        };
         return (
-            <ReactPlayerComponent
-                         width={364}
-                         height={205}
-                         url={url}
-                         controls={false}
-                         muted={true}
-                         loop={true}
-                         playing={props.shouldPlay}
-                         config={config}/>
+            <PreviewVideo url={url} playing={props.shouldPlay}/>
         )
+    }
+    else if (piece.type === "videoWithThumbnail")
+    {
+        return (
+            <>
+                <Image width={364} height={205} src={piece.thumbnailUrl} alt={piece.title}
+                      className="opacity-100
+                            group-hover:opacity-0
+                            transition-opacity
+                            ease-in-out
+                            duration-300
+                            w-full
+                            h-full
+                            absolute"/>
+                <PreviewVideo url={url} playing={props.shouldPlay}/>
+            </>)
     }
 }
 
