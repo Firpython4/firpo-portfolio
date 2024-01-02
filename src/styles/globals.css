@@ -4,9 +4,39 @@
 
 :root
 {
-	--small-font: 7px;
-	--medium-font: 17px;
-	--large-font: 28px;
+	--small-font: 6px;
+	--medium-font: 8px;
+	--large-font: 24px;
+}
+
+@media (min-width: 320px)
+{
+	:root
+	{
+		--small-font: 8px;
+		--medium-font: 10px;
+		--large-font: 28px;
+	}
+}
+
+@media (min-width: 375px)
+{
+	:root
+	{
+		--small-font: 8px;
+		--medium-font: 12px;
+		--large-font: 32px;
+	}
+}
+
+@media (min-width: 425px)
+{
+	:root
+	{
+		--small-font: 8px;
+		--medium-font: 16px;
+		--large-font: 38px;
+	}
 }
 
 @media (min-width: 640px)
