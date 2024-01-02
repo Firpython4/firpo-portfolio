@@ -11,7 +11,7 @@ export const ExpositionText = (props: {className?: string}) =>
                     justify-center
                     max-lg:items-center
                     gap-y-[30px]
-                    sm:gap-y-[80px]
+                    sm:gap-y-[40px]
                     md:gap-y-[100px]
                     lg:gap-y-[140px]
                     xl:gap-y-[150px]
