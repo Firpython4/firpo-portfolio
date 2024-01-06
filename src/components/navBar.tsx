@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { emailLink, linkedInLink } from "~/config";
+import { type Locale } from "~/localization/localization";
+import LinkWithLocale from "./LinkWithLocale";
 
 export const emailIconSize = `w-[14px]
                             h-[14px]

@@ -1,15 +1,11 @@
-import matter from "gray-matter";
 import type {GetStaticProps, GetStaticPropsContext, InferGetStaticPropsType} from "next";
 import {type GetStaticPaths} from "next";
 import Image from "next/image";
-import {type Dirent, promises as fileSystem} from "node:fs";
-import {type ParsedUrlQuery} from "node:querystring";
-import {remark} from "remark";
-import html from "remark-html";
+import { type ParsedUrlQuery } from "node:querystring";
 import {Scaffold} from "~/components/scaffold";
 import "@total-typescript/ts-reset";
 import {VerticalCenterBox} from "~/components/verticalCenterBox";
-import {getAllCollections, getMarkdownFilesForLocales, getPath, readCollectionDirectory,} from "~/cms/fileManagement";
+import {getAllCollections, getMarkdownFilesForLocales, readCollectionDirectory,} from "../../../cms/fileManagement";
 import type {YouTubeConfig} from "react-player/youtube";
 import dynamic from "next/dynamic";
 import Head from "next/head";
@@ -17,11 +13,12 @@ import {Favicon} from "~/components/favicon";
 import {type PieceType} from "~/types/pieceType";
 import {collectionsPath} from "~/config";
 import path from "node:path";
-import {getPieces} from "~/index";
+import {getPiecesWithLocale} from "~/index";
 import {useRouter} from "next/router";
-import {getLocalizedContent, type Locale} from "~/localization/localization";
+import { type Locale} from "~/localization/localization";
 import {mapMap, mapMapAsync} from "~/functional";
 import {type Brand} from "~/typeSafety";
+import toContentObject from "../../../contentFormatting";
 
 const ReactPlayerComponent = dynamic(() => import("react-player/youtube"), { ssr: false });
 
@@ -34,15 +31,15 @@ export type LocalizedContentType = Map<Locale, ContentType>;
 
 interface CollectionProps
 {
-    content: LocalizedContentType,
+    content: ContentType,
     works: PieceType[]
 }
 
 export const getStaticPaths = (async () =>
 {
     const directories: string[] = (await getAllCollections())
-        .filter((dirent: Dirent) => dirent.isDirectory())
-        .map((directory: Dirent) => directory.name);
+        .filter((dirent) => dirent.isDirectory())
+        .map((directory) => directory.name);
     
     return {
         paths: directories.map(directoryName =>
@@ -96,33 +93,10 @@ export async function getContent(collectionId: CollectionId)
 {
     const directoryEntries = await readCollectionDirectory(collectionId);
     const content = getMarkdownFilesForLocales(directoryEntries)
-    return await mapMapAsync(content, async (locale, content) =>
-    {
-        const contentFile: Buffer = await fileSystem.readFile(getPath(content));
-        const matterResult: matter.GrayMatterFile<Buffer> = matter(contentFile);
-        const processedContent = await remark()
-            .use(html)
-            .process(matterResult.content);
-
-        const title = matterResult.data.title as unknown;
-        if (typeof title === "string")
-        {
-            const literalNewLine = "\\n";
-            const newLineChar = "\r\n";
-            const contentObject = {
-                title: title.replaceAll(literalNewLine, newLineChar),
-                html: processedContent.toString()
-            };
-            return [locale, contentObject];
-        }
-        else
-        {
-            throw new Error("Title is malformed")
-        }
-    });
+    return await mapMapAsync(content, toContentObject);
 }
 
-async function getPiecesAsProps(collectionId: CollectionId)
+async function getPiecesAsProps(collectionId: CollectionId, locale: Locale)
 {
     const directoryEntries = await readCollectionDirectory(collectionId);
     const directoriesWithParent = {
@@ -131,7 +105,7 @@ async function getPiecesAsProps(collectionId: CollectionId)
         collectionId: collectionId
     }
     
-    return getPieces(directoriesWithParent);
+    return (getPiecesWithLocale(locale))(directoriesWithParent);
 }
 
 export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQuery, string | false | object | undefined>) =>
@@ -140,7 +114,7 @@ export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQu
     {
         const collection = context.params.collection as CollectionId;
 
-        const pieces = await getPiecesAsProps(collection);
+        const pieces = await getPiecesAsProps(collection, context.params.locale as Locale);
         const content = await getContent(collection);
 
         if (content)
@@ -156,7 +130,7 @@ export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQu
                             html: contentObject.html,
                             title: titleWithNewLines
                         }];
-                    }),
+                    }).get(context.params.locale as Locale)!,
                     works: pieces
                 }
             }
@@ -180,15 +154,14 @@ function BackButton()
 
 const Collection = (props: InferGetStaticPropsType<typeof getStaticProps>) =>
 {
-    const localizedContent = getLocalizedContent(props.content);
     const dangerouslySetInnerHTML = {
-        __html: localizedContent.html
+        __html: props.content.html
     };
 
     return (
         <>
             <Head>
-                <title>Marcelo Firpo - {props.content}</title>
+                <title>Marcelo Firpo - {props.content.title}</title>
                 <Favicon src="/favicon.ico"/>
             </Head>
             <Scaffold>
@@ -204,7 +177,7 @@ const Collection = (props: InferGetStaticPropsType<typeof getStaticProps>) =>
                 <VerticalCenterBox className="gap-y-[16px]
                                               pt-[88px]">
                     <h2 className="px-[30px] font-extrabold font-inter text-[17px] text-neutral-700 text-center">
-                        {props.content}
+                        {props.content.title}
                     </h2>
                     <div className="font-inter text-[17px] text-neutral-700 text-center whitespace-pre-wrap"
                          dangerouslySetInnerHTML={dangerouslySetInnerHTML}>
