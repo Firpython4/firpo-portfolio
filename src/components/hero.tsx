@@ -2,8 +2,8 @@ import Image from "next/image";
 import background from "../../public/firpo-color.png";
 import { VerticalCenterBox } from "./verticalCenterBox";
 import { NavBar } from "./navBar";
-import {locale} from "~/localization/localization";
 import {type PropsWithChildren} from "react";
+import {useLocaleTexts} from "~/localization/localization";
 
 const HeroTitle = () =>
 (
@@ -23,7 +23,7 @@ const HeroTitle = () =>
                    tracking-[-2px]
                    mobile_lg:tracking-[-3.745px]
                    font-hepta_slab">
-        {locale.name}
+        {useLocaleTexts().name}
     </h2>
 );
 
@@ -48,7 +48,7 @@ const HeroSubtitle = () =>
                    md:leading-[40px]
                    lg:leading-[50px]
                    font-hepta_slab">
-        {locale.subtitle}
+        {useLocaleTexts().subtitle}
     </h3>
 );
 

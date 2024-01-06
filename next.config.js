@@ -9,11 +9,6 @@ const config = {
   reactStrictMode: true,
   output: "export",
   images: {unoptimized: true},
-  i18n: {
-    locales: ["pt-BR", "en-US"],
-    defaultLocale: "pt-BR"
-  }
-
 };
 
 export default config;

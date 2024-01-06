@@ -1,5 +1,6 @@
 import {useRouter} from "next/router";
 import React from "react";
+import {type LocalizedContentType} from "~/pages/[locale]/collections/[collection]";
 
 type LocaleTexts = {
     clients: React.JSX.Element;
@@ -7,7 +8,7 @@ type LocaleTexts = {
     name: React.JSX.Element;
     someAttendedClients: React.JSX.Element;
     expositionFirst: React.JSX.Element;
-    solveYourCommunicationProblems: JSX.Element
+    solveYourCommunicationProblems: React.JSX.Element
 };
 
 const en_us: LocaleTexts = {
@@ -109,22 +110,78 @@ const pt_br: LocaleTexts = {
     solveYourCommunicationProblems: <>Solve your communication problems:</>
 }
 
-const texts: Record<Locale, typeof pt_br> = {
+const texts: Record<Locale, LocaleTexts> = {
     "pt-BR": pt_br,
-    "en-US": pt_br
+    "en-US": en_us
 }
 
-type Locale = "pt-BR" | "en-US";
+export type Locale = "pt-BR" | "en-US";
+export const locales = ["pt-BR" as const, "en-US" as const];
 
-export const useLocale = () =>
+export function useLocaleTexts()
 {
     const router = useRouter();
 
-    const locale = router.locale;
+    const locale = router.query.locale;
     if (locale && (locale === "pt-BR" || locale === "en-US"))
     {
         return texts[locale];
     }
+    else
+    {
+        throw new Error("Unsupported locale");
+    }
 }
 
-export const locale = pt_br;
+export function useLocale()
+{
+    const router = useRouter();
+
+    const locale = router.query.locale;
+    if (locale && (locale === "pt-BR" || locale === "en-US"))
+    {
+        return locale;
+    }
+    else
+    {
+        throw new Error("Unsupported locale");
+    }
+}
+
+export function getLocalizedString(localizedText: LocalizedText)
+{
+    const locale = useLocale();
+
+    const keys: Map<Locale, string> = localizedText.keys;
+    if (keys.has(locale))
+    {
+        return keys.get(locale);
+    }
+
+    const defaultLocalizedText = keys.get(localizedText.defaultLocale);
+    if (!defaultLocalizedText)
+    {
+        throw new Error("No default localized string found")
+    }
+    return defaultLocalizedText;
+}
+
+export function getLocalizedContent(localizedContent: LocalizedContentType)
+{
+    const locale = useLocale();
+    const content = localizedContent.get(locale);
+    if (content)
+    {
+        return content;
+    }
+    else
+    {
+        throw new Error("No default localized string found")
+    }
+}
+
+
+export type LocalizedText = {
+    keys: Map<Locale, string>;
+    defaultLocale: Locale;
+}

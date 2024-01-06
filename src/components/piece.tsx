@@ -6,6 +6,7 @@ import {useRef} from "react";
 import {useHover} from "usehooks-ts";
 import dynamic from 'next/dynamic'
 import {type YouTubeConfig} from "react-player/youtube";
+import {getLocalizedString} from "~/localization/localization";
 const ReactPlayerComponent = dynamic(() => import("react-player/youtube"), { ssr: false });
 
 export const Piece = (props: {piece: PieceType}) =>
@@ -32,7 +33,7 @@ export const Piece = (props: {piece: PieceType}) =>
                             text-center
                             text-[24px]
                             whitespace-pre-wrap">
-                {piece.collectionTitle}
+                {piece.collectionName}
             </div>
             <PieceThumbnail piece={piece} shouldPlay={isHovering}/>
         </Link>

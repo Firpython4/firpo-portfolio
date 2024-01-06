@@ -4,7 +4,7 @@ import {type Dirent, promises as fileSystem} from "node:fs";
 import {
     absoluteToRelativePath, exists,
     getExtension,
-    getFirstMarkdownFile,
+    getMarkdownFilesForLocales,
     getPath, getSubdirectories,
     getVideoUrl, getAllCollections,
     removeExtension
@@ -14,6 +14,8 @@ import matter from "gray-matter";
 import {promiseFullfilledPredicate, promiseRejectedPredicate, valueMapper} from "~/promises/promisePredicates";
 import {orderByConfig} from "~/cms/ordering";
 import {type PieceSharedType, type PieceType} from "~/types/pieceType";
+import {getLocalizedContent} from "~/localization/localization";
+import {type CollectionId, getContent} from "~/pages/[locale]/collections/[collection]";
 
 function replaceNewLineWithNewLineLiterals(collectionTitle: string)
 {
@@ -90,21 +92,23 @@ async function asVideoWithThumbnail(mediaDirent: Dirent, shared: PieceSharedType
     }
 }
 
-function getPiece(parentDirectoryPath: StringWithInnerSubstring<PublicFolder>, collectionTitle: string)
+function getPiece(parentDirectoryPath: StringWithInnerSubstring<PublicFolder>, collectionId: CollectionId)
 {
-    type PieceProvider = (mediaDirent: Dirent, shared: PieceSharedType, parentDirectoryPath: StringWithInnerSubstring<PublicFolder>, collectionTitle: string) => Promise<PieceType | undefined>;
+    type PieceProvider = (mediaDirent: Dirent, shared: PieceSharedType, parentDirectoryPath: StringWithInnerSubstring<PublicFolder>, collectionId: CollectionId) => Promise<PieceType | undefined>;
     const providers: PieceProvider[] = [asImage, asVideo, asVideoWithThumbnail]
     return async (mediaDirent: Dirent) =>
     {
         const link: string = absoluteToRelativePath(parentDirectoryPath).replaceAll("\\", "/");
+        const literalNewLine = "\\n";
+        const newLineChar = "\n";
         const shared = {
             linkToCollection: link,
-            collectionTitle: replaceNewLineWithNewLineLiterals(collectionTitle),
+            collectionName: getLocalizedContent(await getContent(collectionId)).title.replace(literalNewLine, newLineChar)
         };
 
         for (const provider of providers)
         {
-            const piece = await provider(mediaDirent, shared, parentDirectoryPath, collectionTitle);
+            const piece = await provider(mediaDirent, shared, parentDirectoryPath, collectionId);
             if (piece)
             {
                 return piece;
@@ -115,33 +119,26 @@ function getPiece(parentDirectoryPath: StringWithInnerSubstring<PublicFolder>, c
     };
 }
 
-export async function getPieces(subCollection: { path: string, directoryEntities: Dirent[] })
+type SubcollectionType = { path: string, directoryEntities: Dirent[], collectionId: CollectionId };
+
+export async function getPieces(subCollection: SubcollectionType)
 {
     if (includesInner(subCollection.path, publicFolderValue))
     {
-        const firstMarkdownFileDirent = getFirstMarkdownFile(subCollection.directoryEntities);
-        if (firstMarkdownFileDirent)
+        const firstMarkdownFileDirent = await getContent(subCollection.collectionId).get("pt-BR");
+        const firstMarkdownFile = firstMarkdownFileDirent?.name;
+        const contentFile = await fileSystem.readFile(getPath(firstMarkdownFileDirent));
+        const matterResult = matter(contentFile).data.title as unknown;
+        if (typeof(matterResult) === "string")
         {
-            const firstMarkdownFile = firstMarkdownFileDirent.name;
-            const contentFile = await fileSystem.readFile(getPath(firstMarkdownFileDirent));
-            const matterResult = matter(contentFile).data.title as unknown;
-            if (typeof(matterResult) === "string")
-            {
-                const literalNewLine = "\\r\\n";
-                const newLineChar = "\n";
-                const result = await Promise.allSettled(subCollection.directoryEntities
-                    .map(getPiece(subCollection.path, matterResult.replaceAll(literalNewLine, newLineChar))));
+            const result = await Promise.allSettled(subCollection.directoryEntities
+                .map(getPiece(subCollection.path, subCollection.collectionId)));
 
-                return result.filter(promiseFullfilledPredicate).map(valueMapper);
+            return result.filter(promiseFullfilledPredicate).map(valueMapper);
 
-            }
-
-            throw new Error(`Wrong matter format in ${firstMarkdownFile}`)
         }
-        else
-        {
-            throw new Error(`Unable to find first markdown file at ${subCollection.directoryEntities.toString()}`)
-        }
+
+        throw new Error(`Wrong matter format in ${firstMarkdownFile}`)
     }
     else
     {
@@ -154,7 +151,14 @@ export async function getIndexProps()
     const directoryEntries = await getAllCollections();
     const directories = directoryEntries.filter(dirent => dirent.isDirectory())
     const subDirectories = await Promise.allSettled(getSubdirectories(directories));
-    const fulfilledSubdirectories = subDirectories.filter(promiseFullfilledPredicate).map(promise => promise.value);
+    const fulfilledSubdirectories = subDirectories.filter(promiseFullfilledPredicate).map(valueMapper).map(value =>
+    {
+        const collectionId = value.path.split(`collections${path.sep}`)[1]!;
+        return {
+            collectionId: collectionId as CollectionId,
+            ...value
+        }
+    });
     const rejectedSubdirectories = subDirectories.filter(promiseRejectedPredicate);
 
     if (rejectedSubdirectories.length > 0)
