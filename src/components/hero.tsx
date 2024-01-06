@@ -3,9 +3,9 @@ import background from "../../public/firpo-color.png";
 import { VerticalCenterBox } from "./verticalCenterBox";
 import { NavBar } from "./navBar";
 import {type PropsWithChildren} from "react";
-import {useLocaleTexts} from "~/localization/localization";
+import { type Locale, useLocaleTexts } from "~/localization/localization";
 
-const HeroTitle = () =>
+const HeroTitle = (props: {locale: Locale}) =>
 (
     <h2 className="shrink-0
                    text-white
@@ -23,11 +23,11 @@ const HeroTitle = () =>
                    tracking-[-2px]
                    mobile_lg:tracking-[-3.745px]
                    font-hepta_slab">
-        {useLocaleTexts().name}
+        {useLocaleTexts(props.locale).name}
     </h2>
 );
 
-const HeroSubtitle = () =>
+const HeroSubtitle = (props: {locale: Locale}) =>
 (
     <h3 className="w-[30svw]
                    mobile_md:w-[160px]
@@ -48,11 +48,11 @@ const HeroSubtitle = () =>
                    md:leading-[40px]
                    lg:leading-[50px]
                    font-hepta_slab">
-        {useLocaleTexts().subtitle}
+        {useLocaleTexts(props.locale).subtitle}
     </h3>
 );
 
-const HeroText = (props: {className?: string}) =>
+const HeroText = (props: {className?: string, locale: Locale}) =>
 (
     <div className={`flex
         flex-col
@@ -63,8 +63,8 @@ const HeroText = (props: {className?: string}) =>
         lg:gap-y-8
         xl:gap-y-10
         ${props.className}`}>
-        <HeroTitle/>
-        <HeroSubtitle/>
+        <HeroTitle locale={props.locale}/>
+        <HeroSubtitle locale={props.locale}/>
     </div>
 );
 
@@ -76,7 +76,7 @@ const HeroBackground = (props: PropsWithChildren<{className?: string}>) =>
     </div>
 );
 
-const HeroContent = () =>
+const HeroContent = (props: {locale: Locale}) =>
 {
     const iconPaths = {
         email: "/icons/hero-icons/email-icon.svg",
@@ -94,7 +94,7 @@ const HeroContent = () =>
                              sm:top-[14%]
                              md:top-[16%]
                              lg:top-[20%]
-                             xl:top-[27%]"/>
+                             xl:top-[27%]" locale={props.locale}/>
             <NavBar
                 iconPaths={iconPaths}
                 className="absolute
@@ -113,7 +113,7 @@ const HeroContent = () =>
     );
 };
 
-export const Hero = () =>
+export const Hero = (props: {locale: Locale}) =>
 (
     <VerticalCenterBox className="relative
                                   w-responsive
@@ -128,6 +128,6 @@ export const Hero = () =>
                                   xl:min-h-[600px]
                                   overflow-hidden">
         <HeroBackground className="relative top-[-2%] lg:top-[-11%]"/>
-        <HeroContent/>
+        <HeroContent locale={props.locale}/>
     </VerticalCenterBox>
 );

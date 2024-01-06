@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { type MutableRefObject, type PropsWithChildren } from "react";
+import { forwardRef, type MutableRefObject, type PropsWithChildren, type Ref } from "react";
 import { type Locale } from "~/localization/localization";
 
 type LinkWithLocaleProps = {
@@ -9,11 +9,11 @@ type LinkWithLocaleProps = {
     locale: Locale
 }
 
-const LinkWithLocale = (props: PropsWithChildren<LinkWithLocaleProps>) =>
+const LinkWithLocale = forwardRef((props: PropsWithChildren<LinkWithLocaleProps>, ref: Ref<HTMLAnchorElement>) =>
 {
-    return <Link className={props.className} href={`/${props.locale}${props.href}`}>
+    return <Link className={props.className} href={`/${props.locale}${props.href}`} ref={ref}>
         {props.children}
     </Link>
-}
+})
 
 export default LinkWithLocale;

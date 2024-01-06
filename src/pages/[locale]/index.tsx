@@ -33,7 +33,7 @@ const Home = (props: HomeProps) =>
             <Favicon src="/favicon.ico"/>
         </Head>
         <Scaffold>
-            <Hero/>
+            <Hero locale={props.locale}/>
             <ExpositionText className="pt-[10px]
                                        mobile_sm:pt-[25px]
                                        mobile_md:pt-[40px]
@@ -41,7 +41,7 @@ const Home = (props: HomeProps) =>
                                        sm:pt-[70px]
                                        md:pt-[85px]
                                        lg:pt-[100px]
-                                       xl:pt-[118px]"/>
+                                       xl:pt-[118px]" locale={props.locale}/>
             <div className="pt-28">
                 <PieceCollection pieces={props.pieces} locale={props.locale}/>
             </div>
