@@ -1,12 +1,12 @@
 import { type Dirent } from "node:fs";
-import {includesInner, type StringWithInnerSubstring} from "~/typeSafety";
+import {includesInner} from "~/typeSafety";
 import {type PublicFolder, publicFolderValue} from "~/config";
 import {
     absoluteToRelativePath, exists,
     getExtension,
     getPath, getSubdirectories,
     getVideoUrl, getAllCollections,
-    removeExtension
+    removeExtension, isImageExtension, type PublicFolderPath, typeSafePathJoin, importAsImage
 } from "~/cms/fileManagement";
 import path from "node:path";
 import {promiseFullfilledPredicate, promiseRejectedPredicate, valueMapper} from "~/promises/promisePredicates";
@@ -21,7 +21,7 @@ async function asImage(mediaDirent: Dirent, shared: PieceSharedType)
     const extension = path.extname(piecePath);
     if (includesInner(piecePath, "public"))
     {
-        if (extension === ".png" || extension === ".jpg")
+        if (isImageExtension(extension))
         {
             return {
                 type: "image" as const,
@@ -55,21 +55,12 @@ async function asVideoWithThumbnail(mediaDirent: Dirent, shared: PieceSharedType
 {
     const piecePath = getPath(mediaDirent);
     const videoUrlPath = path.join(piecePath, `${removeExtension(mediaDirent)}.url`)
-    const pngThumbnailPath = path.join(piecePath, `${removeExtension(mediaDirent)}.png`)
-    const jpgThumbnailPath = path.join(piecePath, `${removeExtension(mediaDirent)}.jpg`)
     if (includesInner(piecePath, publicFolderValue) && includesInner(videoUrlPath, publicFolderValue))
     {
         if (await (exists(videoUrlPath)))
         {
-            let thumbnailUrl: string | undefined = undefined;
-            if ((await exists(pngThumbnailPath)) && includesInner(pngThumbnailPath, publicFolderValue))
-            {
-                thumbnailUrl = absoluteToRelativePath(pngThumbnailPath);
-            }
-            if ((await (exists(jpgThumbnailPath))) && includesInner(jpgThumbnailPath, publicFolderValue))
-            {
-                thumbnailUrl = absoluteToRelativePath(jpgThumbnailPath);
-            }
+            const imagePathNoExtension = typeSafePathJoin<PublicFolder>(piecePath, removeExtension(mediaDirent));
+            const thumbnailUrl = await importAsImage(imagePathNoExtension);
             if (!thumbnailUrl)
             {
                 return undefined;
@@ -85,9 +76,9 @@ async function asVideoWithThumbnail(mediaDirent: Dirent, shared: PieceSharedType
     }
 }
 
-function getPiece(parentDirectoryPath: StringWithInnerSubstring<PublicFolder>, collectionId: CollectionId, locale: Locale)
+function getPiece(parentDirectoryPath: PublicFolderPath, collectionId: CollectionId, locale: Locale)
 {
-    type PieceProvider = (mediaDirent: Dirent, shared: PieceSharedType, parentDirectoryPath: StringWithInnerSubstring<PublicFolder>, collectionId: CollectionId) => Promise<PieceType | undefined>;
+    type PieceProvider = (mediaDirent: Dirent, shared: PieceSharedType, parentDirectoryPath: PublicFolderPath, collectionId: CollectionId) => Promise<PieceType | undefined>;
     const providers: PieceProvider[] = [asImage, asVideo, asVideoWithThumbnail]
     return async (mediaDirent: Dirent) =>
     {

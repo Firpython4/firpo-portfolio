@@ -82,7 +82,7 @@ export async function getPiecesAsProps(collectionId: CollectionId, locale: Local
 {
     const directoryEntries = await readCollectionDirectory(collectionId);
     const directoriesWithParent = {
-        path: path.join(process.cwd(), collectionsPath, collectionId),
+        path: (process.cwd(), collectionsPath, collectionId),
         directoryEntities: directoryEntries,
         collectionId: collectionId
     }

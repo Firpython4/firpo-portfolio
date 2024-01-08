@@ -9,7 +9,7 @@ const texts: Record<Locale, LocaleTexts> = {
 export const ptLocale = "pt" as const;
 export const enLocale = "en" as const;
 export const locales = [ptLocale, enLocale];
-export type Locale = typeof ptLocale | typeof enLocale;
+export type Locale = typeof locales[number];
 
 export function useLocaleTexts(locale: Locale)
 {

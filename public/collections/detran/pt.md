@@ -1,3 +1,3 @@
 ---
-title: Detran-RS
+title: Rio Grande do Sul Traffic Department (Detran-RS)
 ---
