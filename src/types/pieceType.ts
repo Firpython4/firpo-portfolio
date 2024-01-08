@@ -2,6 +2,8 @@ export type PieceType = ImagePieceType | VideoPieceType | VideoWithThumbnailPiec
 
 export type ImagePieceType = {
     type: "image",
+    width: number,
+    height: number
 } & PieceSharedType & PieceCommonType;
 
 export type VideoPieceType = {
