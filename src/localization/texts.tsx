@@ -1,6 +1,7 @@
 import React from "react";
 
 export type LocaleTexts = {
+    homeMetaDescription: string,
     clients: React.JSX.Element;
     subtitle: React.JSX.Element;
     name: React.JSX.Element;
@@ -9,7 +10,8 @@ export type LocaleTexts = {
     solveYourCommunicationProblems: React.JSX.Element
 };
 
-export const en_us: LocaleTexts = {
+export const en: LocaleTexts = {
+    homeMetaDescription: `Hi, I'm Marcelo Firpo, a CMO, Creative Director, Creative Consultant, Copywriter, and Screenwriter. I have more than 30 years of experience in communication, advertising, and branding. I've been awarded at multiple festivals. Get in touch now.`,
     name: <>Marcelo Firpo</>,
     subtitle: <>CMO, Creative Director, Creative Consultant, Copywriter, Screenwriter</>,
     expositionFirst: <>I have more than 30 years of experience in communication, advertising, and branding. I've been awarded at multiple festivals.
@@ -31,7 +33,8 @@ export const en_us: LocaleTexts = {
     solveYourCommunicationProblems: <>Solve your communication problems:</>
 }
 
-export const pt_br: LocaleTexts = {
+export const pt: LocaleTexts = {
+    homeMetaDescription: `Marcelo Firpo: CMO, Diretor de Criação, Consultor Criativo, Redator, Roteirista. Tenho mais de 30 de experiência em comunicação, publicidade e branding, e já fui premiado em múltiplos festivais. Entre em contato agora.`,
     name: <>Marcelo Firpo</>,
     subtitle: <>CMO, Diretor de Criação, Consultor Criativo, Redator, Roteirista</>,
     expositionFirst: <>Tenho
@@ -53,6 +56,6 @@ export const pt_br: LocaleTexts = {
         Sulgás, Detran, CEEE, Corsan, Zaffari Group, Angeloni Supermarkets, Renner Paints, Sayerlack,
         Selenium Loudspeakers, Oxford Ceramics, Student Travel Bureau, Colombo Stores, Fiat Dealership Network,
         and the following city halls: Porto Alegre, Passo Fundo, Bento Gonçalves, Gravataí, Santa Maria, and Rio Grande.</>,
-    solveYourCommunicationProblems: <>Solve your communication problems:</>
+    solveYourCommunicationProblems: <>Resolva seus problemas de comunicação:</>
 }
 

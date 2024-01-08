@@ -33,7 +33,7 @@ export async function getCollectionsStaticPaths()
 }
 
 export async function getCollectionProps(context: GetStaticPropsContext<ParsedUrlQuery, string | false | object | undefined>): Promise<{
-    props: { works: PieceType[]; content: { html: string; title: string } }
+    props: { works: PieceType[]; content: { html: string; title: string, asString: string } }
 }>
 {
     if (context.params && typeof (context.params.collection) === "string")
@@ -54,7 +54,8 @@ export async function getCollectionProps(context: GetStaticPropsContext<ParsedUr
                         const titleWithNewLines = contentObject.title.replaceAll(literalNewLine, newLineChar);
                         return [locale, {
                             html: contentObject.html,
-                            title: titleWithNewLines
+                            title: titleWithNewLines,
+                            asString: contentObject.asString
                         }];
                     }).get(context.params.locale as Locale)!,
                     works: pieces
