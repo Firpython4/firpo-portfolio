@@ -18,6 +18,7 @@ const env = createEnv({
    */
   client: {
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_VERCEL_URL: z.string().url()
   },
 
   /**
