@@ -5,16 +5,19 @@ import {  type StringWithInnerSubstring } from "~/typeSafety";
 import {type Locale, locales} from "~/localization/localization";
 import {promisify} from "util";
 import sizeOf from "image-size";
+import { type CollectionId } from "./cmsCompiler";
 
-export function getSubdirectories(directories: Dirent[])
+export function getCollectionsFromDirectories(directories: Dirent[])
 {
     return directories.map(async directoryEntity =>
                            {
-                               const path = getPath(directoryEntity);
-                               const directoryEntities: Dirent[] = await fileSystem.readdir(path, {withFileTypes: true});
+                               const directoryPath = getPath(directoryEntity);
+                               const id = directoryPath.split(`collections${path.sep}`)[1]!;
+                               const directoryEntities = await fileSystem.readdir(directoryPath, {withFileTypes: true});
                                return {
-                                   path: path,
-                                   directoryEntities: directoryEntities
+                                   id: id as CollectionId,
+                                   path: directoryPath,
+                                   directoryEntities
                                }
                            });
 }

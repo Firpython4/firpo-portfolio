@@ -1,23 +1,25 @@
-export type PieceType = ImagePieceType | VideoPieceType | VideoWithThumbnailPieceType;
+import { type TextType } from "~/localization/localization";
+
+export type PieceType<GenericTextType extends TextType> = (ImagePieceType | VideoPieceType | VideoWithThumbnailPieceType) & PieceSharedType<GenericTextType> & PieceCommonType;
 
 export type ImagePieceType = {
     type: "image",
     width: number,
     height: number
-} & PieceSharedType & PieceCommonType;
+}
 
 export type VideoPieceType = {
     type: "video",
-} & PieceSharedType & PieceCommonType;
+}
 
 export type VideoWithThumbnailPieceType = {
     type: "videoWithThumbnail",
     thumbnailUrl: string,
-} & PieceSharedType & PieceCommonType;
+}
 
-export type PieceSharedType = {
+export type PieceSharedType<GenericTextType extends TextType> = {
     linkToCollection: string,
-    collectionName: string,
+    collectionName: GenericTextType,
 }
 
 type PieceCommonType = {
