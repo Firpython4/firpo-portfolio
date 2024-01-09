@@ -5,7 +5,6 @@ import {  type StringWithInnerSubstring } from "~/typeSafety";
 import {type Locale, locales} from "~/localization/localization";
 import {promisify} from "util";
 import sizeOf from "image-size";
-import {ISizeCalculationResult} from "image-size/dist/types/interface";
 
 export function getSubdirectories(directories: Dirent[])
 {
