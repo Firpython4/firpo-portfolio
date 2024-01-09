@@ -48,7 +48,7 @@ async function asImage(mediaDirent: Dirent, shared: PieceSharedType<LocalizedTex
             }
             return {
                 type: "image" as const,
-                url: absoluteToRelativePath(piecePath).replace("\\", "/"),
+                url: absoluteToRelativePath(piecePath).replaceAll("\\", "/"),
                 title: mediaDirent.name.replace(getExtension(mediaDirent), ""),
                 width: size.width,
                 height: size.height,
@@ -100,7 +100,7 @@ async function asVideoWithThumbnail(mediaDirent: Dirent, shared: PieceSharedType
                 type: "videoWithThumbnail" as const,
                 url: await getVideoUrl(videoUrlPath),
                 thumbnail: {
-                    url: thumbnail.relativePath.replace("\\", "/"),
+                    url: thumbnail.relativePath.replaceAll("\\", "/"),
                     width: size.width,
                     height: size.height
                 },
@@ -115,7 +115,7 @@ const replaceNewlines = (text: string) =>
 {
     const literalNewLine = "\\n";
     const newLineChar = "\n";
-    return text.replace(literalNewLine, newLineChar);
+    return text.replaceAll(literalNewLine, newLineChar);
 };
 
 function getPiece(parentDirectoryPath: PublicFolderPath, collectionId: CollectionId, collectionName: LocalizedText)
