@@ -85,15 +85,25 @@ async function asVideoWithThumbnail(mediaDirent: Dirent, shared: PieceSharedType
         if (await (exists(videoUrlPath)))
         {
             const imagePathNoExtension = typeSafePathJoin<PublicFolder>(piecePath, removeExtension(mediaDirent));
-            const thumbnailUrl = await importAsImage(imagePathNoExtension);
-            if (!thumbnailUrl)
+            const thumbnail = await importAsImage(imagePathNoExtension);
+            if (!thumbnail)
+            {
+                return undefined;
+            }
+
+            const size = await sizeOfAsync(thumbnail.absolutePath);
+            if (!size || !size.height || !size.width)
             {
                 return undefined;
             }
             return {
                 type: "videoWithThumbnail" as const,
                 url: await getVideoUrl(videoUrlPath),
-                thumbnailUrl: thumbnailUrl,
+                thumbnail: {
+                    url: thumbnail.relativePath,
+                    width: size.width,
+                    height: size.height
+                },
                 title: mediaDirent.name,
                 ...shared
             };

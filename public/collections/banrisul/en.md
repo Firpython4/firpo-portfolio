@@ -1,3 +1,3 @@
 ---
-title: Banrisul.\nO Grande Banco do Sul.
+title: Banrisul
 ---

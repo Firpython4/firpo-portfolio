@@ -1,8 +1,9 @@
 import type {PieceType} from "~/types/pieceType";
 import {orderFilePath} from "~/config";
 import {getFileRelative} from "~/cms/fileManagement";
+import { type TextType } from "~/localization/localization";
 
-export async function orderByConfig(pieces: PieceType[])
+export async function orderByConfig<GenericTextType extends TextType>(pieces: PieceType<GenericTextType>[])
 {
     const orderFile = await getFileRelative(orderFilePath)
     const asString = orderFile.toString()

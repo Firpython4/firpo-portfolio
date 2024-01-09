@@ -103,11 +103,11 @@ export async function importAsImage(imagePath: PublicFolderPath)
     for (const imageFormat of supportedImageFormats)
     {
         let relativePath: string | undefined = undefined;
-        const asFormat = `${imagePath}${imageFormat}` as PublicFolderPath;
-        if ((await exists(asFormat)))
+        const absolutePath = `${imagePath}${imageFormat}` as PublicFolderPath;
+        if ((await exists(absolutePath)))
         {
-            relativePath = absoluteToRelativePath(asFormat);
-            return relativePath;
+            relativePath = absoluteToRelativePath(absolutePath);
+            return { relativePath, absolutePath };
         }
     }
 }

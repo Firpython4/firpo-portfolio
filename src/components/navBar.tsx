@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { emailLink, linkedInLink } from "~/config";
+import Image from "next/image";
 
 export const emailIconSize = `w-[14px]
                             h-[14px]
