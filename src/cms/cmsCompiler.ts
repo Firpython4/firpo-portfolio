@@ -48,7 +48,7 @@ async function asImage(mediaDirent: Dirent, shared: PieceSharedType<LocalizedTex
             }
             return {
                 type: "image" as const,
-                url: absoluteToRelativePath(piecePath),
+                url: absoluteToRelativePath(piecePath).replace("\\", "/"),
                 title: mediaDirent.name.replace(getExtension(mediaDirent), ""),
                 width: size.width,
                 height: size.height,
@@ -100,7 +100,7 @@ async function asVideoWithThumbnail(mediaDirent: Dirent, shared: PieceSharedType
                 type: "videoWithThumbnail" as const,
                 url: await getVideoUrl(videoUrlPath),
                 thumbnail: {
-                    url: thumbnail.relativePath,
+                    url: thumbnail.relativePath.replace("\\", "/"),
                     width: size.width,
                     height: size.height
                 },
