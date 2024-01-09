@@ -8,7 +8,15 @@ await import("./src/env.js");
 const config = {
   reactStrictMode: true,
   output: "export",
-  images: {unoptimized: true},
+  images: {
+    remotePatterns: [
+      {
+        hostname: "img.youtube.com",
+        protocol: "https"
+      }
+    ],
+    unoptimized: true
+  },
 };
 
 export default config;

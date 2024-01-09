@@ -71,7 +71,7 @@ const HeroText = (props: {className?: string} & LocalizedTextsProps) =>
 const HeroBackground = (props: PropsWithChildren<{className?: string}>) =>
 (
     <div className={props.className}>
-        <Image src={background} alt="Marcelo Firpo" priority={true}/>
+        <Image src={background} alt="Marcelo Firpo" priority={true} fetchPriority="high" sizes="100svw"/>
         {props.children}
     </div>
 );
