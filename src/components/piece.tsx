@@ -146,7 +146,9 @@ const PieceThumbnail = (props: { className?: string, piece: PieceType, shouldPla
     const url = piece.url;
     if (piece.type === "image")
     {
-        return <Image className={props.className} width={364} height={205} src={url} alt={piece.title}/>;
+        return (
+            <Image className={`aspect-[${piece.width}/${piece.height}] cover ${props.className}`} width={piece.width} height={piece.height} src={url} alt={piece.title}/>
+        )
     }
     else if (piece.type === "video")
     {
