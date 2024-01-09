@@ -7,7 +7,7 @@ await import("./src/env.js");
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
-  output: "export",
+  output: "standalone",
   images: {
     remotePatterns: [
       {
@@ -15,7 +15,6 @@ const config = {
         protocol: "https"
       }
     ],
-    unoptimized: true
   },
 };
 
