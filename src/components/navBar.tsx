@@ -1,6 +1,7 @@
+import ExportedImage from "next-image-export-optimizer";
+import Image from "next/image";
 import Link from "next/link";
 import { emailLink, linkedInLink } from "~/config";
-import Image from "next/image";
 
 const iconImageSizes = `14px,
                             screen(mobile_sm) 16px,
@@ -35,10 +36,10 @@ export const NavBar = (props: {className?: string, iconPaths: {linkedin: string,
     return (
         <div className={`${props.className} flex flex-row gap-x-[8px] sm:gap-x-[12px] md:gap-x-[18px] lg:gap-x-[22px] xl:gap-x-[26px]`}>
             <Link href={emailLink}>
-                <Image alt="email" className={`aspect-[39/34] ${emailIconSize}`} src={props.iconPaths.email} width={39} height={34} sizes={iconImageSizes}/>
+                <ExportedImage alt="email" className={`aspect-[39/34] ${emailIconSize}`} src={props.iconPaths.email} width={39} height={34} sizes={iconImageSizes}/>
             </Link>
             <Link href={linkedInLink}>
-                <Image alt="LinkedIn" className={`aspect-square ${linkedIconSize}`} src={props.iconPaths.linkedin} width={34} height={34} sizes={iconImageSizes}/>
+                <ExportedImage alt="LinkedIn" className={`aspect-square ${linkedIconSize}`} src={props.iconPaths.linkedin} width={34} height={34} sizes={iconImageSizes}/>
             </Link>
         </div>
     );

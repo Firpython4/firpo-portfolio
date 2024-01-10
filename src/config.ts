@@ -1,7 +1,7 @@
 export const publicFolderValue = "public";
 export const collectionsPath = `/${publicFolderValue}/collections` as const;
 
-export const orderFilePath = "public/order.txt";
+export const orderFilePath = "order.txt";
 
 export type PublicFolder = typeof publicFolderValue;
 

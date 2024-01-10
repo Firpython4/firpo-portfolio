@@ -1,3 +1,4 @@
+import ExportedImage from "next-image-export-optimizer";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 
@@ -144,7 +145,7 @@ const PieceThumbnail = (props: { className?: string, piece: PieceType<string>, s
     if (piece.type === "image")
     {
         return (
-            <Image className={`aspect-[${piece.width}/${piece.height}] object-cover ${props.className}`} width={piece.width} height={piece.height} src={url} alt={piece.title} sizes={pieceThumbnailSizes}/>
+            <ExportedImage className={`aspect-[${piece.width}/${piece.height}] object-cover ${props.className}`} width={piece.width} height={piece.height} src={url} alt={piece.title} sizes={pieceThumbnailSizes}/>
         )
     }
     else
@@ -166,7 +167,7 @@ const PieceThumbnail = (props: { className?: string, piece: PieceType<string>, s
             {
                 return (
                     <>
-                        <Image src={thumbnail} alt={piece.title} fill={true} sizes={pieceThumbnailSizes}
+                        <ExportedImage src={thumbnail} alt={piece.title} fill={true} sizes={pieceThumbnailSizes}
                                className={`${props.className}
                                   opacity-100
                                   group-hover:opacity-0
@@ -186,7 +187,7 @@ const PieceThumbnail = (props: { className?: string, piece: PieceType<string>, s
         {
             return (
                 <>
-                    <Image width={piece.thumbnail.width} height={piece.thumbnail.height} src={piece.thumbnail.url} alt={piece.title} sizes={pieceThumbnailSizes}
+                    <ExportedImage width={piece.thumbnail.width} height={piece.thumbnail.height} src={piece.thumbnail.url} alt={piece.title} sizes={pieceThumbnailSizes}
                            className={`${props.className}
                               opacity-100
                               group-hover:opacity-0

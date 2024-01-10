@@ -1,6 +1,6 @@
 import type {GetStaticProps, GetStaticPropsContext, InferGetStaticPropsType} from "next";
 import {type GetStaticPaths} from "next";
-import Image from "next/image";
+import ExportedImage from "next-image-export-optimizer";
 import { type ParsedUrlQuery } from "node:querystring";
 import {Scaffold} from "~/components/scaffold";
 import "@total-typescript/ts-reset";
@@ -33,7 +33,7 @@ const Piece = (props: {piece: PieceType<string>}) =>
     {
         return (
             <div key={piece.url}>
-                <Image className={`aspect-[${piece.width}/${piece.height}]`} src={piece.url} width={piece.width} height={piece.height} alt={piece.title} sizes={`${piece.width.toString()}px`}/>
+                <ExportedImage className={`aspect-[${piece.width}/${piece.height}]`} src={piece.url} width={piece.width} height={piece.height} alt={piece.title} sizes={`${piece.width.toString()}px`}/>
             </div>
         );
     }
@@ -57,7 +57,7 @@ export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQu
     return await getCollectionProps(context);
 }) satisfies GetStaticProps<CollectionProps>
 
-const BackIcon = (props: {className?: string}) => <Image className={props.className} alt="home" src="/icons/back-icon.svg" width={31} height={31} sizes="31px"/>;
+const BackIcon = (props: {className?: string}) => <ExportedImage className={props.className} alt="home" src="/icons/back-icon.svg" width={31} height={31} sizes="31px"/>;
 
 const BackButton = (props: {locale: Locale}) =>
 {

@@ -1,3 +1,4 @@
+import ExportedImage from "next-image-export-optimizer";
 import Image from "next/image";
 import background from "../../public/firpo-color.png";
 import { type LocalizedTextsProps } from "../types/misc";
@@ -71,7 +72,7 @@ const HeroText = (props: {className?: string} & LocalizedTextsProps) =>
 const HeroBackground = (props: PropsWithChildren<{className?: string}>) =>
 (
     <div className={props.className}>
-        <Image src={background} alt="Marcelo Firpo" priority={true} fetchPriority="high" sizes="100svw"/>
+        <ExportedImage src={background} alt="Marcelo Firpo" priority={true} fetchPriority="high" sizes="100svw"/>
         {props.children}
     </div>
 );
