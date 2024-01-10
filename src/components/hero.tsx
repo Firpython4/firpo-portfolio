@@ -1,5 +1,4 @@
 import ExportedImage from "next-image-export-optimizer";
-import Image from "next/image";
 import background from "../../public/firpo-color.png";
 import { type LocalizedTextsProps } from "../types/misc";
 import { VerticalCenterBox } from "./verticalCenterBox";
