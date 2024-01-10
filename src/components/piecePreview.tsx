@@ -1,6 +1,7 @@
+"use client"
+
 import ExportedImage from "next-image-export-optimizer";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 
 import { useRef } from "react";
 import { type YouTubeConfig } from "react-player/youtube";

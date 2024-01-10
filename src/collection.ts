@@ -1,48 +1,27 @@
-import type { GetStaticPropsContext } from "next";
-import type { ParsedUrlQuery } from "node:querystring";
-import getOrCompileCms, { type CollectionId } from "./cms/cmsCompiler";
-import getOrCacheCompiledCms from "./cms/cmsCompiler";
+import getOrCompileCms from "./cms/cmsCompiler";
+import getOrCacheCompiledCms, { type CollectionId } from "./cms/cmsCompiler";
 import { getLocalizedPiece, type Locale, locales } from "./localization/localization";
+import { type CollectionPageParams } from "./types/params";
 
 export async function getCollectionsStaticPaths()
 {
     const cms = await getOrCacheCompiledCms();
-    
-    const paths = locales.map(locale => cms.array.map(collection =>
-                                                        {
-                                                            return {
-                                                                params: {
-                                                                    collection: collection.id,
-                                                                    locale: locale
-                                                                }
-                                                            };
-                                                        })).flat();
-    
-    return {
-        paths: paths,
-        fallback: false
-    };
+
+    return locales.map(locale => cms.array.map(collection =>
+                                               {
+                                                   return {
+                                                       collection: collection.id,
+                                                       locale: locale
+                                                   };
+                                               })).flat();
 }
 
-export async function getCollectionProps(context: GetStaticPropsContext<ParsedUrlQuery, string | false | object | undefined>)
+export async function getCollectionPageContent(params: CollectionPageParams)
 {
     const cms = await getOrCompileCms();
-    if (!context.params)
-    {
-        throw new Error("Invalid params");
-    }
-    if (typeof context.params.locale !== "string")
-    {
-        throw new Error("Invalid locale");
-    }
-    
-    if (typeof context.params.collection !== "string")
-    {
-        throw new Error("Invalid collection");
-    }
 
-    const collectionId = context.params.collection as CollectionId;
-    const locale = context.params.locale as Locale;
+    const collectionId = params.collection as CollectionId;
+    const locale = params.locale as Locale;
     
     const collection = cms.map.get(collectionId)!;
     const content = collection.content.get(locale);
@@ -55,11 +34,9 @@ export async function getCollectionProps(context: GetStaticPropsContext<ParsedUr
     const pieces = collection.pieces.map(piece => getLocalizedPiece(piece, locale));
     
     return {
-        props: {
-            content,
-            pieces,
-            locale
-        }
+        content,
+        pieces,
+        locale
     };
 }
 
