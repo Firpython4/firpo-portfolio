@@ -1,6 +1,7 @@
 import ExportedImage from "next-image-export-optimizer";
 import background from "../../public/firpo-color.png";
 import { type LocalizedTextsProps } from "../types/misc";
+import PropsWithClassName from "../types/propsWithClassName";
 import { VerticalCenterBox } from "./verticalCenterBox";
 import { NavBar } from "./navBar";
 import {type PropsWithChildren} from "react";
@@ -52,7 +53,7 @@ const HeroSubtitle = (props: LocalizedTextsProps) =>
     </h3>
 );
 
-const HeroText = (props: {className?: string} & LocalizedTextsProps) =>
+const HeroText = (props: PropsWithClassName<LocalizedTextsProps>) =>
 (
     <div className={`flex
         flex-col
@@ -68,7 +69,7 @@ const HeroText = (props: {className?: string} & LocalizedTextsProps) =>
     </div>
 );
 
-const HeroBackground = (props: PropsWithChildren<{className?: string}>) =>
+const HeroBackground = (props: PropsWithClassName<PropsWithChildren>) =>
 (
     <div className={props.className}>
         <ExportedImage src={background} alt="Marcelo Firpo" priority={true} fetchPriority="high" sizes="100svw"/>

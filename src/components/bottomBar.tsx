@@ -1,9 +1,10 @@
 import {NavBar} from "~/components/navBar";
 import { type LocalizedTextsProps } from "../types/misc";
+import type PropsWithClassName from "../types/propsWithClassName";
 
 const responsiveText = "text-sm md:text-md lg:text-lg xl:text-xl"
 
-export const BottomBar = (props: {className?: string} & LocalizedTextsProps) =>
+export const BottomBar = (props: PropsWithClassName<LocalizedTextsProps>) =>
 (
     <div
         className={`${props.className} flex flex-col gap-y-[11px] items-center justify-center md:flex-row md:gap-x-[11px]`}>
