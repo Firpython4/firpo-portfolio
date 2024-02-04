@@ -1,12 +1,12 @@
 import getOrCacheCompiledCms from "./cms/cmsCompiler";
 import { orderByConfig } from "./cms/ordering";
 import { getLocalizedPiece, getLocalizedTexts, type Locale } from "./localization/localization";
-import { type LocalizedTexts } from "./localization/texts";
+import { type LocalizedCopy } from "./localization/copy";
 import { type PieceType } from "./types/pieceType";
 
 export type HomeProps = {
     pieces: PieceType<string>[];
-    localizedTexts: LocalizedTexts;
+    localizedTexts: LocalizedCopy;
     locale: Locale
 };
 
