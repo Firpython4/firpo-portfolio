@@ -1,12 +1,12 @@
 import ExportedImage from "next-image-export-optimizer";
 import background from "../../public/firpo-color.png";
-import { type LocalizedTextsProps } from "../types/misc";
+import { type PropsWithLocalizedCopy } from "../types/misc";
 import PropsWithClassName from "../types/propsWithClassName";
 import { VerticalCenterBox } from "./verticalCenterBox";
 import { NavBar } from "./navBar";
 import {type PropsWithChildren} from "react";
 
-const HeroTitle = (props: LocalizedTextsProps) =>
+const HeroTitle = (props: PropsWithLocalizedCopy) =>
 (
     <h2 className="shrink-0
                    text-white
@@ -24,11 +24,11 @@ const HeroTitle = (props: LocalizedTextsProps) =>
                    tracking-[-2px]
                    mobile_lg:tracking-[-3.745px]
                    font-hepta_slab">
-        {props.localizedTexts.home.name}
+        {props.localizedCopy.home.hero.name}
     </h2>
 );
 
-const HeroSubtitle = (props: LocalizedTextsProps) =>
+const HeroSubtitle = (props: PropsWithLocalizedCopy) =>
 (
     <h3 className="w-[30svw]
                    mobile_md:w-[160px]
@@ -49,11 +49,11 @@ const HeroSubtitle = (props: LocalizedTextsProps) =>
                    md:leading-[40px]
                    lg:leading-[50px]
                    font-hepta_slab">
-        {props.localizedTexts.home.subtitle}
+        {props.localizedCopy.home.hero.subtitle}
     </h3>
 );
 
-const HeroText = (props: PropsWithClassName<LocalizedTextsProps>) =>
+const HeroText = (props: PropsWithClassName<PropsWithLocalizedCopy>) =>
 (
     <div className={`flex
         flex-col
@@ -64,8 +64,8 @@ const HeroText = (props: PropsWithClassName<LocalizedTextsProps>) =>
         lg:gap-y-8
         xl:gap-y-10
         ${props.className}`}>
-        <HeroTitle localizedTexts={props.localizedTexts}/>
-        <HeroSubtitle localizedTexts={props.localizedTexts}/>
+        <HeroTitle localizedCopy={props.localizedCopy}/>
+        <HeroSubtitle localizedCopy={props.localizedCopy}/>
     </div>
 );
 
@@ -77,7 +77,7 @@ const HeroBackground = (props: PropsWithClassName<PropsWithChildren>) =>
     </div>
 );
 
-const HeroContent = (props: LocalizedTextsProps) =>
+const HeroContent = (props: PropsWithLocalizedCopy) =>
 {
     const iconPaths = {
         email: "/icons/hero-icons/email-icon.svg",
@@ -96,7 +96,7 @@ const HeroContent = (props: LocalizedTextsProps) =>
                              md:top-[16%]
                              lg:top-[20%]
                              xl:top-[27%]"
-                      localizedTexts={props.localizedTexts}/>
+                      localizedCopy={props.localizedCopy}/>
             <NavBar
                 iconPaths={iconPaths}
                 className="absolute
@@ -115,7 +115,7 @@ const HeroContent = (props: LocalizedTextsProps) =>
     );
 };
 
-export const Hero = (props: LocalizedTextsProps) =>
+export const Hero = (props: PropsWithLocalizedCopy) =>
 (
     <VerticalCenterBox className="relative
                                   w-responsive
@@ -130,6 +130,6 @@ export const Hero = (props: LocalizedTextsProps) =>
                                   xl:min-h-[600px]
                                   overflow-hidden">
         <HeroBackground className="relative top-[-2%] lg:top-[-11%]"/>
-        <HeroContent localizedTexts={props.localizedTexts}/>
+        <HeroContent localizedCopy={props.localizedCopy}/>
     </VerticalCenterBox>
 );
