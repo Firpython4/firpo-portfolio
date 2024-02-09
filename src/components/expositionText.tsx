@@ -1,7 +1,8 @@
 import { type Locale  } from "~/localization/localization";
-import { type LocalizedTextsProps } from "../types/misc";
+import { type PropsWithLocalizedCopy } from "~/types/misc";
+import type PropsWithClassName from "../types/propsWithClassName";
 
-export const ExpositionText = (props: {className?: string, locale: Locale} & LocalizedTextsProps) =>
+export const ExpositionText = (props: PropsWithClassName<{locale: Locale} & PropsWithLocalizedCopy>) =>
 (
     <div
         className={`${props.className}
@@ -21,7 +22,7 @@ export const ExpositionText = (props: {className?: string, locale: Locale} & Loc
                     md:gap-x-[20px]
                     lg:gap-x-[130px]
                     xl:gap-x-[215px]`}>
-        <div
+        <p
             className={`w-[434px]
                         text-black
                         text-small
@@ -32,9 +33,9 @@ export const ExpositionText = (props: {className?: string, locale: Locale} & Loc
                         md:leading-[18px]
                         lg:leading-[22px]
                         xl:leading-[27px]
-                        font-inter`}>{props.localizedTexts.expositionFirst}
-        </div>
-        <div className="w-[435px]
+                        font-inter`}>{props.localizedCopy.home.about.expositionFirst}
+        </p>
+        <p className="w-[435px]
                         text-black
                         text-small
                         not-italic
@@ -50,10 +51,10 @@ export const ExpositionText = (props: {className?: string, locale: Locale} & Loc
             <span className="text-black
                              text-small
                              font-semibold
-                             pt-3">{props.localizedTexts.someAttendedClients}<br/></span>
+                             pt-3">{props.localizedCopy.home.about.someAttendedClients}<br/></span>
             <span className="text-black
                              text-small
-                             font-normal">{props.localizedTexts.clients}</span>
-        </div>
+                             font-normal">{props.localizedCopy.home.about.clients}</span>
+        </p>
     </div>
 );
