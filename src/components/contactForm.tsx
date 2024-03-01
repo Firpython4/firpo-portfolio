@@ -1,6 +1,5 @@
 "use client"
 
-import { options } from "prettier-plugin-tailwindcss";
 import {
     type FieldErrors, type FieldPath,
     type FieldValues, type RegisterOptions,
@@ -94,7 +93,7 @@ const ContactForm = (props: PropsWithClassName<{locale: Locale, copy: LocalizedC
         }
     };
 
-    const { register, handleSubmit, getValues, formState: { defaultValues, errors, isSubmitSuccessful, isDirty,  }, reset } = useForm<ContactFormType>(formProps);
+    const { register, handleSubmit, formState: {errors, isSubmitSuccessful, isDirty,  }, reset } = useForm<ContactFormType>(formProps);
     console.log(isDirty);
     const contactForm = props.copy.home.contactForm;
     const submitContactForm = async (data: ContactFormType) =>
