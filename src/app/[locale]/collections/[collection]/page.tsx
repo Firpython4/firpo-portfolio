@@ -10,7 +10,7 @@ import { PieceVideo } from "~/components/piecePreview";
 import { type Locale } from "~/localization/localization";
 import { type CollectionPageParams } from "~/types/params";
 import commonMetadata from "../../../../metadata";
-import PropsWithClassName from "../../../../types/propsWithClassName";
+import type PropsWithClassName from "../../../../types/propsWithClassName";
 
 export const generateStaticParams = async () =>
 {

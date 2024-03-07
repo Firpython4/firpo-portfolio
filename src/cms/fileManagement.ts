@@ -26,12 +26,6 @@ export async function getAllCollections()
 {
     return await fileSystem.readdir(path.join(process.cwd(), collectionsPath), {withFileTypes: true});
 }
-
-export async function readCollectionDirectory(collection: string)
-{
-    return await fileSystem.readdir(path.join(process.cwd(), collectionsPath, collection), {withFileTypes: true});
-}
-
 export async function getFileRelative(filePath: string)
 {
     return await fileSystem.readFile(path.join(process.cwd(), filePath));
@@ -88,7 +82,15 @@ export type ImageExtension = typeof supportedImageFormats[number];
 
 export function isImageExtension(extension: string): extension is ImageExtension
 {
-    return supportedImageFormats.includes(extension);
+    for (const element of supportedImageFormats)
+    {
+        if (extension === element)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 export type PublicFolderPath = StringWithInnerSubstring<PublicFolder>;
