@@ -27,6 +27,7 @@ export type LocalizedCopy = {
             email: string,
             subject: string,
             content: string,
+            send: string,
             submitSuccessful: string,
             errors: ContactFormErrors
         }
@@ -67,6 +68,7 @@ export const en: LocalizedCopy = {
             firstName: "First name",
             lastName: "Last name",
             subject: "Subject",
+            send: "Send",
             submitSuccessful: "Your message has been sent successfully, thanks for reaching out!",
             errors: {
                 invalidEmail: "Please insert a valid email.",
@@ -117,6 +119,7 @@ export const pt: LocalizedCopy = {
             email: "E-mail",
             firstName: "Nome",
             lastName: "Sobrenome",
+            send: "Enviar",
             submitSuccessful: "A sua mensagem foi enviada com sucesso. Obrigado por entrar em contato!",
             errors: {
                 invalidEmail: "Por favor insira um e-mail válido.",

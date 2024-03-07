@@ -122,7 +122,7 @@ const ContactForm = (props: PropsWithClassName<{locale: Locale, copy: LocalizedC
             </div>
             <input className="border-2 border-gray-300 rounded-md w-[20%] cursor-pointer"
                    type="submit"
-                   value="Send"
+                   value={props.copy.home.contactForm.send}
                    lang={props.locale}/>
         </form>
     </div>
