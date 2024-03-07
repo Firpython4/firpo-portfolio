@@ -170,7 +170,7 @@ async function getCollectionWithPiecesAndContent(collectionDirectory: Collection
     const promiseRejectedResults = result.filter(promiseRejectedPredicate);
     if (promiseRejectedResults.length > 0)
     {
-        console.warn(`Some pieces were unable to be rendered due to missing localizations: ${JSON.stringify(promiseRejectedResults)}`)
+        console.warn(`Some pieces failed to resolve: ${JSON.stringify(promiseRejectedResults)}`)
     }
     
     const pieces = result.filter(promiseFullfilledPredicate)
