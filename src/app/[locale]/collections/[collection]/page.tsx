@@ -1,7 +1,6 @@
 import { type Metadata } from "next";
 import ExportedImage from "next-image-export-optimizer";
 import {Scaffold} from "~/components/scaffold";
-import "@total-typescript/ts-reset";
 import {VerticalCenterBox} from "~/components/verticalCenterBox";
 import type {YouTubeConfig} from "react-player/youtube";
 import {type PieceType} from "~/types/pieceType";
