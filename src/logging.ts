@@ -1,6 +1,6 @@
 import env from "./env";
 
-const canLog = () => env.NODE_ENV != "development";
+const canLog = () => env.NODE_ENV != "production";
 
 const log = {
     info: (message: string) => {
