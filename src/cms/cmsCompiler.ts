@@ -19,6 +19,7 @@ import {
 import { type PublicFolder, publicFolderValue } from "~/config";
 import { type LocalizedText } from "~/localization/localization";
 import { promiseFullfilledPredicate, promiseRejectedPredicate, valueMapper } from "~/promises/promisePredicates";
+import log from "../logging";
 import { type UniqueCollectionType } from "../types/localizedCollectionType";
 import { type PieceSharedType, type PieceType } from "~/types/pieceType";
 import { type Brand, includesInner } from "~/typeSafety";
@@ -170,7 +171,7 @@ async function getCollectionWithPiecesAndContent(collectionDirectory: Collection
     const promiseRejectedResults = result.filter(promiseRejectedPredicate);
     if (promiseRejectedResults.length > 0)
     {
-        console.warn(`Some pieces failed to resolve: ${JSON.stringify(promiseRejectedResults)}`)
+        log.warn(`Some pieces failed to resolve: ${JSON.stringify(promiseRejectedResults)}`)
     }
     
     const pieces = result.filter(promiseFullfilledPredicate)

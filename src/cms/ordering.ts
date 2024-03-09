@@ -2,6 +2,7 @@ import type {PieceType} from "~/types/pieceType";
 import {orderFilePath} from "~/config";
 import {getFileRelative} from "~/cms/fileManagement";
 import { type TextType } from "~/localization/localization";
+import log from "../logging";
 
 export async function orderByConfig<GenericTextType extends TextType>(pieces: PieceType<GenericTextType>[])
 {
@@ -16,12 +17,12 @@ export async function orderByConfig<GenericTextType extends TextType>(pieces: Pi
         const correctedAIndex = aIndex === -1 ? 9999 : aIndex;
         if (aIndex === -1)
         {
-            console.error(`No ordering found for ${a.title}`);
+            log.error(`No ordering found for ${a.title}`);
         }
 
         if (bIndex === -1)
         {
-            console.error(`No ordering found for ${b.title}`);
+            log.error(`No ordering found for ${b.title}`);
         }
 
         return correctedAIndex - bIndex
