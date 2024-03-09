@@ -8,11 +8,11 @@ await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
 const config = {
-  webpack: config =>
+  webpack: (config) =>
   {
-      config.resolve.alias = {
-          "~": path.resolve(__dirname, "src/"),
-      }
+      config.resolve.alias["~"] = path.resolve("./src");
+
+      return config;
   },
   reactStrictMode: true,
   output: "export",
