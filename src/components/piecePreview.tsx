@@ -173,7 +173,7 @@ const PieceThumbnail = (props: PropsWithClassName<{piece: PieceType<string>, sho
             {
                 return (
                     <>
-                        <ExportedImage src={thumbnail} alt={piece.title} fill={true} sizes={pieceThumbnailSizes}
+                        <ExportedImage src={thumbnail} alt={piece.title} fill={true} sizes={pieceThumbnailSizes} unoptimized={true}
                                className={`${props.className}
                                   opacity-100
                                   group-hover:opacity-0
