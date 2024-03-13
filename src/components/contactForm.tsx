@@ -26,7 +26,7 @@ const ContactFormValues = (errors: ContactFormErrors) =>
 
 export type ContactFormType = z.infer<ReturnType<typeof ContactFormValues>>;
 
-const formBorderClassNames = "border-2 border-gray-300 rounded-md";
+const formBorderClassNames = "border-2 border-gray-400 rounded-lg";
 const formClassNames = `h-8 px-2 py-4 ${formBorderClassNames}`;
 
 function FormItem<FieldValuesType extends FieldValues, FieldNameType extends FieldPath<FieldValuesType>>(props: PropsWithClassName<{ placeholder: string, register: UseFormRegister<FieldValuesType>, name: FieldNameType, options?: RegisterOptions, errors: FieldErrors<FieldValuesType>}>)
@@ -119,7 +119,7 @@ const ContactForm = (props: PropsWithClassName<{locale: Locale, copy: LocalizedC
                 <FormItem className="col-span-2" placeholder={contactForm.subject} name={"Subject"} register={register} errors={errors}/>
                 <FormArea gridClassNames="col-span-2 row-span-4" className="px-2 py-1 resize-none" placeholder={contactForm.content} name="Content" register={register} options={{required: true}} errors={errors}/>
             </div>
-            <input className="border-2 border-gray-300 rounded-md w-[20%] cursor-pointer"
+            <input className={`${formBorderClassNames} w-[20%] cursor-pointer`}
                    type="submit"
                    value={props.copy.home.contactForm.send}
                    lang={props.locale}/>
