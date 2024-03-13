@@ -50,7 +50,9 @@ const Piece = (props: {piece: PieceType<string>}) =>
             }
         };
 
-        return <PieceVideo playing={false} url={piece.url} youtubeConfig={youTubeConfig}/>
+        return <div className="relative aspect-video w-full">
+            <PieceVideo playing={false} url={piece.url} youtubeConfig={youTubeConfig} muted={false} controls={true}/>
+        </div>
     }
 };
 
@@ -95,7 +97,23 @@ const Collection = async (props: {params: PageParams}) =>
                 </div>
             </VerticalCenterBox>
             <VerticalCenterBox className="gap-y-[30px]">
-                <VerticalCenterBox className="pt-[74px] pb-[156px] gap-y-[128px]">
+                <VerticalCenterBox className="pt-[74px]
+                    xl:px-40
+                    lg:px-20
+                    md:px-10
+                    sm:px-5
+                    mobile_lg:px-4
+                    mobile_md:px-3
+                    mobile_sm:px-2
+                    mobile_xsm:px-1
+                    pb-[156px]
+                    xl:gap-y-[128px]
+                    lg:gap-y-[128px]
+                    md:gap-y-[128px]
+                    sm:gap-y-[96px]
+                    gap-y-[32px]
+                    
+                    ">
                     {pageContent.pieces.map(piece => <Piece piece={piece} key={piece.url}/>)}
                 </VerticalCenterBox>
                 <div className="w-responsive-screen
