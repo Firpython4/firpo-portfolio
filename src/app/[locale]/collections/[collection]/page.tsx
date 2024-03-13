@@ -115,7 +115,7 @@ const Collection = async (props: {params: PageParams}) =>
                     gap-y-[32px]
                     
                     ">
-                    {pageContent.pieces.map(piece => <Piece className="h-responsive-screen-90" piece={piece} key={piece.url}/>)}
+                    {pageContent.pieces.map(piece => <Piece className="max-h-responsive-screen-90" piece={piece} key={piece.url}/>)}
                 </VerticalCenterBox>
                 <div className="w-responsive-screen
                                               pl-[40px]
