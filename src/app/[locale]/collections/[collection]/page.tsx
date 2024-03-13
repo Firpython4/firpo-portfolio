@@ -28,14 +28,14 @@ export const generateMetadata = async (props: {params: PageParams}) => {
     return metadata
 }
 
-const Piece = (props: {piece: PieceType<string>}) =>
+const Piece = (props: PropsWithClassName<{piece: PieceType<string>}>) =>
 {
     const piece = props.piece;
     if (piece.type === "image")
     {
         return (
             <div key={piece.url}>
-                <ExportedImage className={`aspect-[${piece.width}/${piece.height}]`} src={piece.url} width={piece.width} height={piece.height} alt={piece.title} sizes={`${piece.width.toString()}px`}/>
+                <ExportedImage className={`${props.className} w-auto aspect-[${piece.width}/${piece.height}]`} src={piece.url} width={piece.width} height={piece.height} alt={piece.title} sizes={`${piece.width.toString()}px`}/>
             </div>
         );
     }
@@ -50,7 +50,7 @@ const Piece = (props: {piece: PieceType<string>}) =>
             }
         };
 
-        return <div className="relative aspect-video w-full">
+        return <div className={`${props.className} relative aspect-video w-full`}>
             <PieceVideo playing={false} url={piece.url} youtubeConfig={youTubeConfig} muted={false} controls={true}/>
         </div>
     }
@@ -115,7 +115,7 @@ const Collection = async (props: {params: PageParams}) =>
                     gap-y-[32px]
                     
                     ">
-                    {pageContent.pieces.map(piece => <Piece piece={piece} key={piece.url}/>)}
+                    {pageContent.pieces.map(piece => <Piece className="max-h-responsive-screen-90" piece={piece} key={piece.url}/>)}
                 </VerticalCenterBox>
                 <div className="w-responsive-screen
                                               pl-[40px]
