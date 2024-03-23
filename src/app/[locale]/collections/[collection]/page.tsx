@@ -10,6 +10,7 @@ import { PieceVideo } from "~/components/piecePreview";
 import { type Locale } from "~/localization/localization";
 import { type CollectionPageParams } from "~/types/params";
 import commonMetadata from "../../../../metadata";
+import { getContainedByAspectRatioStyle } from "../../../../styles/styleUtilities";
 import type PropsWithClassName from "../../../../types/propsWithClassName";
 
 export const generateStaticParams = async () =>
@@ -33,10 +34,11 @@ const Piece = (props: PropsWithClassName<{piece: PieceType<string>}>) =>
     const piece = props.piece;
     if (piece.type === "image")
     {
+        const style = getContainedByAspectRatioStyle("90vw", "90svh", piece.width, piece.height);
+
         return (
-            <div key={piece.url}>
-                <ExportedImage className={`${props.className} w-auto aspect-[${piece.width}/${piece.height}]`} src={piece.url} width={piece.width} height={piece.height} alt={piece.title} sizes={`${piece.width.toString()}px`}/>
-            </div>
+                <ExportedImage key={piece.url} style={style} className={`${props.className}
+                aspect-[${piece.width}/${piece.height}]`} src={piece.url} width={piece.width} height={piece.height} alt={piece.title} sizes={`${piece.width.toString()}px`}/>
         );
     }
     else
@@ -49,10 +51,10 @@ const Piece = (props: PropsWithClassName<{piece: PieceType<string>}>) =>
                 showinfo: 1
             }
         };
-
-        return <div className={`${props.className} relative aspect-video w-full`}>
-            <PieceVideo playing={false} url={piece.url} youtubeConfig={youTubeConfig} muted={false} controls={true}/>
-        </div>
+        
+        const style = getContainedByAspectRatioStyle("90vw", "90svh", 16, 9);
+        
+        return <PieceVideo className={props.className} style={style} playing={false} url={piece.url} youtubeConfig={youTubeConfig} muted={false} controls={true}/>
     }
 };
 
@@ -98,14 +100,6 @@ const Collection = async (props: {params: PageParams}) =>
             </VerticalCenterBox>
             <VerticalCenterBox className="gap-y-[30px]">
                 <VerticalCenterBox className="pt-[74px]
-                    xl:px-40
-                    lg:px-20
-                    md:px-10
-                    sm:px-5
-                    mobile_lg:px-4
-                    mobile_md:px-3
-                    mobile_sm:px-2
-                    mobile_xsm:px-1
                     sm:pb-[156px]
                     pb-[80px]
                     xl:gap-y-[128px]
@@ -115,7 +109,7 @@ const Collection = async (props: {params: PageParams}) =>
                     gap-y-[32px]
                     
                     ">
-                    {pageContent.pieces.map(piece => <Piece className="max-h-responsive-screen-90" piece={piece} key={piece.url}/>)}
+                    {pageContent.pieces.map(piece => <Piece piece={piece} key={piece.url}/>)}
                 </VerticalCenterBox>
                 <div className="w-responsive-screen
                                               pl-[40px]
