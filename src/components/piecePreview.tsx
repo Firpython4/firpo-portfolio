@@ -3,7 +3,7 @@
 import ExportedImage from "next-image-export-optimizer";
 import dynamic from "next/dynamic";
 
-import { CSSProperties, useRef } from "react";
+import { type CSSProperties, useRef } from "react";
 import { type YouTubeConfig } from "react-player/youtube";
 import { useHover } from "usehooks-ts";
 import { type PieceType } from "~/types/pieceType";
@@ -72,7 +72,7 @@ export const PieceVideo = (props: PropsWithClassName<{
             muted={props.muted}
             loop={true}
             playing={props.playing}
-            config={props.youtubeConfig}/>;
+            config={props.youtubeConfig}/>
         </div>
     }
     else if (props.url.includes("vimeo"))
@@ -85,7 +85,7 @@ export const PieceVideo = (props: PropsWithClassName<{
             controls={props.controls}
             muted={props.muted}
             loop={true}
-            playing={props.playing}/>;
+            playing={props.playing}/>
         </div>
     }
 
