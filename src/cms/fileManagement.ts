@@ -5,7 +5,9 @@ import {  type StringWithInnerSubstring } from "~/typeSafety";
 import {type Locale, locales} from "~/localization/localization";
 import {promisify} from "util";
 import sizeOf from "image-size";
+import { error, ok } from "../types/result";
 import { type CollectionId } from "./cmsCompiler";
+import { Path } from "./tcmsTypes";
 
 export function getCollectionsFromDirectories(directories: Dirent[])
 {
@@ -51,7 +53,7 @@ export const removeExtension = (name: Dirent) => name.name.replace(path.extname(
 
 export function getPath(dirent: Dirent)
 {
-    return path.join(dirent.path, dirent.name);
+    return path.join(dirent.path, dirent.name) as Path;
 }
 
 export function getExtension(imageDirent: Dirent)
@@ -62,6 +64,18 @@ export function getExtension(imageDirent: Dirent)
 export async function getVideoUrl(imageOrUrlPath: `${string}public${string}`)
 {
     return (await fileSystem.readFile(imageOrUrlPath)).toString();
+}
+
+export async function getSafe(imageOrUrlPath: Path)
+{
+    try
+    {
+        return ok(await fileSystem.readFile(imageOrUrlPath))
+    }
+    catch (e)
+    {
+        return error(e);
+    }
 }
 
 export async function exists(path: string)
