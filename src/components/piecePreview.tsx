@@ -45,7 +45,7 @@ export const PiecePreview = (props: { piece: PieceType<string>, locale: Locale }
                             whitespace-pre-wrap">
                 {piece.collectionName}
             </div>
-            <PieceThumbnail piece={piece} shouldPlay={isHovering}/>
+            <PieceThumbnail className="h-full w-full" piece={piece} shouldPlay={isHovering}/>
         </LinkWithLocale>
     );
 };
@@ -63,7 +63,7 @@ export const PieceVideo = (props: PropsWithClassName<{
 {
     if (props.url.includes("youtube"))
     {
-        return <div style={props.style}>
+        return <div style={props.style} className={props.className}>
             <YoutubeReactPlayerComponent
             width="100%"
             height="100%"
@@ -77,7 +77,7 @@ export const PieceVideo = (props: PropsWithClassName<{
     }
     else if (props.url.includes("vimeo"))
     {
-        return <div style={props.style}>
+        return <div style={props.style} className={props.className}>
             <VimeoReactPlayerComponent
             width="100%"
             height="100%"
