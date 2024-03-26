@@ -2,77 +2,77 @@ import { type Dirent, promises as fileSystem } from "node:fs";
 import path from "node:path";
 import { promisify } from "util";
 import { z } from "zod";
-import { error, ok, type Result } from "~/types/result";
+import { error, ok } from "~/types/result";
 import { type Brand } from "../typeSafety";
 import { getExtension, getPath } from "./fileManagement";
 
-type TCmsValue = TCmsImage
-    | TCmsMarkdown
-    | TCmsObject<Record<string, TCmsValue>>
-    | TCmsUrl
-    | TCmsArray<TCmsValue>
-    | TCmsUnion<TCmsUnionOptions>
+type TCmsValue<Value> = {readonly output: Value, readonly parse: Parser<Value>} & (TCmsImage | TCmsUrl | TCmsUnion<[...TCmsValue<unknown>[]]> | TCmsArray<TCmsValue<unknown>> | TCmsObject<Record<string, TCmsValue<unknown>>>);
 
 type TCmsEntity = {
     name: string
 }
 
-type Parser<OkType, ErrorType> = ((context: TCmsContext, relativePathPattern: Path) => Promise<Result<(OkType), (ErrorType)>>);
-type CollectionParser<OkType, ErrorType> = ((context: TCmsContext, relativePathPattern: Path) => Promise<Result<(OkType), (ErrorType)>[]>);
+type Parser<OkType> = ((context: TCmsContext, relativePathPattern: Path) => Promise<OkType>);
 
 type TCmsImage = {
-    type: "image"
-    parse: Parser<Image, "no matches">
+    readonly type: "image";
+    readonly output: Image;
+    readonly error: "no matches";
+    readonly parse: Parser<TCmsImage["output"]>
 }
 
 type TCmsMarkdown = {
-    type: "markdown"
-    parse: Parser<Markdown, "no matches" | "invalid name">
+    readonly type: "markdown";
+    readonly output: Markdown;
+    readonly error: "no matches" | "invalid name";
+    readonly parse: Parser<TCmsMarkdown["output"]>
 }
 
-interface TCmsObject<T extends Record<string, TCmsValue>> {
-    type: "object";
-    parse: Parser<Infer<TCmsObject<T>>, "no matches">
+interface TCmsObject<T extends Record<string, TCmsValue<unknown>>> {
+    readonly type: "object";
+    readonly output: InferTCmsObject<T>;
+    readonly error: "no matches";
+    readonly parse: Parser<TCmsObject<T>["output"]>
 }
 
 type TCmsUrl = {
-    type: "url"
-    parse: Parser<Url, "no matches" | "invalid url">
+    readonly type: "url";
+    readonly output: Url;
+    readonly error: "no matches" | "invalid url";
+    readonly parse: Parser<TCmsUrl["output"]>
 }
 
-interface TCmsArray<ElementType extends TCmsValue> {
-    type: "array";
-    element: ElementType;
-    parse: CollectionParser<Array<Infer<ElementType>>, "no matches">;
+interface TCmsArray<ElementType extends TCmsValue<unknown>> {
+    readonly type: "array";
+    readonly output: ElementType["output"][]
+    readonly error: "no matches";
+    readonly parse: Parser<TCmsArray<ElementType>["output"]>;
 }
 
-export declare type TCmsUnionOptions = Readonly<[...TCmsValue[]]>;
-
-interface TCmsUnion<T extends TCmsUnionOptions> {
-    type: "union";
-    parse: Parser<InferTCmsUnion<T>, "no matches">
+interface TCmsUnion<T extends Readonly<[...TCmsValue<unknown>[]]>> {
+    readonly type: "union";
+    readonly output: InferTCmsUnion<T>;
+    readonly error: "no matches";
+    readonly parse: Parser<TCmsUnion<T>["output"]>
 }
 
 type Url = { type: "url", value: string } & TCmsEntity
 
 type Markdown = { type: "markdown", path: Path } & TCmsEntity;
 type Image = { type: "image", path: Path } & TCmsEntity;
+export type Path = Brand<string, "path">;
 
-type Infer<T extends TCmsValue> = T extends TCmsUrl ? Url
-                                : T extends TCmsImage ? Image
-                                : T extends TCmsMarkdown ? Markdown
-                                : T extends TCmsObject<infer ObjectType> ? InferTCmsObject<ObjectType>
-                                : T extends TCmsArray<infer ElementType> ? Array<Infer<ElementType>>
-                                : T extends TCmsUnion<infer UnionType> ? InferTCmsUnion<UnionType>
-                                : "invalid type";
 
-type InferTCmsObject<T extends Record<string, TCmsValue>> = {
+type InferTCmsObject<T extends Record<string, TCmsValue<unknown>>> = {
     [Key in keyof T]: Infer<T[Key]>;
 };
 
-type InferTCmsUnion<T extends TCmsUnionOptions> = Infer<T[number]>;
+type InferTCmsUnion<T extends Readonly<[...TCmsValue<unknown>[]]>> = T[number]["output"];
 
-export type Path = Brand<string, "path">;
+type test = InferTCmsUnion<[TCmsUrl, TCmsArray<TCmsImage>]>
+
+type Infer<T extends TCmsValue<unknown>> =  T["output"];
+
 
 export async function getUrl(imageOrUrlPath: Path)
 {
@@ -94,22 +94,23 @@ type TCmsContext = {
     dirents: Dirent[]
 }
 
+declare const defaultUrl: Url;
+declare const err: "invalid url" | "no matches";
 const url = (): TCmsUrl => (
 {
     type: "url",
+    output: defaultUrl,
+    error: err,
     parse: async (context: TCmsContext, relativePathPattern: Path) => {
         const dirent = context.dirents.find(value => value.name.match(relativePathPattern))
         if (!dirent)
         {
-            return error("no matches" as const);
+            throw new Error();
         }
 
         const url = await getUrlFromDirent(dirent);
         
-        if (!z.string().url().safeParse(url))
-        {
-            return error("invalid url" as const);
-        }
+        z.string().url().parse(url);
         
         return ok({
             type: "url",
@@ -120,9 +121,14 @@ const url = (): TCmsUrl => (
 }
 );
 
+declare const markdownDefault: Markdown;
+declare const noMatches: "no matches";
+
 const markdown = <T extends string>(name?: T): TCmsMarkdown => (
 {
     type: "markdown",
+    output: markdownDefault,
+    error: "no matches",
     parse: promisify((context: TCmsContext, relativePathPattern: Path) => {
         const dirent = context.dirents.find(value => value.name.match(relativePathPattern))
         if (!dirent)
@@ -146,8 +152,11 @@ const markdown = <T extends string>(name?: T): TCmsMarkdown => (
     })
 });
 
+declare const defaultImage: Image;
 const image = (): TCmsImage => ({
     type: "image",
+    output: defaultImage,
+    error: "no matches",
     parse: promisify((context: TCmsContext, relativePathPattern: Path) => {
         const dirent = context.dirents.find(value => value.name.match(relativePathPattern))
         if (!dirent)
@@ -165,24 +174,29 @@ const image = (): TCmsImage => ({
     })
 });
 
-const array = <ElementType extends TCmsValue>(element: ElementType): TCmsArray<ElementType> => ({
+declare function makeDefault<T extends TCmsValue<unknown>>(element: T): Infer<T>;
+const array = <ElementType extends TCmsValue<unknown>>(element: ElementType): TCmsArray<ElementType> => ({
     type: "array",
-    element: element,
+    output: makeDefault(element),
+    error: "no matches",
     async parse(context, relativePath)
     {
-        const results = context.dirents.map(async dirent =>
-                                                                             {
-                                                                                 return await element.parse(context, relativePath);
-                                                                             });
+        const map = await Promise.all(context.dirents.map(async dirent =>
+        {
+            return await element.parse(context, relativePath);
+        }));
         
-        return results;
+        return map;
     }
 });
 
-const object = <T extends Record<string, TCmsValue>>(
+declare function makeDefaultObject<T extends Record<string, TCmsValue<unknown>>>(fields: T): InferTCmsObject<T>
+const object = <T extends Record<string, TCmsValue<unknown>>>(
     fields: T
 ): TCmsObject<T> => ({
     type: "object",
+    error: "no matches",
+    output: makeDefaultObject(fields),
     async parse(context, relativePath) {
 
         const result = await Promise.all(Object.entries(fields).map(async ([, value]) =>
@@ -190,12 +204,15 @@ const object = <T extends Record<string, TCmsValue>>(
                                                            return value.parse(context, relativePath);
                                                        }));
         
-        return ok(result as InferTCmsObject<typeof fields>);
+        return ok(result as TCmsObject<T>["output"]);
     },
 });
 
-const union = <T extends TCmsUnionOptions>(...types: T): TCmsUnion<typeof types> => ({
+declare function makeDefaultUnion<T extends Readonly<[...TCmsValue<unknown>[]]>>(...types: T): InferTCmsUnion<T>;
+const union = <T extends Readonly<[...TCmsValue<unknown>[]]>>(...types: T): TCmsUnion<T> => ({
     type: "union",
+    error: "no matches",
+    output: makeDefaultUnion(...types),
     async parse(context: TCmsContext, relativePath: Path)
     {
         for (const option of types)
@@ -210,7 +227,7 @@ const union = <T extends TCmsUnionOptions>(...types: T): TCmsUnion<typeof types>
             }
         }
         
-        return error("None of the union types matched");
+        throw new Error();
     }
 });
 
@@ -224,7 +241,7 @@ export const tcms = {
 
 const videoWithThumb = object({video: url(), thumbnail: image()})
 const video = url();
-const piece = union(video, videoWithThumb, image());
-const pieces = array(piece);
-const collection = object({ pieces: pieces, pt: markdown("pt")});
-const testSchema = array(collection);
+const schema = union(videoWithThumb, video);
+
+type g = Infer<typeof schema>;
+
