@@ -20,3 +20,5 @@ export function error<ErrorType>(errorType: ErrorType)
     };
 }
 
+export type ExtractOkType<T> = T extends Result<infer OkType, unknown> ? OkType & {wasResultSuccessful: true} : never;
+export type ExtractErrorType<T> = T extends Result<unknown, infer ErrorType> ? ErrorType & {wasResultSuccessful: false} : never;

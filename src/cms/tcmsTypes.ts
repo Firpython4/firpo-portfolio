@@ -2,12 +2,20 @@ import { promises as fileSystem } from "node:fs";
 import path from "node:path";
 import { promisify } from "util";
 import { z } from "zod";
-import { error, ok, type Result } from "~/types/result";
+import { error, type ExtractErrorType, type ExtractOkType, ok, type Result } from "~/types/result";
 import { type Brand } from "../typeSafety";
 import { getExtension, getPath, sizeOfAsync } from "./fileManagement";
 import { readdir } from "node:fs/promises";
 
-type TCmsValue<Value> = {readonly output: Value, readonly parse: Parser<Value, unknown>} & (TCmsImage | TCmsMarkdown | TCmsUrl | TCmsUnion<[...TCmsValue<unknown>[]]> | TCmsArray<TCmsValue<unknown>> | TCmsObject<Record<string, TCmsValue<unknown>>>);
+type TCmsValue<Value, Error> = {
+    readonly parse: Parser<Value, Error>
+} & (
+    TCmsImage
+  | TCmsMarkdown
+  | TCmsUrl
+  | TCmsUnion<[...TCmsValue<unknown, unknown>[]]>
+  | TCmsArray<TCmsValue<unknown, unknown>>
+  | TCmsObject<Record<string, TCmsValue<unknown, unknown>>>);
 
 type TCmsEntity = {
     name: string
@@ -15,47 +23,39 @@ type TCmsEntity = {
 
 type Parser<OkType, ErrorType> = ((path: Path) => Promise<Result<OkType, ErrorType>>);
 
+type ImageError = "no matches" | "image not in the configured folder";
 type TCmsImage = {
     readonly type: "image";
-    readonly output: Image;
-    readonly error: "no matches" | "image not in the configured folder";
-    readonly parse: Parser<TCmsImage["output"], TCmsImage["error"]>
+    readonly parse: Parser<Image, ImageError>
 }
 
+type MarkdownError = "no matches" | "invalid name";
 type TCmsMarkdown = {
     readonly type: "markdown";
-    readonly output: Markdown;
-    readonly error: "no matches" | "invalid name";
-    readonly parse: Parser<TCmsMarkdown["output"], TCmsMarkdown["error"]>
+    readonly parse: Parser<Markdown, MarkdownError>
 }
 
-interface TCmsObject<T extends Record<string, TCmsValue<unknown>>> {
+interface TCmsObject<T extends Record<string, TCmsValue<unknown, unknown>>> {
     readonly type: "object";
-    readonly output: InferTCmsObject<T>;
-    readonly error: "no matches";
-    readonly parse: Parser<TCmsObject<T>["output"], TCmsObject<T>["error"]>
+    readonly parse: Parser<InferTCmsObject<T>, "no matches">
 }
+
+type UrlError = "no matches" | "invalid url";
 
 type TCmsUrl = {
     readonly type: "url";
-    readonly output: Url;
-    readonly error: "no matches" | "invalid url";
-    readonly parse: Parser<TCmsUrl["output"], TCmsUrl["error"]>
+    readonly parse: Parser<Url, UrlError>
 }
 
-interface TCmsArray<ElementType extends TCmsValue<unknown>> {
+interface TCmsArray<ElementType extends TCmsValue<unknown, unknown>> {
     readonly type: "array";
     //@ts-expect-error type inference is expected to get deep
-    readonly output: ElementType["output"][]
-    readonly error: "no matches";
-    readonly parse: Parser<TCmsArray<ElementType>["output"], TCmsArray<ElementType>["error"]>;
+    readonly parse: Parser<Infer<ElementType>[], "empty array">;
 }
 
-interface TCmsUnion<T extends Readonly<[...TCmsValue<unknown>[]]>> {
+interface TCmsUnion<T extends Readonly<[...TCmsValue<unknown, unknown>[]]>> {
     readonly type: "union";
-    readonly output: InferTCmsUnion<T>;
-    readonly error: "no matches";
-    readonly parse: Parser<TCmsUnion<T>["output"], TCmsUnion<T>["error"]>
+    readonly parse: Parser<InferTCmsUnion<T>, "no matches">
 }
 
 type Url = { type: "url", value: string } & TCmsEntity
@@ -70,19 +70,20 @@ type Image = {
 export type Path = Brand<string, "path">;
 
 
-type InferTCmsObject<T extends Record<string, TCmsValue<unknown>>> = {
+type InferTCmsObject<T extends Record<string, TCmsValue<unknown, unknown>>> = {
     [Key in keyof T]: Infer<T[Key]>;
 };
 
-type ArrayIndices<T extends Readonly<[...TCmsValue<unknown>[]]>> = Exclude<keyof T, keyof Array<unknown>>;
+type ArrayIndices<T extends Readonly<[...TCmsValue<unknown, unknown>[]]>> = Exclude<keyof T, keyof Array<unknown>>;
 
-type InferTCmsUnion<T extends Readonly<[...TCmsValue<unknown>[]]>> = {
+type InferTCmsUnion<T extends Readonly<[...TCmsValue<unknown, unknown>[]]>> = {
     [Key in ArrayIndices<T>]: {
         option: Key, // @ts-expect-error TS does not recognize string indices as real indices
-        value: T[Key]["output"]}
+        value: Infer<T[Key]>}
 }[ArrayIndices<T>]
 
-export type Infer<T extends TCmsValue<unknown>> =  T["output"];
+export type Infer<T extends TCmsValue<unknown, unknown>> =  ExtractOkType<Awaited<ReturnType<T["parse"]>>>;
+export type InferError<T extends TCmsValue<unknown, unknown>> =  ExtractErrorType<Awaited<ReturnType<T["parse"]>>>;
 
 
 export async function getUrl(imageOrUrlPath: Path)
@@ -95,13 +96,9 @@ export async function getUrlFromPath(path: Path)
     return (await fileSystem.readFile(path)).toString();
 }
 
-declare const defaultUrl: Url;
-declare const err: "invalid url" | "no matches";
 const url = (): TCmsUrl => (
 {
     type: "url",
-    output: defaultUrl,
-    error: err,
     parse: async path => {
         const extension = ".url";
         if (!path.endsWith(extension))
@@ -125,13 +122,10 @@ const url = (): TCmsUrl => (
 });
     
 
-declare const markdownDefault: Markdown;
 
 const markdown = <T extends string>(namePattern?: T): TCmsMarkdown => (
 {
     type: "markdown",
-    output: markdownDefault,
-    error: "no matches",
     parse: promisify((path: Path) => {
         const extension = ".md";
         if (!path.endsWith(extension))
@@ -153,11 +147,8 @@ const markdown = <T extends string>(namePattern?: T): TCmsMarkdown => (
     })
 });
 
-declare const defaultImage: Image;
 const image = (): TCmsImage => ({
     type: "image",
-    output: defaultImage,
-    error: "no matches",
     parse: async (path: Path) => {
         const extensions = [".jpg", ".webp", ".png", ".svg", ".ico"];
         const split = path.split(".");
@@ -213,27 +204,27 @@ function getName(inPath: Path)
     return name;
 }
 
-declare function makeDefaultArray<T extends TCmsValue<unknown>>(element: T): Infer<T>[];
-const array = <ElementType extends TCmsValue<unknown>>(element: ElementType): TCmsArray<ElementType> => ({
+const array = <ElementType extends TCmsValue<unknown, unknown>>(element: ElementType): TCmsArray<ElementType> => ({
     type: "array",
-    output: makeDefaultArray(element),
-    error: "no matches",
     async parse(path: Path)
     {
         const dirents = await readdir(path, {withFileTypes: true});
         const mapped = await Promise.all(dirents.map(async dirent => (await element.parse(getPath(dirent)))));
-        const filtered = mapped.filter(parsed => parsed.wasResultSuccessful);
+        const filtered = mapped.filter((parsed): parsed is ExtractOkType<typeof parsed> => parsed.wasResultSuccessful) as Infer<ElementType>[];
+        
+        if (filtered.length == 0)
+        {
+            return error("empty array")
+        }
+
         return ok(filtered);
     }
 });
 
-declare function makeDefaultObject<T extends Record<string, TCmsValue<unknown>>>(fields: T): InferTCmsObject<T>
-const object = <T extends Record<string, TCmsValue<unknown>>>(
+const object = <T extends Record<string, TCmsValue<unknown, unknown>>>(
     fields: T
 ): TCmsObject<T> => ({
     type: "object",
-    error: "no matches",
-    output: makeDefaultObject(fields),
     async parse(path: Path) {
         const dirents = await readdir(path, {withFileTypes: true});
         const result = await Promise.all(Object.entries(fields).map(async ([, value]) =>
@@ -255,16 +246,12 @@ const object = <T extends Record<string, TCmsValue<unknown>>>(
             return error("no matches");
         }
 
-        return ok(result as TCmsObject<T>["output"]);
+        return ok(result as InferTCmsObject<T>);
     },
 });
 
-declare function makeDefaultUnion<T extends Readonly<[...TCmsValue<unknown>[]]>>(...types: T): InferTCmsUnion<T>;
-
-const union = <T extends Readonly<[...TCmsValue<unknown>[]]>>(...types: T): TCmsUnion<T> => ({
+const union = <T extends Readonly<[...TCmsValue<unknown, unknown>[]]>>(...types: T): TCmsUnion<T> => ({
     type: "union",
-    error: "no matches",
-    output: makeDefaultUnion<T>(...types),
     async parse(path: Path)
     {
         for (const [option, type] of types.entries())
@@ -274,7 +261,7 @@ const union = <T extends Readonly<[...TCmsValue<unknown>[]]>>(...types: T): TCms
                 const typeSafeIndex = option as ArrayIndices<T>;
 
                 // @ts-expect-error TS does not recognize string indices as real indices
-                const parseResult = (await type.parse(path)) as T[ArrayIndices<T>]["output"]
+                const parseResult = (await type.parse(path)) as Infer<T[ArrayIndices<T>]>
                 return ok({
                     option: typeSafeIndex,
                     value: parseResult
@@ -310,7 +297,7 @@ export function safePath(path: string)
 
 export function relativePath(relativePath: Path)
 {
-    return path.join(process.cwd(), relativePath);
+    return safePath(path.join(process.cwd(), relativePath));
 }
 
 const imageFolder = "public" as const;

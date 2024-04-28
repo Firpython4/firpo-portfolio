@@ -25,6 +25,8 @@ import { type PieceSharedType, type PieceType } from "~/types/pieceType";
 import { type Brand, includesInner } from "~/typeSafety";
 import toContentObject from "../contentFormatting";
 import { mapMap, mapMapAsync } from "../functional";
+import { collection } from "./cmsSchemas";
+import { relativePath, safePath } from "./tcmsTypes";
 
 async function asImage(mediaDirent: Dirent, shared: PieceSharedType<LocalizedText>)
 {
@@ -202,6 +204,15 @@ async function compileCms()
     const fulfilledSubdirectories = subDirectories.filter(promiseFullfilledPredicate)
                                                                          .map(valueMapper);
     const rejectedSubdirectories = subDirectories.filter(promiseRejectedPredicate);
+
+
+    const resultP = await collection.parse(relativePath(safePath("public/collections")))
+
+    if (resultP.wasResultSuccessful)
+    {
+        const mapped = resultP.pieces;
+        mapped.forEach(value => console.log(value));
+    }
     
     if (rejectedSubdirectories.length > 0)
     {

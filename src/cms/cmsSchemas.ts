@@ -1,4 +1,4 @@
-import { tcms } from "./tcmsTypes";
+import { relativePath, safePath, tcms } from "./tcmsTypes";
 
 const videoWithThumbnail = tcms.object({
     url: tcms.url(), thumbnail: tcms.image()
@@ -15,7 +15,8 @@ const piece = tcms.union(
 );
 
 const pieces = tcms.array(piece);
-const collection = tcms.object({
+export const collection = tcms.object({
     pt: tcms.markdown("pt"),
-    en: tcms.markdown("en")
+    en: tcms.markdown("en"),
+    pieces: pieces
 })
