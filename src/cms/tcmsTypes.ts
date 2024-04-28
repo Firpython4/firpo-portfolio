@@ -4,10 +4,10 @@ import { promisify } from "util";
 import { z } from "zod";
 import { error, ok, type Result } from "~/types/result";
 import { type Brand } from "../typeSafety";
-import { getExtension, getPath } from "./fileManagement";
+import { getExtension, getPath, sizeOfAsync } from "./fileManagement";
 import { readdir } from "node:fs/promises";
 
-type TCmsValue<Value> = {readonly output: Value, readonly parse: Parser<Value, unknown>} & (TCmsImage | TCmsUrl | TCmsUnion<[...TCmsValue<unknown>[]]> | TCmsArray<TCmsValue<unknown>> | TCmsObject<Record<string, TCmsValue<unknown>>>);
+type TCmsValue<Value> = {readonly output: Value, readonly parse: Parser<Value, unknown>} & (TCmsImage | TCmsMarkdown | TCmsUrl | TCmsUnion<[...TCmsValue<unknown>[]]> | TCmsArray<TCmsValue<unknown>> | TCmsObject<Record<string, TCmsValue<unknown>>>);
 
 type TCmsEntity = {
     name: string
@@ -61,7 +61,12 @@ interface TCmsUnion<T extends Readonly<[...TCmsValue<unknown>[]]>> {
 type Url = { type: "url", value: string } & TCmsEntity
 
 type Markdown = { type: "markdown", path: Path } & TCmsEntity;
-type Image = { type: "image", path: `${string}public/${string}` } & TCmsEntity;
+type Image = {
+    type: "image",
+    url: `${string}${typeof imageFolder}/${string}`
+    width: number,
+    height: number
+} & TCmsEntity;
 export type Path = Brand<string, "path">;
 
 
@@ -133,15 +138,16 @@ const markdown = <T extends string>(namePattern?: T): TCmsMarkdown => (
         {
             return error("invalid extension");
         }
-
-        if (namePattern && !path.match(namePattern))
+        
+        const name = getName(path);
+        if (namePattern && !name.match(namePattern))
         {
             return error("invalid name");
         }
 
         return ok({
             type: "markdown",
-            name: getName(path),
+            name,
             value: url,
         });
     })
@@ -152,7 +158,7 @@ const image = (): TCmsImage => ({
     type: "image",
     output: defaultImage,
     error: "no matches",
-    parse: promisify((path: Path) => {
+    parse: async (path: Path) => {
         const extensions = [".jpg", ".webp", ".png", ".svg", ".ico"];
         const split = path.split(".");
         const extension = split[split.length - 1];
@@ -169,12 +175,29 @@ const image = (): TCmsImage => ({
             return error("image is not in the configured folder")
         }
 
+        const size = await sizeOfAsync(path);
+
+        if (!size)
+        {
+            return error(`Unable to read file ${path}`)
+        }
+        if (size.width === undefined)
+        {
+            return error(`Invalid image width for ${path}`)
+        }
+        if (size.height === undefined)
+        {
+            return error(`Invalid image height for ${path}`)
+        }
+
         return ok({
-            type: "url",
+            type: "image",
             name: getName(path),
-            url: url as `${string}public/${string}`
+            width: size.width,
+            height: size.height,
+            url: url as `${string}${typeof imageFolder}/${string}`
         });
-    })
+    }
 });
 
 function getName(inPath: Path)
@@ -237,6 +260,7 @@ const object = <T extends Record<string, TCmsValue<unknown>>>(
 });
 
 declare function makeDefaultUnion<T extends Readonly<[...TCmsValue<unknown>[]]>>(...types: T): InferTCmsUnion<T>;
+
 const union = <T extends Readonly<[...TCmsValue<unknown>[]]>>(...types: T): TCmsUnion<T> => ({
     type: "union",
     error: "no matches",
@@ -271,23 +295,13 @@ export const tcms = {
     markdown,
     image,
     array,
-    object
+    object,
+    union
 };
 
 const videoWithThumb = object({video: url(), thumbnail: image()})
 const video = url();
 const schema = union(image(), video, union(image(), url(), videoWithThumb));
-
-type g = Infer<typeof schema>;
-declare const hg: g;
-if (hg.option === "2")
-{
-    const result = hg.value
-    if (result.option === "2")
-    {
-        const gr = result.value.thumbnail;
-    }
-}
 
 export function safePath(path: string)
 {
@@ -299,4 +313,4 @@ export function relativePath(relativePath: Path)
     return path.join(process.cwd(), relativePath);
 }
 
-const imageFolder = "public";
+const imageFolder = "public" as const;
