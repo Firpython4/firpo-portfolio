@@ -68,11 +68,15 @@ type InferTCmsObject<T extends Record<string, TCmsValue<unknown>>> = {
     [Key in keyof T]: Infer<T[Key]>;
 };
 
-type InferTCmsUnion<T extends Readonly<[...TCmsValue<unknown>[]]>> = T[number]["output"];
+type ArrayIndices<T extends Readonly<[...TCmsValue<unknown>[]]>> = Exclude<keyof T, keyof []>;
 
-type test = InferTCmsUnion<[TCmsUrl, TCmsArray<TCmsImage>]>
+type InferTCmsUnion<T extends Readonly<[...TCmsValue<unknown>[]]>> = {
+    [Key in ArrayIndices<T>]: {
+        option: Key, // @ts-expect-error TS does not recognize string indices as real indices
+        value: T[Key]["output"]}
+}[ArrayIndices<T>]
 
-type Infer<T extends TCmsValue<unknown>> =  T["output"];
+export type Infer<T extends TCmsValue<unknown>> =  T["output"];
 
 
 export async function getUrl(imageOrUrlPath: Path)
@@ -123,7 +127,6 @@ const url = (): TCmsUrl => (
 );
 
 declare const markdownDefault: Markdown;
-declare const noMatches: "no matches";
 
 const markdown = <T extends string>(name?: T): TCmsMarkdown => (
 {
@@ -175,19 +178,17 @@ const image = (): TCmsImage => ({
     })
 });
 
-declare function makeDefault<T extends TCmsValue<unknown>>(element: T): Infer<T>;
+declare function makeDefaultArray<T extends TCmsValue<unknown>>(element: T): Infer<T>[];
 const array = <ElementType extends TCmsValue<unknown>>(element: ElementType): TCmsArray<ElementType> => ({
     type: "array",
-    output: makeDefault(element),
+    output: makeDefaultArray(element),
     error: "no matches",
     async parse(context, relativePath)
     {
-        const map = await Promise.all(context.dirents.map(async dirent =>
-        {
-            return await element.parse(context, relativePath);
-        }));
-        
-        return map;
+        return await Promise.all(context.dirents.map(async dirent =>
+                                                     {
+                                                         return await element.parse(context, relativePath);
+                                                     }));
     }
 });
 
@@ -213,14 +214,20 @@ declare function makeDefaultUnion<T extends Readonly<[...TCmsValue<unknown>[]]>>
 const union = <T extends Readonly<[...TCmsValue<unknown>[]]>>(...types: T): TCmsUnion<T> => ({
     type: "union",
     error: "no matches",
-    output: makeDefaultUnion(...types),
+    output: makeDefaultUnion<T>(...types),
     async parse(context: TCmsContext, relativePath: Path)
     {
-        for (const option of types)
+        for (const [option, type] of types.entries())
         {
             try
             {
-                return await option.parse(context, relativePath);
+                const typeSafeIndex = option as ArrayIndices<T>;
+                // @ts-expect-error TS does not recognize string indices as real indices
+                const parseResult = (await type.parse(context, relativePath)) as T[ArrayIndices<T>]["output"]
+                return {
+                    option: typeSafeIndex,
+                    value: parseResult
+                } 
             }
             catch (error)
             {
@@ -242,7 +249,15 @@ export const tcms = {
 
 const videoWithThumb = object({video: url(), thumbnail: image()})
 const video = url();
-const schema = union(videoWithThumb, video);
+const schema = union(image(), video, union(image(), url(), videoWithThumb));
 
 type g = Infer<typeof schema>;
-
+declare const hg: g;
+if (hg.option === "2")
+{
+    const result = hg.value
+    if (result.option === "2")
+    {
+        const gr = result.value.thumbnail;
+    }
+}
