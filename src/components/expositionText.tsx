@@ -1,4 +1,4 @@
-import { locale } from "~/localization/localization";
+import {useLocaleTexts} from "~/localization/localization";
 
 export const ExpositionText = (props: {className?: string}) =>
 (
@@ -31,7 +31,7 @@ export const ExpositionText = (props: {className?: string}) =>
                         md:leading-[18px]
                         lg:leading-[22px]
                         xl:leading-[27px]
-                        font-inter`}>{locale.expositionFirst}
+                        font-inter`}>{useLocaleTexts().expositionFirst}
         </div>
         <div className="w-[435px]
                         text-black
@@ -49,10 +49,10 @@ export const ExpositionText = (props: {className?: string}) =>
             <span className="text-black
                              text-small
                              font-semibold
-                             pt-3">{locale.someAttendedClients}<br/></span>
+                             pt-3">{useLocaleTexts().someAttendedClients}<br/></span>
             <span className="text-black
                              text-small
-                             font-normal">{locale.clients}</span>
+                             font-normal">{useLocaleTexts().clients}</span>
         </div>
     </div>
 );
