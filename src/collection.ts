@@ -1,4 +1,4 @@
-import getOrCompileCms, { replaceNewlines } from "./cms/cmsCompiler";
+import getOrCompileCms from "./cms/cmsCompiler";
 import getOrCacheCompiledCms from "./cms/cmsCompiler";
 import { locales } from "./localization/localization";
 import { type CollectionPageParams } from "./types/params";

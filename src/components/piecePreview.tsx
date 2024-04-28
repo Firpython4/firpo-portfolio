@@ -1,18 +1,13 @@
-"use client"
-
 import ExportedImage from "next-image-export-optimizer";
-import dynamic from "next/dynamic";
 
-import { type CSSProperties, useRef } from "react";
+import { useRef } from "react";
 import { type YouTubeConfig } from "react-player/youtube";
 import { useHover } from "usehooks-ts";
 import { type Locale } from "~/localization/localization";
 import type PropsWithClassName from "../types/propsWithClassName";
 import LinkWithLocale from "./LinkWithLocale";
 import { getUrlFromPiece, type PieceType } from "~/cms/cmsSchemas";
-
-const YoutubeReactPlayerComponent = dynamic(() => import("react-player/youtube"), {ssr: false});
-const VimeoReactPlayerComponent = dynamic(() => import("react-player/vimeo"), {ssr: false});
+import { PieceVideo } from "./PieceVideo";
 
 export const PiecePreview = (props: { piece: PieceType, locale: Locale, collectionName: string }) =>
 {
@@ -49,48 +44,6 @@ export const PiecePreview = (props: { piece: PieceType, locale: Locale, collecti
         </LinkWithLocale>
     );
 };
-
-export const PieceVideo = (props: PropsWithClassName<{
-    url: string,
-    playing: boolean,
-    muted: boolean,
-    controls: boolean,
-    style?: CSSProperties
-    width?: number,
-    height?: number,
-    youtubeConfig: YouTubeConfig
-}>) =>
-{
-    if (props.url.includes("youtube"))
-    {
-        return <div style={props.style} className={props.className}>
-            <YoutubeReactPlayerComponent
-            width="100%"
-            height="100%"
-            url={props.url}
-            controls={props.controls}
-            muted={props.muted}
-            loop={true}
-            playing={props.playing}
-            config={props.youtubeConfig}/>
-        </div>
-    }
-    else if (props.url.includes("vimeo"))
-    {
-        return <div style={props.style} className={props.className}>
-            <VimeoReactPlayerComponent
-            width="100%"
-            height="100%"
-            url={props.url}
-            controls={props.controls}
-            muted={props.muted}
-            loop={true}
-            playing={props.playing}/>
-        </div>
-    }
-
-    throw new Error(`Unsupported video provider: ${props.url}`)
-}
 
 const maxresdefault = "maxresdefault" as const;
 const sddefault = "sddefault" as const;

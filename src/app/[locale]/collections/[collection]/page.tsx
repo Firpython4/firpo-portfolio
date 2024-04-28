@@ -5,7 +5,7 @@ import {VerticalCenterBox} from "~/components/verticalCenterBox";
 import type {YouTubeConfig} from "react-player/youtube";
 import { getCollectionPageContent, getCollectionsStaticPaths } from "~/collection";
 import LinkWithLocale from "~/components/LinkWithLocale";
-import { PieceVideo } from "~/components/piecePreview";
+import { PieceVideo } from "~/components/PieceVideo";
 import { type Locale } from "~/localization/localization";
 import { type CollectionPageParams } from "~/types/params";
 import commonMetadata from "../../../../metadata";
