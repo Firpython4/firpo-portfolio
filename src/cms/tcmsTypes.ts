@@ -1,20 +1,18 @@
 import { promises as fileSystem } from "node:fs";
 import path from "node:path";
 import { promisify } from "util";
-import { z } from "zod";
-import { error, type ExtractErrorTypeRaw, type ExtractOkType, type ExtractOkTypeRaw, ok, type Result } from "~/types/result";
+import { type ZodObject, type ZodRawShape, z } from "zod";
+import html from "remark-html";
+import strip from "strip-markdown";
+import { error, type ExtractErrorTypeRaw, type ExtractOkType, ok, type Result } from "~/types/result";
 import { type Brand } from "../typeSafety";
-import {  getPath, safeReadDir, sizeOfAsync } from "./fileManagement";
+import {  getPath, readFileSafe, safeReadDir, sizeOfAsync } from "./fileManagement";
+import matter from "gray-matter";
+import { remark } from "remark";
 
-type TCmsValue<Value, Error> = {
-    readonly parse: Parser<Value, Error>
-} & (
-    TCmsImage
-  | TCmsMarkdown
-  | TCmsUrl
-  | TCmsUnion<[...TCmsValue<unknown, unknown>[]]>
-  | TCmsArray<TCmsValue<unknown, unknown>>
-  | TCmsObject<Record<string, TCmsValue<unknown, unknown>>>);
+export type TCmsValue<Value, Error> = {
+    readonly parse: Parser<Value, Error>;
+}
 
 type TCmsEntity = {
     name: string
@@ -25,38 +23,38 @@ type Parser<OkType, ErrorType> = ((path: Path) => Promise<Result<OkType, ErrorTy
 type ImageError = string;
 type TCmsImage = {
     readonly type: "image";
-    readonly parse: Parser<Image, ImageError>;
-}
+} & TCmsValue<Image, ImageError>
 
 type MarkdownError = "no matches" | "invalid name";
 type TCmsMarkdown = {
     readonly type: "markdown";
-    readonly parse: Parser<Markdown, MarkdownError>;
-}
+} & TCmsValue<Markdown, MarkdownError>
+
 
 const couldNotReadDirectory = "could not read directory";
 
-interface TCmsObject<T extends Record<string, TCmsValue<unknown, unknown>>> {
+interface TCmsObject<T extends Record<string, TCmsValue<unknown, unknown>>>
+    extends TCmsValue<InferTCmsObject<T>, "no matches" | typeof couldNotReadDirectory>
+{
     readonly type: "object";
-    readonly parse: Parser<InferTCmsObject<T>, "no matches" | typeof couldNotReadDirectory>
 }
-
 type UrlError = "no matches" | "invalid url" | "invalid extension";
 
 type TCmsUrl = {
     readonly type: "url";
     readonly parse: Parser<Url, UrlError>;
-}
+} & TCmsValue<Url, UrlError>
 
-interface TCmsArray<ElementType extends TCmsValue<unknown, unknown>> {
+interface TCmsArray<ElementType extends TCmsValue<unknown, unknown>>
+    extends TCmsValue<(Infer<ElementType>)[], "empty array" | typeof couldNotReadDirectory>
+{
     readonly type: "array";
-    //@ts-expect-error type inference is expected to get deep
-    readonly parse: Parser<(Infer<ElementType>)[], "empty array" | typeof couldNotReadDirectory>;
 }
 
-interface TCmsUnion<T extends Readonly<[...TCmsValue<unknown, unknown>[]]>> {
+interface TCmsUnion<T extends Readonly<[...TCmsValue<unknown, unknown>[]]>>
+    extends TCmsValue<InferTCmsUnion<T>, "no matches">
+{
     readonly type: "union";
-    readonly parse: Parser<InferTCmsUnion<T>, "no matches">;
 }
 
 type Url = { type: "url", value: string } & TCmsEntity
@@ -288,6 +286,52 @@ const union = <T extends Readonly<[...TCmsValue<unknown, unknown>[]]>>(...types:
         return error("no matches");
     }
 });
+
+type TCmsMarkdownWithContent<T extends ZodRawShape> = TCmsValue<{
+    html: string;
+    asString: string;
+    matters: z.infer<ZodObject<T>>;
+}, "could not read file" | "invalid matter"> & {type: "markdownWithContent"};
+
+const parseMarkdownWithContent = <T extends ZodRawShape> (matters: ZodObject<T>) => ((async (path: Path) => {
+    const contentFile = await readFileSafe(path);
+
+    if (!contentFile.wasResultSuccessful)
+    {
+        return error("could not read file" as const);
+    }
+
+    const matterResult: matter.GrayMatterFile<Buffer> = matter(contentFile.okValue);
+    const processedContent = await remark()
+        .use(html)
+        .process(matterResult.content);
+    
+    const processedAsString = await remark()
+        .use(strip)
+        .process(matterResult.content);
+    
+    const matterData = matterResult.data;
+    if (matters.safeParse(matterData))
+    {
+        const literalNewLine = "\\n";
+        const newLineChar = "\r\n";
+
+        return ok({
+                matters: matterData as z.infer<typeof matters>,
+                html: processedContent.toString(),
+                asString: processedAsString.toString()
+            });
+    }
+    else
+    {
+        return error("invalid matter" as const);
+    }
+}));
+
+const markdownWithContent = <T extends ZodRawShape> (matters: ZodObject<T>): TCmsMarkdownWithContent<T> => ({
+    type: "markdownWithContent",
+    parse: parseMarkdownWithContent(matters)
+})
 
 export const tcms = {
     url,

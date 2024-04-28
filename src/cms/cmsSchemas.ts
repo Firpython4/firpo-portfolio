@@ -1,12 +1,9 @@
+import { safePath } from "./fileManagement";
 import { type Infer, tcms } from "./tcmsTypes";
 
 const videoWithThumbnail = tcms.object({
     url: tcms.url(), thumbnail: tcms.image()
 });
-
-const abc = tcms.url();
-
-type TestA = Infer<typeof abc>;
 
 const video = tcms.union(
     tcms.url(),
@@ -19,4 +16,17 @@ const piece = tcms.union(
 );
 
 const pieces = tcms.array(piece);
-export const collection = pieces;
+
+export const collection = tcms.object({
+    pieces,
+    pt: tcms.markdown("pt"),
+    en: tcms.markdown("en")
+});
+
+type CollectionType = Infer<typeof collection>;
+
+const parsed = await collection.parse(safePath("collections/internacional"));
+
+if (parsed.wasResultSuccessful)
+{
+}

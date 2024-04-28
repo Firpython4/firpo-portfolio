@@ -15,8 +15,6 @@ import {
     removeExtension,
     sizeOfAsync,
     typeSafePathJoin,
-    relativePath,
-    safePath
 } from "~/cms/fileManagement";
 import { type PublicFolder, publicFolderValue } from "~/config";
 import { type LocalizedText } from "~/localization/localization";
@@ -27,7 +25,6 @@ import { type PieceSharedType, type PieceType } from "~/types/pieceType";
 import { type Brand, includesInner } from "~/typeSafety";
 import toContentObject from "../contentFormatting";
 import { mapMap, mapMapAsync } from "../functional";
-import { collection } from "./cmsSchemas";
 
 async function asImage(mediaDirent: Dirent, shared: PieceSharedType<LocalizedText>)
 {

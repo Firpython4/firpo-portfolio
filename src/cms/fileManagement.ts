@@ -67,11 +67,11 @@ export async function getVideoUrl(imageOrUrlPath: `${string}public${string}`)
     return (await fileSystem.readFile(imageOrUrlPath)).toString();
 }
 
-export async function getSafe(imageOrUrlPath: Path)
+export async function readFileSafe(path: Path)
 {
     try
     {
-        return okAsync(fileSystem.readFile(imageOrUrlPath))
+        return okAsync(fileSystem.readFile(path))
     }
     catch (e)
     {
