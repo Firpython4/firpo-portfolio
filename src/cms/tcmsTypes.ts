@@ -45,7 +45,7 @@ interface TCmsObject<T extends TCmsRecord>
     extends TCmsValue<InferTCmsObject<T>, "no matches" | typeof couldNotReadDirectory>
 {
     readonly type: "object";
-    readonly withName: ReturnType<typeof objectWithName>;
+    readonly withName: ReturnType<typeof objectWithName<T>>;
 }
 type UrlError = "no matches" | "invalid url" | "invalid extension";
 
@@ -212,8 +212,8 @@ const array = <ElementType extends TCmsValue<unknown, unknown>>(element: Element
 type TCmsRecord = Record<string, TCmsValue<unknown, unknown>>;
 
 type InferTCmsObjectWithName<T extends TCmsRecord> = {
-    name: string;
-    parsedObject: InferTCmsObject<T>;
+    name: string,
+    parsedObject: InferTCmsObject<T>
 };
 
 interface TCmsObjectWithName<T extends TCmsRecord>
@@ -273,8 +273,8 @@ const object = <T extends TCmsRecord>(
     fields: T
 ): TCmsObject<T> => ({
     type: "object",
-    parse: objectParse<T>(fields),
-    withName: objectWithName<T>(objectParse<T>(fields))
+    parse: objectParse(fields),
+    withName: objectWithName(objectParse(fields))
 });
 
 const union = <T extends Readonly<[...TCmsValue<unknown, unknown>[]]>>(...types: T): TCmsUnion<T> => ({
