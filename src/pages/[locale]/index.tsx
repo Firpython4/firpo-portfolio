@@ -56,7 +56,15 @@ const Home = (props: HomeProps) =>
 
 export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQuery, string | false | object | undefined>) =>
 {
-    const locale = context.params!.locale as Locale;
+    if (!context.params)
+    {
+        throw new Error("Invalid params");
+    }
+    if (typeof context.params.locale !== "string")
+    {
+        throw new Error("Invalid locale");
+    }
+    const locale = context.params.locale as Locale;
     return await getIndexProps(locale);
 }) satisfies GetStaticProps<HomeProps>
 
