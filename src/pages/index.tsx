@@ -18,7 +18,14 @@ const Home = (props: HomeProps) =>
         </Head>
         <Scaffold>
             <Hero/>
-            <ExpositionText className="pt-[118px]"/>
+            <ExpositionText className="pt-[10px]
+                                       mobile_sm:pt-[25px]
+                                       mobile_md:pt-[40px]
+                                       mobile_lg:pt-[55px]
+                                       sm:pt-[70px]
+                                       md:pt-[85px]
+                                       lg:pt-[100px]
+                                       xl:pt-[118px]"/>
             <div className="pt-28">
                 <PieceCollection images={props.pieces}/>
             </div>
