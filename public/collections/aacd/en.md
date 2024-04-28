@@ -1,3 +1,3 @@
 ---
-title: Association for the Assistance of Disabled Children (AACD-RS)
+title: Association for the Assistance of Children With Disabilities (AACD-RS)
 ---

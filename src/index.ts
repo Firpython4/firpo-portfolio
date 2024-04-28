@@ -1,12 +1,12 @@
 import getOrCacheCompiledCms from "./cms/cmsCompiler";
 import { orderByConfig } from "./cms/ordering";
-import { getLocalizedPiece, getLocalizedTexts, type Locale } from "./localization/localization";
-import { type LocalizedTexts } from "./localization/texts";
+import { getLocalizedPiece, getLocalizedCopy, type Locale } from "./localization/localization";
+import { type LocalizedCopy } from "./localization/copy";
 import { type PieceType } from "./types/pieceType";
 
 export type HomeProps = {
     pieces: PieceType<string>[];
-    localizedTexts: LocalizedTexts;
+    localizedCopy: LocalizedCopy;
     locale: Locale
 };
 
@@ -19,7 +19,7 @@ export async function getIndexPageContent(locale: Locale)
 
     return {
         pieces,
-        localizedTexts: getLocalizedTexts(locale),
+        localizedCopy: getLocalizedCopy(locale),
         locale
     };
 }
