@@ -142,7 +142,7 @@ export async function getUrl(imageOrUrlPath: Path)
 
 export async function getUrlFromPath(path: Path)
 {
-    return (await readFile(path)).toString();
+    return map(await readFileSafe(path) , toString);
 }
 
 const objectWithName = <T extends TCmsRecord> (parse: Parser<InferTCmsObject<T>, "no matches" | typeof couldNotReadDirectory>): ObjectWithName<T> => (namePattern?: string) =>
