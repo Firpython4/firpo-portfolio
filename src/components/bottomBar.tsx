@@ -1,22 +1,20 @@
 import Image from "next/image"
 import Link from "next/link";
-import { emailLink, linkedInLink } from "../config";
+import { emailLink, linkedInLink } from "~/config";
 
-export const BottomBar = () =>
+export const BottomBar = (props: {className?: string}) =>
 (
-    <div className="flex flex-col space-y-[11px] items-center md:flex-row md:space-x-[11px]">
+    <div className={`${props.className} flex flex-col gap-y-[11px] items-center justify-center md:flex-row md:gap-x-[11px]`}>
         <p className={`w-[412px] text-black flex items-center text-xl font-semibold font-inter leading-normal`}>
             Resolva seus problemas de comunicação:
         </p>
-        <div className="h-full">
-            <div className=" flex flex-row items-center space-x-[26px]">
-                <Link href={emailLink}>
-                    <Image alt="email" src="/icons/email-icon.svg" width={38.48} height={34.2}/>
-                </Link>
-                <Link href={linkedInLink}>
-                    <Image alt="LinkedIn" src="/icons/linkedin-icon.svg" width={34.21} height={34.21}/>
-                </Link>
-            </div>
+        <div className="m-0 flex flex-row gap-x-[26px]">
+            <Link href={emailLink}>
+                <Image alt="email" src="/icons/email-icon.svg" width={38} height={34}/>
+            </Link>
+            <Link href={linkedInLink}>
+                <Image alt="LinkedIn" src="/icons/linkedin-icon.svg" width={34} height={34}/>
+            </Link>
         </div>
     </div>
 );

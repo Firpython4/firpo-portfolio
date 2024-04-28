@@ -12,15 +12,15 @@ import "@total-typescript/ts-reset";
 import { VerticalCenterBox } from "~/components/verticalCenterBox";
 const ReactPlayerComponent = dynamic(() => import("react-player/youtube"), { ssr: false });
 import {
-    absoluteToRelativePath,
     getFirstMarkdownFile,
     filterImagesAndUrls,
     getWorksDirectoryEntities, removeMarkdownExtension, getPath, getWorkDirectory
 } from "~/cms/fileManagement";
-import { includesInner, type StringWithInnerSubstring } from "~/typeSafety";
 import {promiseFullfilledPredicate, promiseRejectedPredicate, valueMapper} from "~/promises/promisePredicates";
 import type {YouTubeConfig} from "react-player/youtube";
 import dynamic from "next/dynamic";
+import Head from "next/head";
+import {Favicon} from "~/components/favicon";
 
 type ImageWorkType = {
     type: "image",
@@ -106,7 +106,7 @@ export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQu
 
         if (rejectedFilePaths.length > 0)
         {
-            throw new Error("Some files were rejected: " + JSON.stringify(rejectedFilePaths))
+            throw new Error(`Some files were rejected: ${JSON.stringify(rejectedFilePaths)}`)
         }
 
         const content: Dirent | undefined = getFirstMarkdownFile(directoryEntries)
@@ -144,24 +144,32 @@ const WorkShowcase = (props: InferGetStaticPropsType<typeof getStaticProps>) =>
         __html: props.contentHtml
     };
 
-    return <Scaffold>
-        <Link href="/" className="w-responsive-screen pl-[411px] pt-[44px]">
-            <BackIcon/>
-        </Link>
-        <VerticalCenterBox className="space-y-[16px] pt-[88px]">
-            <h2 className="font-extrabold font-inter text-[17px] text-neutral-700 text-center">
-                {props.collectionTitle}
-            </h2>
-                <div className="font-inter text-[17px] text-neutral-700 text-center" dangerouslySetInnerHTML={dangerouslySetInnerHTML}>
-            </div>
-        </VerticalCenterBox>
-        <VerticalCenterBox className="pt-[74px] pb-[156px] space-y-[128px]">
-            {props.works.map(work => <Work work={work}/>)}
-        </VerticalCenterBox>
-        <Link href="/" className="w-responsive-screen pl-[411px] pb-[74px]">
-            <BackIcon/>
-        </Link>
-    </Scaffold>
+    return (
+        <>
+            <Head>
+                <title>Marcelo Firpo - {props.collectionTitle}</title>
+                <Favicon src="/favicon.ico"/>
+            </Head>
+            <Scaffold>
+                <Link href="/" className="w-responsive-screen pl-[411px] pt-[44px]">
+                    <BackIcon/>
+                </Link>
+                <VerticalCenterBox className="gap-y-[16px] pt-[88px]">
+                    <h2 className="font-extrabold font-inter text-[17px] text-neutral-700 text-center">
+                        {props.collectionTitle}
+                    </h2>
+                        <div className="font-inter text-[17px] text-neutral-700 text-center" dangerouslySetInnerHTML={dangerouslySetInnerHTML}>
+                    </div>
+                </VerticalCenterBox>
+                <VerticalCenterBox className="pt-[74px] pb-[156px] gap-y-[128px]">
+                    {props.works.map(work => <Work work={work}/>)}
+                </VerticalCenterBox>
+                <Link href="/" className="w-responsive-screen pl-[411px] pb-[74px]">
+                    <BackIcon/>
+                </Link>
+            </Scaffold>
+        </>
+    )
 }
 
 export default WorkShowcase;

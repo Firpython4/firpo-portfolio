@@ -1,9 +1,9 @@
 import { locale } from "~/localization/localization";
 
-export const ExpositionText = () =>
+export const ExpositionText = (props: {className?: string}) =>
 (
     <div
-        className="w-full flex flex-col lg:flex-row justify-center max-lg:items-center pt-[118px] gap-[40px] md:gap-[20px] lg:gap-[130px] xl:gap-[215px]">
+        className={`${props.className} w-full flex flex-col lg:flex-row justify-center max-lg:items-center gap-[40px] md:gap-[20px] lg:gap-[130px] xl:gap-[215px]`}>
         <div
             className={`w-[434px] text-black text-small not-italic font-semibold leading-[27px] font-inter`}>{locale.expositionFirst}
         </div>
