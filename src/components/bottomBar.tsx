@@ -1,4 +1,6 @@
+import { inter } from "../fonts/inter";
+
 export const BottomBar = () => <div
-    className="w-96 h-6 text-black text-xl font-semibold font-['Inter'] leading-normal">Resolva
+    className={`w-[412px] text-black text-xl font-semibold ${inter.variable} font-inter leading-normal`}>Resolva
     seus problemas de comunicação:
 </div>;
