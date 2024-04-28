@@ -3,8 +3,8 @@ import { type Dirent, promises as fileSystem } from "node:fs";
 import { remark } from "remark";
 import html from "remark-html";
 import strip from "strip-markdown";
-import { getPath } from "./cms/type-fs/fileManagement";
 import type { Locale } from "./localization/localization";
+import { getPath } from "./cms/type-fs/src/fileManagement";
 
 const toContentObject: (
   locale: Locale,

@@ -17,8 +17,8 @@ export const generateStaticParams = () =>
                        });
 };
 
-export const generateMetadata = async () => {
-    const pageContent = await getIndexPageContent(ptLocale);
+export const generateMetadata = async (props: {params: LocalePageParams}) => {
+    const pageContent = await getIndexPageContent(props.params.locale);
     const metadata: Metadata = {
         ...commonMetadata,
         title: "Marcelo Firpo: CMO, Diretor de Criação, Consultor Criativo, Redator, Roteirista",

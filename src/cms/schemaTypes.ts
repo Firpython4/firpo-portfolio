@@ -9,5 +9,5 @@ export const getUrlFromPiece = (piece: PieceType) =>
   piece.option === 2
     ? piece.value.url
     : piece.option === 0
-      ? piece.value.value
-      : piece.value.url.value;
+      ? piece.value.url
+      : piece.value.url.url;
