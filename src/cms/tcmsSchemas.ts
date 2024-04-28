@@ -21,8 +21,14 @@ const url = (): TCmsUrl => (
         }
         
         const url = await getUrlFromPath(pathToParse);
+
+        if (!url.wasResultSuccessful)
+        {
+            return error(url.errorValue);
+        }
         
-        if (!z.string().url().safeParse(url))
+        const urlOkValue = url.okValue;
+        if (!z.string().url().safeParse(urlOkValue))
         {
             return error("invalid url");
         }
@@ -30,7 +36,7 @@ const url = (): TCmsUrl => (
         return ok({
             type: "url",
             name: getName(pathToParse),
-            value: url,
+            value: urlOkValue,
         });
     }
 });

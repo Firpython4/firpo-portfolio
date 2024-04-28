@@ -75,7 +75,7 @@ export async function readFileSafe(path: Path)
     }
     catch (e)
     {
-        return error(e);
+        return error("could not read file" as const);
     }
 }
 

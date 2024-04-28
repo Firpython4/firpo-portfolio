@@ -44,16 +44,17 @@ const HoverablePiecePreview = forwardRef<HTMLAnchorElement, HoverablePieceProps>
                             whitespace-pre-wrap">
                 {props.collectionName}
             </div>
+            {props.children}
         </LinkWithLocale>
 )});
 
-export const PiecePreview = (props: { piece: PieceType, locale: Locale, collectionName: string }) =>
+export const PiecePreview = (props: { piece: PieceType, locale: Locale, collectionName: string, collectionPrettyName: string }) =>
 {
     const piece = props.piece;
     const ref = useRef<HTMLAnchorElement>(null);
     const isHovering = useHover(ref);
     return (
-        <HoverablePiecePreview locale={props.locale} url={`/collections/${props.collectionName}`} collectionName={props.collectionName} ref={ref}>
+        <HoverablePiecePreview locale={props.locale} url={`/collections/${props.collectionName}`} collectionName={props.collectionPrettyName} ref={ref}>
             <PieceThumbnail className="h-full w-full" piece={piece} shouldPlay={isHovering}/>
         </HoverablePiecePreview>
     );

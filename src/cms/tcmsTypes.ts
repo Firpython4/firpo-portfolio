@@ -40,7 +40,7 @@ export interface TCmsObject<T extends TCmsRecord>
     readonly type: "object";
     readonly withName: ObjectWithName<T>;
 }
-type UrlError = "no matches" | "invalid url" | "invalid extension";
+type UrlError = "no matches" | "invalid url" | "invalid extension" | "could not read file";
 
 export type TCmsUrl = {
     readonly type: "url";

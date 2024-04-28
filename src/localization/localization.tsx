@@ -1,4 +1,3 @@
-import { type LocalizedContentType } from "../types/localizedCollectionType";
 import { en, pt, type LocalizedCopy } from "./copy";
 
 const texts: Record<Locale, LocalizedCopy> = {
@@ -24,17 +23,4 @@ export function getLocalizedCopy(locale: Locale)
         throw new Error("Unsupported locale");
     }
 }
-export function getLocalizedContent(localizedContent: LocalizedContentType, locale: Locale)
-{
-    const content = localizedContent.get(locale);
-    if (content)
-    {
-        return content;
-    }
-    else
-    {
-        throw new Error("No default localized string found")
-    }
-}
-
 export type LocalizedText = Map<Locale, string>;
