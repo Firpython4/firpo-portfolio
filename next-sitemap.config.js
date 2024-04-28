@@ -1,8 +1,8 @@
-import {env} from "~/env.js";
+import env from "./src/env.js";
 
 /** @type {import('next-sitemap').IConfig} */
 const config = {
-    siteUrl: env.WEBSITE_URL,
+    siteUrl: env.VERCEL_URL,
     output: "export",
     generateRobotsTxt: true
 }

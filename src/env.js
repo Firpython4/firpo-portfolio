@@ -1,14 +1,14 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
-export const env = createEnv({
+const env = createEnv({
   /**
    * Specify your server-side environment variables schema here. This way you can ensure the app
    * isn't built with invalid env vars.
    */
   server: {
     NODE_ENV: z.enum(["development", "test", "production"]),
-    WEBSITE_URL: z.string().url()
+    VERCEL_URL: z.string().url()
   },
 
   /**
@@ -26,7 +26,7 @@ export const env = createEnv({
    */
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
-    WEBSITE_URL: process.env.WEBSITE_URL,
+    VERCEL_URL: process.env.WEBSITE_URL,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**
@@ -40,3 +40,5 @@ export const env = createEnv({
    */
   emptyStringAsUndefined: true,
 });
+
+export default env;
