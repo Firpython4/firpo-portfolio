@@ -5,7 +5,7 @@ This is a static portfolio website for my dad. I made it as thanks for all the l
 ## Technical decisions
 
 - I'm using Next. To avoid having to host a server, I'm using ```output: export```
-  - I could have chosen something like Astro, but I figured that it would be best to use a proven technology, as well as gain some Next experience
+  - I could have chosen something like Astro, but I figured that it would be best to use a proven technology that I'm personally familiar with, as well as gain some valuable Next experience
 - I opted to use Next's App Router. There are some reasons for it:
   - The App Router has better support for ```output: export```
   - Zero Javascript by default. Since most of the site is static, this ensures that no unnecessary Javascript is shipped to the client.
