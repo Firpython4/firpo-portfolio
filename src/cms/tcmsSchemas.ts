@@ -1,5 +1,5 @@
 import { error, type ExtractOkType, map, ok, type Result } from "~/types/result";
-import { type Path, type TCmsValue, type TCmsUrl, type Parser, type InferOk, type TCmsArray, type InferError, couldNotReadDirectory, type TCmsImage, imageFolder, type TCmsRecord, type InferTCmsObject, type TCmsObject, type TCmsUnion, type ArrayIndices, type TCmsMarkdown, type MarkdownWithMatter, type ArrayWithName, type ObjectWithName } from "./tcmsTypes";
+import { type Path, type TCmsValue, type TCmsUrl, type Parser, type InferOk, type TCmsArray, type InferError, couldNotReadDirectory, type TCmsImage, imageFolder, type TCmsRecord, type InferTCmsObject, type TCmsObject, type TCmsUnion, type ArrayIndices, type TCmsMarkdown, type MarkdownWithMatter, type ArrayWithName, type ObjectWithName, type Markdown, type MarkdownError } from "./tcmsTypes";
 import { readFile } from "node:fs/promises";
 import { z, type ZodObject, type ZodRawShape } from "zod";
 import path from "node:path";
@@ -108,7 +108,7 @@ const arrayWithName = <T extends TCmsValue<unknown, unknown>> (parse: Parser<Inf
         if (namePattern !== undefined)
         {
             const matches = name.match(namePattern);
-            if (matches !== null && matches.length === 0)
+            if (matches === null)
             {
                 return error("name does not match" as const);
             }
@@ -165,7 +165,7 @@ const objectWithName = <T extends TCmsRecord> (parse: Parser<InferTCmsObject<T>,
         if (namePattern !== undefined)
         {
             const matches = name.match(namePattern);
-            if (matches !== null && matches.length === 0)
+            if (matches === null)
             {
                 return error("name does not match" as const);
             }
