@@ -107,9 +107,19 @@ const HeroContent = () =>
 
 export const Hero = () =>
 (
-    <VerticalCenterBox className="w-responsive max-h-responsive-screen overflow-hidden">
-        <HeroBackground className="relative top-[-2%] lg:top-[-11%]">
-            <HeroContent/>
-        </HeroBackground>
+    <VerticalCenterBox className="relative
+                                  w-responsive
+                                  max-h-responsive-screen
+                                  min-h-[180px]
+                                  mobile_sm:min-h-[200px]
+                                  mobile_md:min-h-[210px]
+                                  mobile_lg:min-h-[225px]
+                                  sm:min-h-[330px]
+                                  md:min-h-[400px]
+                                  lg:min-h-[510px]
+                                  xl:min-h-[600px]
+                                  overflow-hidden">
+        <HeroBackground className="relative top-[-2%] lg:top-[-11%]"/>
+        <HeroContent/>
     </VerticalCenterBox>
 );

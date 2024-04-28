@@ -13,12 +13,8 @@ export const Piece = (props: {piece: PieceType}) =>
     const piece = props.piece;
     const ref = useRef(null);
     const isHovering = useHover(ref);
-    if (isHovering)
-    {
-        console.log("hi")
-    }
     return (
-        <Link className="relative h-[205px] group" href={piece.linkToCollection} ref={ref}>
+        <Link className="relative max-w-[364px] max-h-[205px] group overflow-hidden flex items-center" href={piece.linkToCollection} ref={ref}>
             <div className="opacity-0
                             group-hover:opacity-100
                             transition-opacity
@@ -40,10 +36,14 @@ export const Piece = (props: {piece: PieceType}) =>
             </div>
             <PieceThumbnail piece={piece} shouldPlay={isHovering}/>
         </Link>
-    )
+)
 }
 
-const PreviewVideo = (props: { url: string, playing: boolean }) =>
+const PreviewVideo = (props: {
+    url: string,
+    playing: boolean,
+    className?: string
+}) =>
 {
     const config: YouTubeConfig = {
         playerVars: {
@@ -64,18 +64,18 @@ const PreviewVideo = (props: { url: string, playing: boolean }) =>
         config={config}/>;
 };
 
-const PieceThumbnail = (props: {piece: PieceType, shouldPlay: boolean}) =>
+const PieceThumbnail = (props: {className?: string, piece: PieceType, shouldPlay: boolean}) =>
 {
     const piece = props.piece;
     const url = piece.url;
     if (piece.type === "image")
     {
-        return <Image width={364} height={205} src={url} alt={piece.title}/>
+        return <Image className={props.className} width={364} height={205} src={url} alt={piece.title}/>
     }
     else if (piece.type === "video")
     {
         return (
-            <PreviewVideo url={url} playing={props.shouldPlay}/>
+            <PreviewVideo className={props.className} url={url} playing={props.shouldPlay}/>
         )
     }
     else if (piece.type === "videoWithThumbnail")
@@ -83,16 +83,17 @@ const PieceThumbnail = (props: {piece: PieceType, shouldPlay: boolean}) =>
         return (
             <>
                 <Image width={364} height={205} src={piece.thumbnailUrl} alt={piece.title}
-                      className="opacity-100
-                            group-hover:opacity-0
-                            transition-opacity
-                            ease-in-out
-                            duration-300
-                            w-full
-                            h-full
-                            absolute"/>
-                <PreviewVideo url={url} playing={props.shouldPlay}/>
-            </>)
+                      className={`${props.className} opacity-100
+                          group-hover:opacity-0
+                          transition-opacity
+                          ease-in-out
+                          duration-300
+                          w-full
+                          h-full
+                          absolute`}/>
+                <PreviewVideo className={props.className} url={url} playing={props.shouldPlay}/>
+            </>
+        )
     }
 }
 
