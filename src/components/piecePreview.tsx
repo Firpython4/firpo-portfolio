@@ -27,8 +27,8 @@ export const PiecePreview = (props: { piece: PieceType<string>, locale: Locale }
                             group-hover:opacity-100
                             transition-opacity
                             ease-in
-                            duration-100
-                            bg-black/40 w-full
+                            duration-150
+                            bg-black/70 w-full
                             h-full
                             flex
                             items-center
@@ -38,7 +38,9 @@ export const PiecePreview = (props: { piece: PieceType<string>, locale: Locale }
                             font-medium
                             text-white
                             text-center
-                            text-[24px]
+                            sm:text-[24px]
+                            mobile_md:text-[22px]
+                            text-[12px]
                             p-6
                             whitespace-pre-wrap">
                 {piece.collectionName}
@@ -51,6 +53,8 @@ export const PiecePreview = (props: { piece: PieceType<string>, locale: Locale }
 export const PieceVideo = (props: PropsWithClassName<{
     url: string,
     playing: boolean,
+    muted: boolean,
+    controls: boolean,
     width?: number,
     height?: number,
     youtubeConfig: YouTubeConfig
@@ -59,11 +63,11 @@ export const PieceVideo = (props: PropsWithClassName<{
     if (props.url.includes("youtube"))
     {
         return <YoutubeReactPlayerComponent
-            width={props.width}
-            height={props.height}
+            width="100%"
+            height="100%"
             url={props.url}
-            controls={false}
-            muted={true}
+            controls={props.controls}
+            muted={props.muted}
             loop={true}
             playing={props.playing}
             config={props.youtubeConfig}/>;
@@ -71,11 +75,11 @@ export const PieceVideo = (props: PropsWithClassName<{
     else if (props.url.includes("vimeo"))
     {
         return <VimeoReactPlayerComponent
-            width={364}
-            height={205}
+            width="100%"
+            height="100%"
             url={props.url}
-            controls={false}
-            muted={true}
+            controls={props.controls}
+            muted={props.muted}
             loop={true}
             playing={props.playing}/>;
     }
@@ -178,12 +182,12 @@ const PieceThumbnail = (props: PropsWithClassName<{piece: PieceType<string>, sho
                                   duration-300
                                   object-cover
                                   absolute`}/>
-                        <PieceVideo className={props.className} url={url} playing={props.shouldPlay} width={364} height={205} youtubeConfig={youTubeConfig}/>
+                        <PieceVideo className={props.className} url={url} playing={props.shouldPlay} width={364} height={205} youtubeConfig={youTubeConfig} muted={true} controls={false}/>
                     </>
                 );
             }
             
-            return <PieceVideo className={props.className} url={url} playing={props.shouldPlay} width={364} height={205} youtubeConfig={youTubeConfig}/>;
+            return <PieceVideo className={props.className} url={url} playing={props.shouldPlay} width={364} height={205} youtubeConfig={youTubeConfig} muted={true} controls={false}/>;
         }
         else if (piece.type === "videoWithThumbnail")
         {
@@ -198,7 +202,7 @@ const PieceThumbnail = (props: PropsWithClassName<{piece: PieceType<string>, sho
                               duration-300
                               object-cover
                               absolute`}/>
-                    <PieceVideo className={props.className} url={url} playing={props.shouldPlay} width={364} height={205} youtubeConfig={youTubeConfig}/>
+                    <PieceVideo className={props.className} url={url} playing={props.shouldPlay} width={364} height={205} youtubeConfig={youTubeConfig} muted={true} controls={false}/>
                 </>
             );
         }
