@@ -1,5 +1,5 @@
 import { error, type ExtractOkType, map, ok, type Result } from "~/types/result";
-import { type Path, type TCmsValue, type TCmsUrl, type Parser, type InferOk, type TCmsArray, type InferError, couldNotReadDirectory, type TCmsImage, imageFolder, type TCmsArrayWithName, type TCmsObjectWithName, type TCmsRecord, type InferTCmsObject, type TCmsObject, type TCmsUnion, type ArrayIndices, type TCmsMarkdown, type MarkdownWithContent, type ArrayWithName, type ObjectWithName } from "./tcmsTypes";
+import { type Path, type TCmsValue, type TCmsUrl, type Parser, type InferOk, type TCmsArray, type InferError, couldNotReadDirectory, type TCmsImage, imageFolder, type TCmsRecord, type InferTCmsObject, type TCmsObject, type TCmsUnion, type ArrayIndices, type TCmsMarkdown, type MarkdownWithContent, type ArrayWithName, type ObjectWithName } from "./tcmsTypes";
 import { readFile } from "node:fs/promises";
 import { z, type ZodObject, type ZodRawShape } from "zod";
 import path from "node:path";
