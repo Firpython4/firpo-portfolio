@@ -293,14 +293,15 @@ const markdown = <T extends string>(namePattern?: T): TCmsMarkdown => (
 {
     type: "markdown",
     withMatter: withMatter,
-    parse: promisify((path: Path) => {
-        const extension = ".md";
-        if (!path.endsWith(extension))
+    parse: promisify((inPath: Path) => {
+        const mdExtension = ".md";
+        const extension = path.extname(inPath);
+        if (extension !== mdExtension)
         {
             return error("invalid extension" as const);
         }
         
-        const name = getName(path);
+        const name = getName(inPath);
         if (namePattern !== undefined)
         {
             const matches = name.match(namePattern);
