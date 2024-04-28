@@ -37,3 +37,10 @@ These are the main technologies used in this project.
 - [Remark.js](https://github.com/remarkjs)
 - [Gray Matter](https://github.com/jonschlinkert/gray-matter)
 
+# Core Web Vitals
+
+Currently, these are the core web vitals scores:
+
+![image](https://github.com/Firpython4/firpo-portfolio/assets/60618576/7fc5e089-fb83-45bb-8a28-c50b71bf4697)
+
+There are still some optimization opportunities, such as cropping works' thumbnails during build, so that all images are properly sized, as well as using facades / lite versions of the embedded video players.
