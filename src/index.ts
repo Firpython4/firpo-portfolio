@@ -112,12 +112,22 @@ function getPiece(parentDirectoryPath: PublicFolderPath, collectionId: Collectio
                 return piece;
             }
         }
-        
+
         throw new Error(`Unsupported file format: ${getPath(mediaDirent)}`)
     };
 }
 
 type SubcollectionType = { path: string, directoryEntities: Dirent[], collectionId: CollectionId };
+
+function isMarkdownFile(dirent: Dirent)
+{
+    if (!dirent.isFile())
+    {
+        return false;
+    }
+
+    return path.extname(getPath(dirent)) === ".md";
+}
 
 export function getPiecesWithLocale(locale: Locale)
 {
@@ -125,7 +135,7 @@ export function getPiecesWithLocale(locale: Locale)
     {
         if (includesInner(subCollection.path, publicFolderValue))
         {
-            const result = await Promise.allSettled(subCollection.directoryEntities
+            const result = await Promise.allSettled(subCollection.directoryEntities.filter(dirent => !isMarkdownFile(dirent))
                 .map(getPiece(subCollection.path, subCollection.collectionId, locale)));
             
             const promiseRejectedResults = result.filter(promiseRejectedPredicate);
