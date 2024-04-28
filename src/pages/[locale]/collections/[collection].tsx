@@ -5,20 +5,14 @@ import { type ParsedUrlQuery } from "node:querystring";
 import {Scaffold} from "~/components/scaffold";
 import "@total-typescript/ts-reset";
 import {VerticalCenterBox} from "~/components/verticalCenterBox";
-import {getAllCollections, getMarkdownFilesForLocales, readCollectionDirectory,} from "../../../cms/fileManagement";
 import type {YouTubeConfig} from "react-player/youtube";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import {Favicon} from "~/components/favicon";
 import {type PieceType} from "~/types/pieceType";
-import {collectionsPath} from "~/config";
-import path from "node:path";
-import {getPiecesWithLocale} from "~/index";
 import {useRouter} from "next/router";
 import { type Locale} from "~/localization/localization";
-import {mapMap, mapMapAsync} from "~/functional";
-import {type Brand} from "~/typeSafety";
-import toContentObject from "../../../contentFormatting";
+import { getCollectionProps, getCollectionsStaticPaths } from "~/collection";
 
 const ReactPlayerComponent = dynamic(() => import("react-player/youtube"), { ssr: false });
 
@@ -34,24 +28,9 @@ interface CollectionProps
     content: ContentType,
     works: PieceType[]
 }
-
 export const getStaticPaths = (async () =>
 {
-    const directories: string[] = (await getAllCollections())
-        .filter((dirent) => dirent.isDirectory())
-        .map((directory) => directory.name);
-    
-    return {
-        paths: directories.map(directoryName =>
-        {
-            return {
-                params: {
-                    collection: directoryName
-                }
-            };
-        }),
-        fallback: false
-    }
+    return await getCollectionsStaticPaths();
 }) satisfies GetStaticPaths
 
 const Piece = (props: {piece: PieceType}) =>
@@ -87,59 +66,9 @@ const Piece = (props: {piece: PieceType}) =>
     }
 };
 
-export type CollectionId = Brand<string, "collectionId">;
-
-export async function getContent(collectionId: CollectionId)
-{
-    const directoryEntries = await readCollectionDirectory(collectionId);
-    const content = getMarkdownFilesForLocales(directoryEntries)
-    return await mapMapAsync(content, toContentObject);
-}
-
-async function getPiecesAsProps(collectionId: CollectionId, locale: Locale)
-{
-    const directoryEntries = await readCollectionDirectory(collectionId);
-    const directoriesWithParent = {
-        path: path.join(process.cwd(), collectionsPath, collectionId),
-        directoryEntities: directoryEntries,
-        collectionId: collectionId
-    }
-    
-    return (getPiecesWithLocale(locale))(directoriesWithParent);
-}
-
 export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQuery, string | false | object | undefined>) =>
 {
-    if (context.params && typeof (context.params.collection) === "string")
-    {
-        const collection = context.params.collection as CollectionId;
-
-        const pieces = await getPiecesAsProps(collection, context.params.locale as Locale);
-        const content = await getContent(collection);
-
-        if (content)
-        {
-            const literalNewLine = "\\n";
-            const newLineChar = "\r\n";
-            return {
-                props: {
-                    content: mapMap(content, (locale, contentObject) =>
-                    {
-                        const titleWithNewLines = contentObject.title.replaceAll(literalNewLine, newLineChar);
-                        return [locale, {
-                            html: contentObject.html,
-                            title: titleWithNewLines
-                        }];
-                    }).get(context.params.locale as Locale)!,
-                    works: pieces
-                }
-            }
-        }
-
-        throw new Error("Invalid matter");
-    }
-
-    throw new Error("Unable to locate markdown file for content");
+    return await getCollectionProps(context);
 }) satisfies GetStaticProps<CollectionProps>
 
 const BackIcon = (props: {className?: string}) => <Image className={props.className} alt="home" src="/icons/back-icon.svg" width={31} height={31}/>;

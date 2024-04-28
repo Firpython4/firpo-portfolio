@@ -1,6 +1,6 @@
-import {useLocaleTexts} from "~/localization/localization";
+import { type Locale, useLocaleTexts } from "~/localization/localization";
 
-export const ExpositionText = (props: {className?: string}) =>
+export const ExpositionText = (props: {className?: string, locale: Locale}) =>
 (
     <div
         className={`${props.className}
@@ -31,7 +31,7 @@ export const ExpositionText = (props: {className?: string}) =>
                         md:leading-[18px]
                         lg:leading-[22px]
                         xl:leading-[27px]
-                        font-inter`}>{useLocaleTexts().expositionFirst}
+                        font-inter`}>{useLocaleTexts(props.locale).expositionFirst}
         </div>
         <div className="w-[435px]
                         text-black
@@ -49,10 +49,10 @@ export const ExpositionText = (props: {className?: string}) =>
             <span className="text-black
                              text-small
                              font-semibold
-                             pt-3">{useLocaleTexts().someAttendedClients}<br/></span>
+                             pt-3">{useLocaleTexts(props.locale).someAttendedClients}<br/></span>
             <span className="text-black
                              text-small
-                             font-normal">{useLocaleTexts().clients}</span>
+                             font-normal">{useLocaleTexts(props.locale).clients}</span>
         </div>
     </div>
 );
