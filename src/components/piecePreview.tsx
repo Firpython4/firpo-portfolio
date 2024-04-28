@@ -112,7 +112,6 @@ function getThumbnail(url: string, quality?: string)
             return `https://img.youtube.com/vi/${video_id}/${quality_key}.jpg`;
         }
     }
-    return false;
 }
 
 const pieceThumbnailSizes = `100svw, screen(mobile_lg) 364px`;
@@ -121,7 +120,7 @@ const PieceThumbnail = (props: PropsWithClassName<{piece: PieceType, shouldPlay:
 {
     const piece = props.piece;
     const url = getUrlFromPiece(piece);
-    if (piece.option === 0)
+    if (piece.option === 2)
     {
         return (
             <ExportedImage className={`aspect-[${piece.value.width}/${piece.value.height}] object-cover ${props.className}`} width={piece.value.width} height={piece.value.height} src={url} alt={piece.value.name} sizes={pieceThumbnailSizes}/>
@@ -138,7 +137,7 @@ const PieceThumbnail = (props: PropsWithClassName<{piece: PieceType, shouldPlay:
             }
         };
 
-        if (piece.option === 1)
+        if (piece.option === 0)
         {
             
             const thumbnail = getThumbnail(url);

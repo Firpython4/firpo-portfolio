@@ -12,11 +12,11 @@ export async function orderByConfig(pieces: PieceType[])
     pieces.sort((leftElement, rightElement) => {
         let nameA: string;
         let nameB: string;
-        if (leftElement.option === 0)
+        if (leftElement.option === 2)
         {
             nameA = leftElement.value.name;
         }
-        else if (leftElement.option === 1)
+        else if (leftElement.option === 0)
         {
             nameA = leftElement.value.name;
         }
@@ -24,11 +24,11 @@ export async function orderByConfig(pieces: PieceType[])
         {
             nameA = leftElement.value.url.name;
         }
-        if (rightElement.option === 0)
+        if (rightElement.option === 2)
         {
             nameB = rightElement.value.name;
         }
-        else if (rightElement.option === 1)
+        else if (rightElement.option === 0)
         {
             nameB = rightElement.value.name;
         }

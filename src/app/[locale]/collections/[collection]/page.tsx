@@ -33,7 +33,7 @@ export const generateMetadata = async (props: {params: PageParams}) => {
 const Piece = (props: PropsWithClassName<{piece: PieceType}>) =>
 {
     const piece = props.piece;
-    if (piece.option === 0)
+    if (piece.option === 2)
     {
         const style = getContainedByAspectRatioStyle("90vw", "90svh", piece.value.width, piece.value.height);
 

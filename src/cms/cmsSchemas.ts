@@ -9,9 +9,9 @@ const videoWithThumbnail = tcms.object({
 const videoUrl = tcms.url();
 
 export const piece = tcms.union(
-    tcms.image(),
     videoUrl,
-    videoWithThumbnail
+    videoWithThumbnail,
+    tcms.image()
 );
 
 const pieces = tcms.array(piece).withName("pieces");

@@ -15,7 +15,7 @@ const url = (): TCmsUrl => (
     type: "url",
     parse: async pathToParse => {
         const extension = ".url";
-        if (!pathToParse.endsWith(extension))
+        if (path.extname(pathToParse) !== extension)
         {
             return error("invalid extension");
         }
@@ -29,7 +29,7 @@ const url = (): TCmsUrl => (
         
         const urlOkValue = url.okValue;
         const parseResult = z.string().url().safeParse(urlOkValue)
-        if (parseResult.success)
+        if (!parseResult.success)
         {
             return error("invalid url");
         }
@@ -44,49 +44,48 @@ const url = (): TCmsUrl => (
     
 const image = (): TCmsImage => ({
     type: "image",
-    parse: async (path: Path) => {
+    parse: async (inPath: Path) => {
         const extensions = [".jpg", ".webp", ".png", ".svg", ".ico"];
-        const split = path.split(".");
-        const extension = split[split.length - 1];
-        if (!extension
-         || extensions.includes(extension))
+        const extension = path.extname(inPath);
+
+        if (!extensions.includes(extension))
         {
             return error("invalid extension");
         }
         
-        const url = path.replaceAll("\\", "/").split(imageFolder)[1];
+        const url = inPath.replaceAll("\\", "/").split(imageFolder)[1];
 
         if (!url)
         {
             return error("image is not in the configured folder")
         }
 
-        const size = await sizeOfAsync(path);
+        const size = await sizeOfAsync(inPath);
 
         if (!size.wasResultSuccessful)
         {
-            return error(`Unable to read file ${path}`)
+            return error(`Unable to read file ${inPath}`)
         }
         
         const sizeValue = size.okValue;
         
         if (!sizeValue)
         {
-            return error(`Unable to read file ${path}`)
+            return error(`Unable to read file ${inPath}`)
         }
 
         if (sizeValue.width === undefined)
         {
-            return error(`Invalid image width for ${path}`)
+            return error(`Invalid image width for ${inPath}`)
         }
         if (sizeValue.height === undefined)
         {
-            return error(`Invalid image height for ${path}`)
+            return error(`Invalid image height for ${inPath}`)
         }
 
         return ok({
             type: "image",
-            name: getName(path),
+            name: getName(inPath),
             width: sizeValue.width,
             height: sizeValue.height,
             url: url as `${string}${typeof imageFolder}/${string}`
@@ -176,7 +175,7 @@ const objectWithName = <T extends TCmsRecord> (parse: Parser<InferTCmsObject<T>,
     }
 });
 
-const objectParse = <T extends TCmsRecord, KeyType extends string | number | symbol = keyof T> (fields: T): Parser<InferTCmsObject<T>, typeof couldNotReadDirectory | "no matches"> => async (path: Path) =>
+const objectParse = <T extends TCmsRecord> (fields: T): Parser<InferTCmsObject<T>, typeof couldNotReadDirectory | "no matches"> => async (path: Path) =>
 {
     const dirents = await safeReadDir(path);
     if (!dirents.wasResultSuccessful)
@@ -184,8 +183,9 @@ const objectParse = <T extends TCmsRecord, KeyType extends string | number | sym
         return error(couldNotReadDirectory);
     }
 
+
     type NewRecordType = {
-        [Key in KeyType]: unknown;
+        [Key in keyof T]: unknown;
     };
 
     type ResultType = Result<NewRecordType, "no matches">;
@@ -212,6 +212,7 @@ const objectParse = <T extends TCmsRecord, KeyType extends string | number | sym
 
     if (okValues.length !== result.length)
     {
+        return error("no matches" as const);
     }
 
     const spread = mapped.reduce((previous, current) => Object.assign(previous, current) as Record<KeyType, unknown>, {}) as InferTCmsObject<T>;
