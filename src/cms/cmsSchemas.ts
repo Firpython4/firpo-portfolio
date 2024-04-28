@@ -1,14 +1,14 @@
 import { z } from "zod";
-import { tcms } from "./tcms/tcmsSchemas";
+import { tcms } from "./type-fs/schemas";
 
 const videoWithThumbnail = tcms.object({
   url: tcms.url(),
-  thumbnail: tcms.image(),
+  thumbnail: tcms.image("public"),
 });
 
 const videoUrl = tcms.url();
 
-export const piece = tcms.union(videoUrl, videoWithThumbnail, tcms.image());
+export const piece = tcms.union(videoUrl, videoWithThumbnail, tcms.image("public"));
 
 const pieces = tcms.array(piece).withName("pieces");
 

@@ -5,13 +5,13 @@ import {
   type PublicFolder,
   publicFolderValue,
 } from "~/config";
-import { type StringWithInnerSubstring } from "~/cms/tcms/typeSafety";
+import { type StringWithInnerSubstring } from "~/cms/type-fs/typeSafety";
 import { type Locale, locales } from "~/localization/localization";
 import { promisify } from "util";
 import sizeOf from "image-size";
 import { error, ok, okAsync } from "../../types/result";
 import { type CollectionId } from "../cmsCompiler";
-import { type Path } from "./tcmsTypes";
+import { type Path } from "./types";
 import { readdir } from "node:fs/promises";
 
 export function getCollectionsFromDirectories(directories: Dirent[]) {

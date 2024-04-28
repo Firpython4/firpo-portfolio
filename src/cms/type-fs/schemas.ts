@@ -7,27 +7,26 @@ import {
 } from "~/types/result";
 import {
   type Path,
-  type TCmsValue,
-  type TCmsUrl,
+  type TfsValue,
+  type TfsUrl,
   type Parser,
   type InferOk,
-  type TCmsArray,
+  type TfsArray,
   type InferError,
   couldNotReadDirectory,
-  type TCmsImage,
-  imageFolder,
-  type TCmsRecord,
-  type InferTCmsObject,
-  type TCmsObject,
-  type TCmsUnion,
+  type TfsImage,
+  type TfsRecord,
+  type InferTfsObject,
+  type TfsObject,
+  type TfsUnion,
   type ArrayIndices,
-  type TCmsMarkdown,
+  type TfsMarkdown,
   type MarkdownWithMatter,
   type ArrayWithName,
   type ObjectWithName,
   type Markdown,
   type MarkdownError,
-} from "./tcmsTypes";
+} from "./types";
 import { readFile } from "node:fs/promises";
 import { z, type ZodObject, type ZodRawShape } from "zod";
 import path from "node:path";
@@ -43,7 +42,7 @@ import {
   sizeOfAsync,
 } from "./fileManagement";
 
-const url = (): TCmsUrl => ({
+const url = (): TfsUrl => ({
   type: "url",
   parse: async (pathToParse) => {
     const extension = ".url";
@@ -72,7 +71,7 @@ const url = (): TCmsUrl => ({
   },
 });
 
-const image = (): TCmsImage => ({
+const image = <T extends string> (imagePathForSplit: T): TfsImage<T> => ({
   type: "image",
   parse: async (inPath: Path) => {
     const extensions = [".jpg", ".webp", ".png", ".svg", ".ico"];
@@ -82,7 +81,7 @@ const image = (): TCmsImage => ({
       return error("invalid extension");
     }
 
-    const url = inPath.replaceAll("\\", "/").split(imageFolder)[1];
+    const url = inPath.replaceAll("\\", "/").split(imagePathForSplit)[1];
 
     if (!url) {
       return error("image is not in the configured folder");
@@ -112,7 +111,7 @@ const image = (): TCmsImage => ({
       name: getName(inPath),
       width: sizeValue.width,
       height: sizeValue.height,
-      url: url as `${string}${typeof imageFolder}/${string}`,
+      url: url as `${string}${typeof imagePathForSplit}/${string}`,
     });
   },
 });
@@ -122,8 +121,8 @@ function getName(inPath: Path) {
 }
 
 const arrayWithName =
-  <T extends TCmsValue<unknown, unknown>>(
-    parse: Parser<InferOk<TCmsArray<T>>, InferError<TCmsArray<T>>>,
+  <T extends TfsValue<unknown, unknown>>(
+    parse: Parser<InferOk<TfsArray<T>>, InferError<TfsArray<T>>>,
   ): ArrayWithName<T> =>
   (namePattern?: string) => ({
     type: "arrayWithName",
@@ -142,9 +141,9 @@ const arrayWithName =
   });
 
 const arrayParse =
-  <ElementType extends TCmsValue>(
+  <ElementType extends TfsValue>(
     element: ElementType,
-  ): Parser<InferOk<ElementType>[], InferError<TCmsArray<ElementType>>> =>
+  ): Parser<InferOk<ElementType>[], InferError<TfsArray<ElementType>>> =>
   async (path: Path) => {
     const dirents = await safeReadDir(path);
 
@@ -169,9 +168,9 @@ const arrayParse =
     return ok(remapped);
   };
 
-const array = <ElementType extends TCmsValue<unknown, unknown>>(
+const array = <ElementType extends TfsValue<unknown, unknown>>(
   element: ElementType,
-): TCmsArray<ElementType> => ({
+): TfsArray<ElementType> => ({
   type: "array",
   parse: arrayParse(element),
   withName: arrayWithName(arrayParse(element)),
@@ -186,9 +185,9 @@ export async function getUrlFromPath(path: Path) {
 }
 
 const objectWithName =
-  <T extends TCmsRecord>(
+  <T extends TfsRecord>(
     parse: Parser<
-      InferTCmsObject<T>,
+      InferTfsObject<T>,
       "no matches" | typeof couldNotReadDirectory
     >,
   ): ObjectWithName<T> =>
@@ -209,9 +208,9 @@ const objectWithName =
   });
 
 const objectParse =
-  <T extends TCmsRecord>(
+  <T extends TfsRecord>(
     fields: T,
-  ): Parser<InferTCmsObject<T>, typeof couldNotReadDirectory | "no matches"> =>
+  ): Parser<InferTfsObject<T>, typeof couldNotReadDirectory | "no matches"> =>
   async (path: Path) => {
     const dirents = await safeReadDir(path);
     if (!dirents.wasResultSuccessful) {
@@ -258,18 +257,18 @@ const objectParse =
       (previous, current) =>
         Object.assign(previous, current) as Record<KeyType, unknown>,
       {},
-    ) as InferTCmsObject<T>;
+    ) as InferTfsObject<T>;
     return ok(spread);
   };
-const object = <T extends TCmsRecord>(fields: T): TCmsObject<T> => ({
+const object = <T extends TfsRecord>(fields: T): TfsObject<T> => ({
   type: "object",
   parse: objectParse(fields),
   withName: objectWithName(objectParse(fields)),
 });
 
-const union = <T extends Readonly<[...TCmsValue<unknown, unknown>[]]>>(
+const union = <T extends Readonly<[...TfsValue<unknown, unknown>[]]>>(
   ...types: T
-): TCmsUnion<T> => ({
+): TfsUnion<T> => ({
   type: "union",
   async parse(path: Path) {
     for (const [option, type] of types.entries()) {
@@ -383,7 +382,7 @@ const parseMarkdown = (namePattern?: string): Parser<Markdown, MarkdownError> =>
     });
   });
 
-const markdown = <T extends string>(namePattern?: T): TCmsMarkdown => ({
+const markdown = <T extends string>(namePattern?: T): TfsMarkdown => ({
   type: "markdown",
   withMatter: withMatter(namePattern),
   parse: parseMarkdown(namePattern),

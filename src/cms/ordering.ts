@@ -1,5 +1,5 @@
 import { orderFilePath } from "~/config";
-import { getFileRelative } from "~/cms/tcms/fileManagement";
+import { getFileRelative } from "~/cms/type-fs/fileManagement";
 import log from "../logging";
 import { type PieceType } from "./schemaTypes";
 

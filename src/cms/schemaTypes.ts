@@ -1,5 +1,5 @@
 import { type collection, type collections, type piece } from "./cmsSchemas";
-import { type InferOk } from "./tcms/tcmsTypes";
+import { type InferOk } from "./type-fs/types";
 
 export type PieceType = InferOk<typeof piece>;
 export type CollectionType = InferOk<typeof collection>;
