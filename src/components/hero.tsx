@@ -11,12 +11,16 @@ const HeroTitle = () =>
                    text-large
                    not-italic
                    font-semibold
-                   leading-[40px]
+                   leading-[20px]
+                   mobile_sm:leading-[25px]
+                   mobile_md:leading-[30px]
+                   mobile_lg:leading-[40px]
                    sm:leading-[50px]
                    md:leading-[60px]
                    lg:leading-[80px]
                    xl:leading-[98px]
-                   tracking-[-3.745px]
+                   tracking-[-2px]
+                   mobile_lg:tracking-[-3.745px]
                    font-hepta_slab">
         {locale.name}
     </h2>
@@ -24,7 +28,10 @@ const HeroTitle = () =>
 
 const HeroSubtitle = () =>
 (
-    <h3 className="w-[200px]
+    <h3 className="w-[140px]
+                   mobile_md:w-[160px]
+                   mobile_lg:w-[200px]
+                   sm:w-[280px]
                    md:w-[300px]
                    lg:w-[400px]
                    xl:w-[500px]
@@ -32,7 +39,9 @@ const HeroSubtitle = () =>
                    text-medium
                    not-italic
                    font-bold
-                   leading-[30px]
+                   leading-[20px]
+                   mobile_lg:leading-[25px]
+                   sm:leading-[30px]
                    md:leading-[40px]
                    lg:leading-[50px]
                    font-hepta_slab">
@@ -69,7 +78,9 @@ const HeroContent = () =>
                              w-[23%]
                              right-[21%]
                              top-[5%]
-                             sm:top-[15%]
+                             mobile_lg:top-[6%]
+                             sm:top-[12%]
+                             md:top-[16%]
                              lg:top-[20%]
                              xl:top-[27.22%]"/>
         <NavBar className="absolute
@@ -80,7 +91,7 @@ const HeroContent = () =>
                            xl:right-[21.56%]
                            top-[3%]
                            sm:top-[5%]
-                           md:top-[8%]
+                           md:top-[6%]
                            lg:top-[10%]
                            xl:top-[13.61%]"/>
     </>
