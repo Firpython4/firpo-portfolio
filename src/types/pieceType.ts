@@ -1,5 +1,3 @@
-import {type LocalizedText} from "~/localization/localization";
-
 export type PieceType = ImagePieceType | VideoPieceType | VideoWithThumbnailPieceType;
 
 export type ImagePieceType = {

@@ -13,7 +13,7 @@ import {promiseFullfilledPredicate, promiseRejectedPredicate, valueMapper} from 
 import {orderByConfig} from "~/cms/ordering";
 import {type PieceSharedType, type PieceType} from "~/types/pieceType";
 import { type Locale, useLocalizedContent } from "~/localization/localization";
-import { CollectionId, getContent } from "./collection";
+import { type CollectionId, getContent } from "./collection";
 
 async function asImage(mediaDirent: Dirent, shared: PieceSharedType)
 {
