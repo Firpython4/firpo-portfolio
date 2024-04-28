@@ -83,7 +83,7 @@ type InferTCmsUnion<T extends Readonly<[...TCmsValue<unknown, unknown>[]]>> = {
         value: Infer<T[Key]>}
 }[ArrayIndices<T>]
 
-export type Infer<T extends TCmsValue<unknown, unknown>> =  (ExtractOkTypeRaw<Awaited<ReturnType<T["parse"]>>>);
+export type Infer<T extends TCmsValue<unknown, unknown>> =  T["parse"] extends Parser<infer OkType, unknown> ? OkType : never;
 export type InferError<T extends TCmsValue<unknown, unknown>> =  (ExtractErrorTypeRaw<Awaited<ReturnType<T["parse"]>>>);
 
 
