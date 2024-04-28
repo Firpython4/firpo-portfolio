@@ -44,6 +44,7 @@ type TCmsUrl = {
 
 interface TCmsArray<ElementType extends TCmsValue<unknown>> {
     readonly type: "array";
+    //@ts-expect-error Since the user can nest schemas, it's expected for the following line to throw an error in regard to the type instantiation limit
     readonly output: ElementType["output"][]
     readonly error: "no matches";
     readonly parse: Parser<TCmsArray<ElementType>["output"]>;
