@@ -206,15 +206,6 @@ async function compileCms()
                                                                          .map(valueMapper);
     const rejectedSubdirectories = subDirectories.filter(promiseRejectedPredicate);
 
-
-    const resultP = await collection.parse(relativePath(safePath("public/collections/internacional")))
-
-    if (resultP.wasResultSuccessful)
-    {
-        const mapped = resultP.pieces;
-        mapped.forEach(value => console.log(value));
-    }
-    
     if (rejectedSubdirectories.length > 0)
     {
         throw new Error(`Some subdirectory reads failed: ${rejectedSubdirectories.toString()}`)
