@@ -29,11 +29,11 @@ async function asImage(mediaDirent: Dirent, shared: PieceSharedType)
             }
             if (!size.width)
             {
-                throw new Error(`Invalid image width ${piecePath}`)
+                throw new Error(`Invalid image width for ${piecePath}`)
             }
             if (!size.height)
             {
-                throw new Error(`Invalid image height ${piecePath}`)
+                throw new Error(`Invalid image height for ${piecePath}`)
             }
             return {
                 type: "image" as const,
