@@ -24,10 +24,10 @@ export type TCmsMarkdownWithContent<T extends ZodRawShape> = TCmsValue<{
 }, "could not read file" | "invalid matter"> & {type: "markdownWithContent"};
 
 
-export type MarkdownWithContent = <T extends ZodRawShape>(matters: ZodObject<T>) => TCmsMarkdownWithContent<T>;
+export type MarkdownWithMatter = <T extends ZodRawShape>(matters: ZodObject<T>) => TCmsMarkdownWithContent<T>;
 type MarkdownError = "no matches" | "invalid name";
 export type TCmsMarkdown = {
-    markdownWithContent: MarkdownWithContent,
+    withMatter: MarkdownWithMatter,
     readonly type: "markdown";
 } & TCmsValue<Markdown, MarkdownError>
 

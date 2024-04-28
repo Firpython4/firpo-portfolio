@@ -1,5 +1,5 @@
 import { error, type ExtractOkType, map, ok, type Result } from "~/types/result";
-import { type Path, type TCmsValue, type TCmsUrl, type Parser, type InferOk, type TCmsArray, type InferError, couldNotReadDirectory, type TCmsImage, imageFolder, type TCmsRecord, type InferTCmsObject, type TCmsObject, type TCmsUnion, type ArrayIndices, type TCmsMarkdown, type MarkdownWithContent, type ArrayWithName, type ObjectWithName } from "./tcmsTypes";
+import { type Path, type TCmsValue, type TCmsUrl, type Parser, type InferOk, type TCmsArray, type InferError, couldNotReadDirectory, type TCmsImage, imageFolder, type TCmsRecord, type InferTCmsObject, type TCmsObject, type TCmsUnion, type ArrayIndices, type TCmsMarkdown, type MarkdownWithMatter, type ArrayWithName, type ObjectWithName } from "./tcmsTypes";
 import { readFile } from "node:fs/promises";
 import { z, type ZodObject, type ZodRawShape } from "zod";
 import path from "node:path";
@@ -15,7 +15,8 @@ const url = (): TCmsUrl => (
     type: "url",
     parse: async pathToParse => {
         const extension = ".url";
-        if (path.extname(pathToParse) !== extension)
+        const ext = path.extname(pathToParse);
+        if (ext !== extension)
         {
             return error("invalid extension");
         }
@@ -152,7 +153,7 @@ export async function getUrl(imageOrUrlPath: Path)
 
 export async function getUrlFromPath(path: Path)
 {
-    return map(await readFileSafe(path) , toString);
+    return map(await readFileSafe(path) , value => value.toString());
 }
 
 const objectWithName = <T extends TCmsRecord> (parse: Parser<InferTCmsObject<T>, "no matches" | typeof couldNotReadDirectory>): ObjectWithName<T> => (namePattern?: string) =>
@@ -283,7 +284,7 @@ const parseMarkdownWithContent = <T extends ZodRawShape> (matters: ZodObject<T>)
     }
 }));
 
-const markdownWithContent: MarkdownWithContent = <T extends ZodRawShape> (matters: ZodObject<T>) => ({
+const withMatter: MarkdownWithMatter = <T extends ZodRawShape> (matters: ZodObject<T>) => ({
     type: "markdownWithContent",
     parse: parseMarkdownWithContent(matters)
 })
@@ -291,7 +292,7 @@ const markdownWithContent: MarkdownWithContent = <T extends ZodRawShape> (matter
 const markdown = <T extends string>(namePattern?: T): TCmsMarkdown => (
 {
     type: "markdown",
-    markdownWithContent,
+    withMatter: withMatter,
     parse: promisify((path: Path) => {
         const extension = ".md";
         if (!path.endsWith(extension))
