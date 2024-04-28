@@ -46,7 +46,7 @@ export const pt: LocaleTexts = {
         Portugal, ofereço serviços em projetos relacionados a criatividade (branding, campanhas, ações,
         direção de criação, redação) e produção textual em geral (projetos na área de entretenimento
         audiovisual são especialmente bem-vindos).</>,
-    someAttendedClients: <>Some customers served:</>,
+    someAttendedClients: <>Alguns clientes atendidos:</>,
     clients: <>Telefónica Group,
         Petrobras, Vivo, Braskem Group, Edenred, Aegea Group, Banrisul, Gerdau Group, Midea-Carrier, Springer,
         GRU Airport, Husqvarna, Massey Ferguson, John Deere, RBS Group, Zero Hora newspaper, Ramarim Shoes, Klabin Group,
