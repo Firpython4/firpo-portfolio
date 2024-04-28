@@ -24,7 +24,7 @@ const HeroTitle = (props: LocalizedTextsProps) =>
                    tracking-[-2px]
                    mobile_lg:tracking-[-3.745px]
                    font-hepta_slab">
-        {props.localizedTexts.name}
+        {props.localizedTexts.home.name}
     </h2>
 );
 
@@ -49,7 +49,7 @@ const HeroSubtitle = (props: LocalizedTextsProps) =>
                    md:leading-[40px]
                    lg:leading-[50px]
                    font-hepta_slab">
-        {props.localizedTexts.subtitle}
+        {props.localizedTexts.home.subtitle}
     </h3>
 );
 

@@ -1,8 +1,8 @@
 import { type LocalizedContentType } from "../types/localizedCollectionType";
 import type { PieceType } from "../types/pieceType";
-import { en, pt, type LocalizedTexts } from "./texts";
+import { en, pt, type LocalizedCopy } from "./copy";
 
-const texts: Record<Locale, LocalizedTexts> = {
+const texts: Record<Locale, LocalizedCopy> = {
     pt: pt,
     en: en
 }

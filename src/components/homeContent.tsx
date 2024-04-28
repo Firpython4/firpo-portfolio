@@ -1,4 +1,4 @@
-import {  type HomeProps } from "../index";
+import {  type HomeProps } from "~/index";
 import { BottomBar } from "./bottomBar";
 import ContactForm from "./contactForm";
 import { ExpositionText } from "./expositionText";
