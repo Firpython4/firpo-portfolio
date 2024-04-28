@@ -11,7 +11,7 @@ export type LocaleTexts = {
 };
 
 export const en: LocaleTexts = {
-    homeMetaDescription: `Hi, I'm Marcelo Firpo, a CMO, Creative Director, Creative Consultant, Copywriter, and Screenwriter. I have more than 30 years of experience in communication, advertising, and branding. I've been awarded at multiple festivals. Get in touch now.`,
+    homeMetaDescription: `Marcelo Firpo's Portfolio, a CMO, Creative Director, Creative Consultant, Copywriter, and Screenwriter. I have more than 30 years of experience in communication, advertising, and branding. I've been awarded at multiple festivals. Get in touch now.`,
     name: <>Marcelo Firpo</>,
     subtitle: <>CMO, Creative Director, Creative Consultant, Copywriter, Screenwriter</>,
     expositionFirst: <>I have more than 30 years of experience in communication, advertising, and branding. I've been awarded at multiple festivals.
@@ -34,7 +34,7 @@ export const en: LocaleTexts = {
 }
 
 export const pt: LocaleTexts = {
-    homeMetaDescription: `Marcelo Firpo: CMO, Diretor de Criação, Consultor Criativo, Redator, Roteirista. Tenho mais de 30 de experiência em comunicação, publicidade e branding, e já fui premiado em múltiplos festivais. Entre em contato agora.`,
+    homeMetaDescription: `Portfolio de Marcelo Firpo: CMO, Diretor de Criação, Consultor Criativo, Redator, Roteirista. Tenho mais de 30 de experiência em comunicação, publicidade e branding, e já fui premiado em múltiplos festivais. Entre em contato agora.`,
     name: <>Marcelo Firpo</>,
     subtitle: <>CMO, Diretor de Criação, Consultor Criativo, Redator, Roteirista</>,
     expositionFirst: <>Tenho
