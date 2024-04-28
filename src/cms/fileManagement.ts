@@ -1,8 +1,7 @@
 import { type Dirent, promises as fileSystem } from "node:fs";
 import path from "node:path";
-import {orderFilePath, type PublicFolder, publicFolderValue, worksPath} from "~/config";
+import { type PublicFolder, publicFolderValue, worksPath} from "~/config";
 import { type StringWithInnerSubstring } from "~/typeSafety";
-import {type PieceType} from "~/types/pieceType";
 
 export function getSubdirectories(directories: Dirent[])
 {
@@ -20,16 +19,23 @@ export const isFilePredicate = (dirent: Dirent) => dirent.isFile();
 
 export const isImagePredicate = (dirent: Dirent) =>
 {
-    const extension: string = path.extname(getPath(dirent)).toLowerCase();
-    return extension === ".png" || extension === ".jpg";
+    const extension = path.extname(getPath(dirent)).toLowerCase();
+    return extension === ".png"
+        || extension === ".jpg";
 };
 
-export function filterImages(directoryEntries: Dirent[])
+export const isUrlPredicate = (dirent: Dirent) =>
+{
+    const extension = path.extname(getPath(dirent)).toLowerCase();
+    return extension === ".url";
+};
+
+export function filterImagesAndUrls(directoryEntries: Dirent[])
 {
     return directoryEntries
-    .filter(isFilePredicate)
-    .filter(isImagePredicate)
-    .map(getPath);
+        .filter(isFilePredicate)
+        .filter(dirent => isImagePredicate(dirent) || isUrlPredicate(dirent))
+        .map(getPath);
 }
 
 export async function getWorksDirectoryEntities()
