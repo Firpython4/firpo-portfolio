@@ -3,6 +3,9 @@ import path from "node:path";
 import {collectionsPath, type PublicFolder, publicFolderValue} from "~/config";
 import {  type StringWithInnerSubstring } from "~/typeSafety";
 import {type Locale, locales} from "~/localization/localization";
+import {promisify} from "util";
+import sizeOf from "image-size";
+import {ISizeCalculationResult} from "image-size/dist/types/interface";
 
 export function getSubdirectories(directories: Dirent[])
 {
@@ -105,4 +108,9 @@ export async function importAsImage(imagePath: PublicFolderPath)
             return relativePath;
         }
     }
+}
+
+export async function sizeOfAsync(input: string)
+{
+    return promisify(sizeOf)(input);
 }
