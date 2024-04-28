@@ -3,6 +3,7 @@
 import { useForm, type UseFormRegisterReturn } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
+import { submitLink } from "../config";
 import { type Locale } from "../localization/localization";
 import type PropsWithClassName from "../types/propsWithClassName";
 
@@ -14,7 +15,7 @@ const ContactFormValues = z.object({
     "Content": z.string().min(1).max(6000)
 })
 
-type ContactFormType = z.infer<typeof ContactFormValues>;
+export type ContactFormType = z.infer<typeof ContactFormValues>;
 
 const formBorderClassNames = "border-2 border-gray-300 rounded-md";
 const formClassNames = `h-8 px-2 py-4 ${formBorderClassNames}`;
@@ -36,7 +37,16 @@ const ContactForm = (props: PropsWithClassName<{locale: Locale}>) =>
     const { register, handleSubmit, formState: { errors } } = useForm<ContactFormType>(formProps);
     console.log(errors);
     return <form className={`${props.className} font-inter flex flex-col gap-y-8 items-center relative`}
-                 onSubmit={handleSubmit((data) => console.log(data))}>
+                 onSubmit={handleSubmit(async (data) =>
+                                        {
+                                            try
+                                            {
+                                                await fetch(submitLink(data));
+                                            }
+                                            catch (error)
+                                            {
+                                            }
+                                        })}>
         <div className="grid grid-cols-2 grid-rows-6 gap-x-3 gap-y-4">
             <FormItem placeholder="First name" register={register("First Name", {required: true})}/>
             <FormItem placeholder="Last name" register={register("Last Name", {required: true})}/>
