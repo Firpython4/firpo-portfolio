@@ -16,18 +16,25 @@ export async function orderByConfig(pieces: PieceType[])
         {
             nameA = leftElement.value.name;
         }
+        else if (leftElement.option === 1)
+        {
+            nameA = leftElement.value.name;
+        }
         else
         {
-            nameA = leftElement.value.option === 0 ? leftElement.value.value.name : leftElement.value.value.url.name;
+            nameA = leftElement.value.url.name;
         }
         if (rightElement.option === 0)
         {
             nameB = rightElement.value.name;
         }
+        else if (rightElement.option === 1)
+        {
+            nameB = rightElement.value.name;
+        }
         else
         {
-            nameB = rightElement.value.option === 0 ? rightElement.value.value.name : rightElement.value.value.url.name;
-
+            nameB = rightElement.value.url.name;
         }
 
             const aIndex = lines.indexOf(nameA);

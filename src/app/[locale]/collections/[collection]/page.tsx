@@ -12,7 +12,7 @@ import commonMetadata from "../../../../metadata";
 import { getContainedByAspectRatioStyle } from "../../../../styles/styleUtilities";
 import type PropsWithClassName from "../../../../types/propsWithClassName";
 import { replaceNewlines } from "~/cms/cmsCompiler";
-import { type PieceType } from "~/cms/schemaTypes";
+import { getUrlFromPiece, type PieceType } from "~/cms/schemaTypes";
 
 export const generateStaticParams = async () =>
 {
@@ -55,8 +55,8 @@ const Piece = (props: PropsWithClassName<{piece: PieceType}>) =>
         
         const style = getContainedByAspectRatioStyle("90vw", "90svh", 16, 9);
         
-        const url = piece.value.option === 0 ? piece.value.value.value
-                                               : piece.value.value.url.value;
+        const url = getUrlFromPiece(piece);
+
         return <PieceVideo className={props.className} style={style} playing={false} url={url} youtubeConfig={youTubeConfig} muted={false} controls={true}/>
     }
 };
@@ -73,14 +73,6 @@ const BackButton = (props: {locale: Locale}) =>
         </div>
     );
 };
-
-const getUrl = (piece: PieceType) => {
-    return piece.option === 0 ? piece.value.url
-                                : piece.value.option === 0
-                                    ? piece.value.value.value
-                                    : piece.value.value.url.value;
-};
-
 
 const Collection = async (props: {params: PageParams}) =>
 {
@@ -120,7 +112,7 @@ const Collection = async (props: {params: PageParams}) =>
                     gap-y-[32px]
                     
                     ">
-                    {pageContent.pieces.parsed.map(piece => <Piece piece={piece} key={getUrl(piece)}/>)}
+                    {pageContent.pieces.parsed.map(piece => <Piece piece={piece} key={getUrlFromPiece(piece)}/>)}
                 </VerticalCenterBox>
                 <div className="w-responsive-screen
                                               pl-[40px]

@@ -138,7 +138,7 @@ const PieceThumbnail = (props: PropsWithClassName<{piece: PieceType, shouldPlay:
             }
         };
 
-        if (piece.value.option === 0)
+        if (piece.option === 1)
         {
             
             const thumbnail = getThumbnail(url);
@@ -146,7 +146,7 @@ const PieceThumbnail = (props: PropsWithClassName<{piece: PieceType, shouldPlay:
             {
                 return (
                     <>
-                        <ExportedImage src={thumbnail} alt={piece.value.value.name} fill={true} sizes={pieceThumbnailSizes} unoptimized={true}
+                        <ExportedImage src={thumbnail} alt={piece.value.name} fill={true} sizes={pieceThumbnailSizes} unoptimized={true}
                                className={`${props.className}
                                   opacity-100
                                   group-hover:opacity-0
@@ -166,7 +166,7 @@ const PieceThumbnail = (props: PropsWithClassName<{piece: PieceType, shouldPlay:
         {
             return (
                 <>
-                    <ExportedImage width={piece.value.value.thumbnail.width} height={piece.value.value.thumbnail.height} src={url} alt={piece.value.value.url.name} sizes={pieceThumbnailSizes}
+                    <ExportedImage width={piece.value.thumbnail.width} height={piece.value.thumbnail.height} src={url} alt={piece.value.url.name} sizes={pieceThumbnailSizes}
                            className={`${props.className}
                               opacity-100
                               group-hover:opacity-0

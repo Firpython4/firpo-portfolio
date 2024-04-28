@@ -242,8 +242,7 @@ const union = <T extends Readonly<[...TCmsValue<unknown, unknown>[]]>>(...types:
                 
             return ok({
                 option: typeSafeIndex,
-                // @ts-expect-error TS does not recognize string indices as real ind
-                value: (parseResult.okValue) as InferOk<T[ArrayIndicesString<T>]>
+                value: (parseResult.okValue) as InferOk<T[ArrayIndices<T>]>
             }) 
         }
         
