@@ -99,6 +99,11 @@ async function getPieces(subCollection: { parent: Dirent, sub: Dirent[] })
     }
 }
 
+function valueMapper<T>(from: {value: T})
+{
+    return from.value
+}
+
 export const getStaticProps = (async () =>
 {
     const directoryEntries = await getWorksDirectoryEntities();
@@ -120,7 +125,7 @@ export const getStaticProps = (async () =>
     }
     return {
         props: {
-            pieces: piecePromises.filter(promiseFullfilledPredicate).map(promise => promise.value).flat()
+            pieces: piecePromises.filter(promiseFullfilledPredicate).map(valueMapper).flat()
         }
     }
     
