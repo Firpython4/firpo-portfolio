@@ -16,6 +16,7 @@ const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
+    NEXT_PUBLIC_FORM_ID: z.string()
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
   },
 
@@ -25,6 +26,7 @@ const env = createEnv({
    */
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
+    NEXT_PUBLIC_FORM_ID: process.env.NEXT_PUBLIC_FORM_ID
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

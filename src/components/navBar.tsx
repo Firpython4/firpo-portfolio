@@ -1,5 +1,6 @@
 import ExportedImage from "next-image-export-optimizer";
 import Link from "next/link";
+import type PropsWithClassName from "../types/propsWithClassName";
 import { emailLink, linkedInLink } from "~/config";
 
 const iconImageSizes = `14px,
@@ -30,7 +31,7 @@ export const emailIconSize = `h-[14px]
                             lg:h-[30px]
                             xl:h-[34px]`
 
-export const NavBar = (props: {className?: string, iconPaths: {linkedin: string, email: string}}) =>
+export const NavBar = (props: PropsWithClassName<{iconPaths: {linkedin: string, email: string}}>) =>
 {
     return (
         <div className={`${props.className} flex flex-row gap-x-[8px] sm:gap-x-[12px] md:gap-x-[18px] lg:gap-x-[22px] xl:gap-x-[26px]`}>
