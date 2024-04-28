@@ -22,7 +22,7 @@ type TCmsEntity = {
 
 type Parser<OkType, ErrorType> = ((path: Path) => Promise<Result<OkType, ErrorType>>);
 
-type ImageError = "no matches" | "image not in the configured folder";
+type ImageError = string;
 type TCmsImage = {
     readonly type: "image";
     readonly parse: Parser<Image, ImageError>;
@@ -167,6 +167,11 @@ const image = (): TCmsImage => ({
 
         const size = await sizeOfAsync(path);
 
+        if (!size.wasResultSuccessful)
+        {
+            return error(`Unable to read file ${path}`)
+        }
+
         if (!size)
         {
             return error(`Unable to read file ${path}`)
@@ -214,8 +219,8 @@ const array = <ElementType extends TCmsValue<unknown, unknown>>(element: Element
             return error(couldNotReadDirectory)
         }
 
-        const mapped = await Promise.all(readDirResultToArray(dirents).map(async dirent => (element.parse(getPath(dirent)))));
-        const filtered = mapped.filter((parsed): parsed is ExtractOkType<typeof parsed> => parsed.wasResultSuccessful) as Infer<ElementType>[];
+        const mapped = await Promise.allSettled(readDirResultToArray(dirents).map(async dirent => (element.parse(getPath(dirent)))));
+        const filtered = mapped.filter((parsed): parsed is ExtractOkType<typeof parsed> => parsed.status === "fulfilled" && parsed.value.wasResultSuccessful) as Infer<ElementType>[];
         
         if (filtered.length == 0)
         {
@@ -239,7 +244,7 @@ const object = <T extends Record<string, TCmsValue<unknown, unknown>>>(
 
         const asArray = readDirResultToArray(dirents);
 
-        const result = await Promise.all(Object.entries(fields).map(async ([, value]) =>
+        const result = await Promise.allSettled(Object.entries(fields).map(async ([, value]) =>
                                                        {
                                                             for (const dirent of asArray)
                                                             {
@@ -253,7 +258,7 @@ const object = <T extends Record<string, TCmsValue<unknown, unknown>>>(
                                                             return error("no matches");
                                                        }));
 
-        if (result.find(value => !value.wasResultSuccessful))
+        if (result.find(value => value.status === "fulfilled" && !value.value.wasResultSuccessful))
         {
             return error("no matches");
         }
