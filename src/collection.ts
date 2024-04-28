@@ -1,5 +1,5 @@
 import getOrCompileCms from "./cms/cmsCompiler";
-import getOrCacheCompiledCms, { type CollectionId } from "./cms/cmsCompiler";
+import getOrCacheCompiledCms from "./cms/cmsCompiler";
 import { getLocalizedPiece, type Locale, locales } from "./localization/localization";
 import { type CollectionPageParams } from "./types/params";
 

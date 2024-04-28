@@ -1,5 +1,5 @@
 import { type Locale } from "~/localization/localization";
-import { CollectionId } from "../cms/cmsCompiler";
+import { type CollectionId } from "../cms/cmsCompiler";
 
 export type LocalePageParams = {
     locale: Locale,
