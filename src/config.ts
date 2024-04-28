@@ -1,5 +1,5 @@
 export const publicFolderValue = "public";
-export const worksPath = `/${publicFolderValue}/works` as const;
+export const collectionsPath = `/${publicFolderValue}/collections` as const;
 
 export const orderFilePath = "public/order.txt";
 
