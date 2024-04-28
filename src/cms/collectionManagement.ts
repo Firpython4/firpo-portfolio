@@ -20,3 +20,9 @@ export function getCollectionsFromDirectories(directories: Dirent[]) {
     };
   });
 }
+
+export async function getAllCollections(collectionsPath: string) {
+  return await readdir(path.join(process.cwd(), collectionsPath), {
+    withFileTypes: true,
+  });
+}
