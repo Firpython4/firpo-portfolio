@@ -5,15 +5,20 @@ import {type PieceType} from "~/types/pieceType";
 import {useRef} from "react";
 import {useHover} from "usehooks-ts";
 import dynamic from 'next/dynamic'
-import {VideoPlayer} from "~/components/videoPlayer";
-import YouTube, {type YouTubeProps} from "react-youtube";
-const ReactPlayer = dynamic(() => import("react-player/lazy"), { ssr: false });
+import {type YouTubeConfig} from "react-player/youtube";
+const ReactPlayerComponent = dynamic(() => import("react-player/youtube"), { ssr: false });
 
 export const Piece = (props: {piece: PieceType}) =>
 {
     const piece = props.piece;
+    const ref = useRef(null);
+    const isHovering = useHover(ref);
+    if (isHovering)
+    {
+        console.log("hi")
+    }
     return (
-        <Link className="relative h-[205px] group" href={piece.linkToCollection}>
+        <Link className="relative h-[205px] group" href={piece.linkToCollection} ref={ref}>
             <div className="opacity-0
                             group-hover:opacity-100
                             transition-opacity
@@ -33,7 +38,7 @@ export const Piece = (props: {piece: PieceType}) =>
                             whitespace-pre-wrap">
                 {piece.title}
             </div>
-            <PieceThumbnail piece={piece}/>
+            <PieceThumbnail piece={piece} shouldPlay={isHovering}/>
         </Link>
     )
 }
@@ -50,24 +55,31 @@ const opts = {
     }
 }
 
-const PieceThumbnail = (props: {piece: PieceType}) =>
+const PieceThumbnail = (props: {piece: PieceType, shouldPlay: boolean}) =>
 {
     const piece = props.piece;
-    if (piece.type === "image")
-    {
+    if (piece.type === "image") {
         return <Image width={364} height={205} src={piece.url} alt={piece.title}/>
-    }
-    else
-    {
-        const ref = useRef(null);
-        const isHovering = useHover(ref);
+    } else {
+        const config: YouTubeConfig = {
+             playerVars: {
+                 controls: 0,
+                 disablekb: 1,
+                 modestbranding: 1,
+                 showinfo: 0
+             }
+        };
         return (
-        <>
-            <YouTube ref={ref}
-                         className="w-[364px] h-[205px]"
-                         videoId={piece.url}
-                         opts={opts}/>
-        </>)
+            <ReactPlayerComponent
+                         width={364}
+                         height={205}
+                         url={piece.url}
+                         controls={false}
+                         muted={true}
+                         loop={true}
+                         playing={props.shouldPlay}
+                         config={config}/>
+        )
     }
 }
 
