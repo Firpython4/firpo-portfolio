@@ -11,6 +11,7 @@ import { PieceVideo } from "~/components/piecePreview";
 import { type Locale } from "~/localization/localization";
 import { type CollectionPageParams } from "~/types/params";
 import commonMetadata from "../../../../metadata";
+import PropsWithClassName from "../../../../types/propsWithClassName";
 
 export const generateStaticParams = async () =>
 {
@@ -54,7 +55,7 @@ const Piece = (props: {piece: PieceType<string>}) =>
     }
 };
 
-const BackIcon = (props: {className?: string}) => <ExportedImage className={props.className} alt="home" src="/icons/back-icon.svg" width={31} height={31} sizes="31px"/>;
+const BackIcon = (props: PropsWithClassName) => <ExportedImage className={props.className} alt="home" src="/icons/back-icon.svg" width={31} height={31} sizes="31px"/>;
 
 const BackButton = (props: {locale: Locale}) =>
 {
