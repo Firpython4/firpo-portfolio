@@ -1,4 +1,4 @@
-export type PieceType = ImagePieceType | VideoPieceType;
+export type PieceType = ImagePieceType | VideoPieceType | VideoWithThumbnailPieceType;
 
 export type ImagePieceType = {
     type: "image",

@@ -89,6 +89,7 @@ export function getFirstMarkdownFile(directoryEntries: Dirent[])
 export const absoluteToRelativePath = (imagePath: StringWithInnerSubstring<PublicFolder>) => (imagePath.split(path.join(publicFolderValue)))[1]!;
 
 export const removeMarkdownExtension = (name: string) => name.replace(".md", "");
+export const removeExtension = (name: Dirent) => name.name.replace(path.extname(name.name), "");
 
 export function getPath(dirent: Dirent)
 {

@@ -7,7 +7,7 @@ import {
     getFirstMarkdownFile,
     getPath, getSubdirectories,
     getVideoUrl, getWorksDirectoryEntities,
-    isFile
+    isFile, removeExtension
 } from "~/cms/fileManagement";
 import path from "node:path";
 import matter from "gray-matter";
@@ -53,19 +53,15 @@ async function asVideo(mediaDirent: Dirent, shared: PieceSharedType)
                 ...shared
             };
         }
-        else
-        {
-            throw new Error(`Unsupported file format: ${piecePath}`)
-        }
     }
 }
 
 async function asVideoWithThumbnail(mediaDirent: Dirent, shared: PieceSharedType)
 {
     const piecePath = getPath(mediaDirent);
-    const videoUrlPath = path.join(piecePath, `${mediaDirent.name}.url`)
-    const pngThumbnailPath = path.join(piecePath, `${mediaDirent.name}.png`)
-    const jpgThumbnailPath = path.join(piecePath, `${mediaDirent.name}.jpg`)
+    const videoUrlPath = path.join(piecePath, `${removeExtension(mediaDirent)}.url`)
+    const pngThumbnailPath = path.join(piecePath, `${removeExtension(mediaDirent)}.png`)
+    const jpgThumbnailPath = path.join(piecePath, `${removeExtension(mediaDirent)}.jpg`)
     if (includesInner(piecePath, publicFolderValue) && includesInner(videoUrlPath, publicFolderValue))
     {
         if (await (exists(videoUrlPath)))
@@ -84,7 +80,7 @@ async function asVideoWithThumbnail(mediaDirent: Dirent, shared: PieceSharedType
                 return undefined;
             }
             return {
-                type: "video" as const,
+                type: "videoWithThumbnail" as const,
                 url: await getVideoUrl(videoUrlPath),
                 thumbnailUrl: thumbnailUrl,
                 title: mediaDirent.name,
@@ -134,7 +130,7 @@ async function getPieces(subCollection: { parent: Dirent, sub: Dirent[] })
             {
                 const literalNewLine = "\\r\\n";
                 const newLineChar = "\n";
-                const result = await Promise.allSettled(subCollection.sub.filter(isFile)
+                const result = await Promise.allSettled(subCollection.sub
                     .map(getPiece(parentDirectoryPath, matterResult.replaceAll(literalNewLine, newLineChar))));
 
                 return result.filter(promiseFullfilledPredicate).map(valueMapper);
