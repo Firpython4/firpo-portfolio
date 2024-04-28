@@ -4,7 +4,8 @@ import { promisify } from "util";
 import { z } from "zod";
 import { error, type ExtractErrorType, type ExtractOkType, ok, type Result } from "~/types/result";
 import { type Brand } from "../typeSafety";
-import { getExtension, getPath, safeReadDir, sizeOfAsync } from "./fileManagement";
+import {  getPath, safeReadDir, sizeOfAsync } from "./fileManagement";
+import { lstat } from "node:fs/promises";
 
 type TCmsValue<Value, Error> = {
     readonly parse: Parser<Value, Error>
@@ -41,7 +42,7 @@ interface TCmsObject<T extends Record<string, TCmsValue<unknown, unknown>>> {
     readonly parse: Parser<InferTCmsObject<T>, "no matches" | typeof couldNotReadDirectory>
 }
 
-type UrlError = "no matches" | "invalid url";
+type UrlError = "no matches" | "invalid url" | "invalid extension";
 
 type TCmsUrl = {
     readonly type: "url";
@@ -100,14 +101,14 @@ export async function getUrlFromPath(path: Path)
 const url = (): TCmsUrl => (
 {
     type: "url",
-    parse: async path => {
+    parse: async pathToParse => {
         const extension = ".url";
-        if (!path.endsWith(extension))
+        if (!pathToParse.endsWith(extension))
         {
             return error("invalid extension");
         }
         
-        const url = await getUrlFromPath(path);
+        const url = await getUrlFromPath(pathToParse);
         
         if (!z.string().url().safeParse(url))
         {
@@ -116,7 +117,7 @@ const url = (): TCmsUrl => (
         
         return ok({
             type: "url",
-            name: getExtension(path),
+            name: getName(pathToParse),
             value: url,
         });
     }
@@ -171,16 +172,19 @@ const image = (): TCmsImage => ({
         {
             return error(`Unable to read file ${path}`)
         }
-
-        if (!size)
+        
+        const sizeValue = size.okValue;
+        
+        if (!sizeValue)
         {
             return error(`Unable to read file ${path}`)
         }
-        if (size.width === undefined)
+
+        if (sizeValue.width === undefined)
         {
             return error(`Invalid image width for ${path}`)
         }
-        if (size.height === undefined)
+        if (sizeValue.height === undefined)
         {
             return error(`Invalid image height for ${path}`)
         }
@@ -188,8 +192,8 @@ const image = (): TCmsImage => ({
         return ok({
             type: "image",
             name: getName(path),
-            width: size.width,
-            height: size.height,
+            width: sizeValue.width,
+            height: sizeValue.height,
             url: url as `${string}${typeof imageFolder}/${string}`
         });
     }
@@ -197,15 +201,7 @@ const image = (): TCmsImage => ({
 
 function getName(inPath: Path)
 {
-    const split = inPath.split(path.delimiter);
-    
-    const name = split[split.length - 1];
-    if (!name)
-    {
-        return inPath;
-    }
-
-    return name;
+    return path.basename(inPath, path.extname(inPath))
 }
 
 const array = <ElementType extends TCmsValue<unknown, unknown>>(element: ElementType): TCmsArray<ElementType> => ({
@@ -219,7 +215,7 @@ const array = <ElementType extends TCmsValue<unknown, unknown>>(element: Element
             return error(couldNotReadDirectory)
         }
 
-        const mapped = await Promise.allSettled(readDirResultToArray(dirents).map(async dirent => (element.parse(getPath(dirent)))));
+        const mapped = await Promise.allSettled(dirents.okValue.map(async dirent => (element.parse(getPath(dirent)))));
         const filtered = mapped.filter((parsed): parsed is ExtractOkType<typeof parsed> => parsed.status === "fulfilled" && parsed.value.wasResultSuccessful) as Infer<ElementType>[];
         
         if (filtered.length == 0)
@@ -242,11 +238,10 @@ const object = <T extends Record<string, TCmsValue<unknown, unknown>>>(
             return error(couldNotReadDirectory);
         }
 
-        const asArray = readDirResultToArray(dirents);
 
         const result = await Promise.allSettled(Object.entries(fields).map(async ([, value]) =>
                                                        {
-                                                            for (const dirent of asArray)
+                                                            for (const dirent of dirents.okValue)
                                                             {
                                                                 const parsed = await value.parse(getPath(dirent));
                                                                 if (parsed.wasResultSuccessful)
@@ -273,21 +268,20 @@ const union = <T extends Readonly<[...TCmsValue<unknown, unknown>[]]>>(...types:
     {
         for (const [option, type] of types.entries())
         {
-            try
-            {
-                const typeSafeIndex = option as ArrayIndices<T>;
+            const typeSafeIndex = option as ArrayIndices<T>;
 
-                // @ts-expect-error TS does not recognize string indices as real indices
-                const parseResult = (await type.parse(path)) as Infer<T[ArrayIndices<T>]>
-                return ok({
-                    option: typeSafeIndex,
-                    value: parseResult
-                }) 
-            }
-            catch (error)
+            // @ts-expect-error TS does not recognize string indices as real indices
+            const parseResult = (await type.parse(path)) as Infer<T[ArrayIndices<T>]>
+
+            if (!parseResult.wasResultSuccessful)
             {
-                // Ignore errors and try the next type
+                continue;
             }
+
+            return ok({
+                option: typeSafeIndex,
+                value: parseResult
+            }) 
         }
         
         return error("no matches");
@@ -308,13 +302,3 @@ const video = url();
 const schema = union(image(), video, union(image(), url(), videoWithThumb));
 
 const imageFolder = "public" as const;
-
-function readDirResultToArray(dirents: { wasResultSuccessful: true; } & Dirent[])
-{
-    const asArray: Dirent[] = [];
-    const copy: Dirent[] & {wasResultSuccessful? : true} = {...dirents};
-    delete copy.wasResultSuccessful;
-    Object.entries(copy).forEach(([, value]) => asArray.push(value));
-
-    return asArray;
-}

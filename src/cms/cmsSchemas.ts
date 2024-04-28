@@ -15,8 +15,4 @@ const piece = tcms.union(
 );
 
 const pieces = tcms.array(piece);
-export const collection = tcms.object({
-    pt: tcms.markdown("pt"),
-    en: tcms.markdown("en"),
-    pieces: pieces
-})
+export const collection = pieces;
