@@ -14,9 +14,9 @@ export type HomeProps = {
 export async function getIndexPageContent(locale: Locale)
 {
     const cms = await getOrCacheCompiledCms();
-    const pieces = cms.map(collection => collection.parsedObject.pieces.map(toLocalizedPiece(collection.parsedObject[locale]))).flat();
-    
-    await orderByConfig(pieces);
+    const piecesArray = cms.map(collection => collection.parsed.pieces.parsed).flat();
+    const pieces = cms.map(collection => collection.parsed.pieces.parsed.map(toLocalizedPiece(collection.parsed[locale]))).flat();
+    await orderByConfig(piecesArray);
 
     return {
         pieces,

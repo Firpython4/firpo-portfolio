@@ -17,7 +17,7 @@ export async function getCollectionsStaticPaths()
                                                })).flat();
 }
 
-export const toLocalizedPiece = (localizedContent: CollectionType["parsedObject"][Locale]) => (piece: PieceType) => ({title: replaceNewlines(localizedContent.matters.title) , piece})
+export const toLocalizedPiece = (localizedContent: CollectionType["parsed"][Locale]) => (piece: PieceType) => ({title: replaceNewlines(localizedContent.matters.title) , piece})
 
 export async function getCollectionPageContent(params: CollectionPageParams)
 {
@@ -29,8 +29,8 @@ export async function getCollectionPageContent(params: CollectionPageParams)
     const collection = cms.find(collection => collection.name === targetCollectionName);
     if (collection)
     {
-        const localizedContent = collection.parsedObject[locale];
-        const pieces = collection.parsedObject.pieces.map(toLocalizedPiece(localizedContent));
+        const localizedContent = collection.parsed[locale];
+        const pieces = collection.parsed.pieces.parsed.map(toLocalizedPiece(localizedContent));
         
         return {
             locale,
