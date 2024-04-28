@@ -57,4 +57,3 @@ export const pt: LocaleTexts = {
         e as seguintes prefeituras: Porto Alegre, Passo Fundo, Bento Gonçalves, Gravataí, Santa Maria e Rio Grande.</>,
     solveYourCommunicationProblems: <>Resolva seus problemas de comunicação:</>
 }
-
