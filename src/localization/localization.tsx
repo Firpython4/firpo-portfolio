@@ -18,7 +18,8 @@ const pt_br = {
         de Vento, Governo do Rio Grande do Sul, Governo de Santa Catarina, Daer, Sulgás, Detran, CEEE, Corsan, Grupo
         Zaffari, Supermercados Angeloni, Tintas Renner, Sayerlack, Selenium, Cerâmicas Oxford, Student Travel Bureau, Lojas
         Colombo Stores, Rede de Concessionárias Fiat e as seguintes prefeituras: Porto Alegre, Passo Fundo, Bento Gonçalves,
-        Gravataí, Santa Maria e Rio Grande.</>
+        Gravataí, Santa Maria e Rio Grande.</>,
+    solveYourCommunicationProblems: <>Resolva seus problemas de comunicação:</>
 }
 
 export const locale = pt_br;
