@@ -4,7 +4,7 @@ import { promisify } from "util";
 import { type ZodObject, type ZodRawShape, z } from "zod";
 import html from "remark-html";
 import strip from "strip-markdown";
-import { error, type ExtractErrorTypeRaw, type ExtractOkType, map, ok, type Result } from "~/types/result";
+import { error, type ExtractOkType, map, ok, type Result } from "~/types/result";
 import { type Brand } from "../typeSafety";
 import {  getPath, readFileSafe, safeReadDir, sizeOfAsync } from "./fileManagement";
 import matter from "gray-matter";
@@ -323,9 +323,6 @@ const parseMarkdownWithContent = <T extends ZodRawShape> (matters: ZodObject<T>)
     const matterData = matterResult.data;
     if (matters.safeParse(matterData))
     {
-        const literalNewLine = "\\n";
-        const newLineChar = "\r\n";
-
         return ok({
                 matters: matterData as z.infer<typeof matters>,
                 html: processedContent.toString(),
@@ -377,8 +374,5 @@ export const tcms = {
     object,
     union
 };
-
-const test = object({test: url()}).withName();
-type a = Infer<typeof test>;
 
 const imageFolder = "public" as const;

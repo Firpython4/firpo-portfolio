@@ -1,7 +1,5 @@
 import { type TextType } from "~/localization/localization";
 
-export type PieceType<GenericTextType extends TextType> = (ImagePieceType | VideoPieceType | VideoWithThumbnailPieceType) & PieceSharedType<GenericTextType> & PieceCommonType;
-
 export type ImagePieceType = {
     type: "image",
 } & ImageSize
@@ -29,7 +27,3 @@ export type PieceSharedType<GenericTextType extends TextType> = {
     collectionName: GenericTextType,
 }
 
-type PieceCommonType = {
-    url: string
-    title: string
-}

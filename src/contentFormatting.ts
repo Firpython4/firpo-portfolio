@@ -3,7 +3,7 @@ import { type Dirent, promises as fileSystem } from "node:fs";
 import { remark } from "remark";
 import html from "remark-html";
 import strip from "strip-markdown";
-import { getPath, readFileSafe as readFileSafe, safePath } from "./cms/fileManagement";
+import { getPath } from "./cms/fileManagement";
 import type { Locale } from "./localization/localization";
 
 const toContentObject: (locale: Locale, content: Dirent) => Promise<[Locale, {

@@ -1,5 +1,4 @@
 import { type LocalizedContentType } from "../types/localizedCollectionType";
-import type { PieceType } from "../types/pieceType";
 import { en, pt, type LocalizedCopy } from "./copy";
 
 const texts: Record<Locale, LocalizedCopy> = {
@@ -35,21 +34,6 @@ export function getLocalizedContent(localizedContent: LocalizedContentType, loca
     else
     {
         throw new Error("No default localized string found")
-    }
-}
-
-export function getLocalizedPiece(piece: PieceType<LocalizedText>, locale: Locale)
-{
-    const localizedCollectionName = piece.collectionName.get(locale);
-    
-    if (!localizedCollectionName)
-    {
-        throw new Error(`Unable to find localized collection name for ${piece.title} using locale ${locale}`)
-    }
-    
-    return {
-        ...piece,
-        collectionName: localizedCollectionName,
     }
 }
 

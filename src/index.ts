@@ -1,11 +1,12 @@
 import getOrCacheCompiledCms from "./cms/cmsCompiler";
 import { orderByConfig } from "./cms/ordering";
-import { getLocalizedPiece, getLocalizedCopy, type Locale } from "./localization/localization";
+import { getLocalizedCopy, type Locale } from "./localization/localization";
 import { type LocalizedCopy } from "./localization/copy";
-import { type PieceType } from "./types/pieceType";
+import { toLocalizedPiece } from "./collection";
+import { type PieceType } from "./cms/cmsSchemas";
 
 export type HomeProps = {
-    pieces: PieceType<string>[];
+    pieces: PieceType[];
     localizedCopy: LocalizedCopy;
     locale: Locale
 };
@@ -13,7 +14,7 @@ export type HomeProps = {
 export async function getIndexPageContent(locale: Locale)
 {
     const cms = await getOrCacheCompiledCms();
-    const pieces = cms.array.map(collection => collection.pieces.map(piece => getLocalizedPiece(piece, locale))).flat();
+    const pieces = cms.map(collection => collection.parsedObject.pieces.map(toLocalizedPiece(collection.parsedObject[locale]))).flat();
     
     await orderByConfig(pieces);
 

@@ -31,7 +31,7 @@ const Home = async (props: {params: PageParams}) =>
 {
     const content = await getIndexPageContent(props.params.locale);
     return (
-        <HomeContent locale={props.params.locale} localizedCopy={content.localizedCopy} pieces={content.pieces}/>
+        <HomeContent locale={props.params.locale} localizedCopy={content.localizedCopy} pieces={content.pieces.map(value => value.piece)}/>
     );
 };
 
