@@ -3,7 +3,7 @@
 import ExportedImage from "next-image-export-optimizer";
 import dynamic from "next/dynamic";
 
-import { useRef } from "react";
+import { CSSProperties, useRef } from "react";
 import { type YouTubeConfig } from "react-player/youtube";
 import { useHover } from "usehooks-ts";
 import { type PieceType } from "~/types/pieceType";
@@ -55,6 +55,7 @@ export const PieceVideo = (props: PropsWithClassName<{
     playing: boolean,
     muted: boolean,
     controls: boolean,
+    style?: CSSProperties
     width?: number,
     height?: number,
     youtubeConfig: YouTubeConfig
@@ -62,7 +63,8 @@ export const PieceVideo = (props: PropsWithClassName<{
 {
     if (props.url.includes("youtube"))
     {
-        return <YoutubeReactPlayerComponent
+        return <div style={props.style}>
+            <YoutubeReactPlayerComponent
             width="100%"
             height="100%"
             url={props.url}
@@ -71,10 +73,12 @@ export const PieceVideo = (props: PropsWithClassName<{
             loop={true}
             playing={props.playing}
             config={props.youtubeConfig}/>;
+        </div>
     }
     else if (props.url.includes("vimeo"))
     {
-        return <VimeoReactPlayerComponent
+        return <div style={props.style}>
+            <VimeoReactPlayerComponent
             width="100%"
             height="100%"
             url={props.url}
@@ -82,6 +86,7 @@ export const PieceVideo = (props: PropsWithClassName<{
             muted={props.muted}
             loop={true}
             playing={props.playing}/>;
+        </div>
     }
 
     throw new Error(`Unsupported video provider: ${props.url}`)
