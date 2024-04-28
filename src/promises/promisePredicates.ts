@@ -7,3 +7,9 @@ export function promiseRejectedPredicate<T> (promise: PromiseSettledResult<T>): 
 {
     return promise.status === "rejected";
 }
+
+export function valueMapper<T>(from: {value: T})
+{
+    return from.value
+}
+
