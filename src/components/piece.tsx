@@ -5,10 +5,11 @@ import { useRef } from "react";
 import { type YouTubeConfig } from "react-player/youtube";
 import { useHover } from "usehooks-ts";
 import { type PieceType } from "~/types/pieceType";
-import { type Locale } from "../localization/localization";
+import { type Locale } from "~/localization/localization";
 import LinkWithLocale from "./LinkWithLocale";
 
-const ReactPlayerComponent = dynamic(() => import("react-player/youtube"), {ssr: false});
+const YoutubeReactPlayerComponent = dynamic(() => import("react-player/youtube"), {ssr: false});
+const VimeoReactPlayerComponent = dynamic(() => import("react-player/vimeo"), {ssr: false});
 
 export const Piece = (props: { piece: PieceType, locale: Locale }) =>
 {
@@ -49,24 +50,40 @@ const PreviewVideo = (props: {
     className?: string
 }) =>
 {
-    const config: YouTubeConfig = {
-        playerVars: {
-            controls: 0,
-            disablekb: 1,
-            modestbranding: 1,
-            showinfo: 0
-        }
-    };
-    return <ReactPlayerComponent
-        width={364}
-        height={205}
-        url={props.url}
-        controls={false}
-        muted={true}
-        loop={true}
-        playing={props.playing}
-        config={config}/>;
-};
+    if (props.url.includes("youtube"))
+    {
+        const config: YouTubeConfig = {
+            playerVars: {
+                controls: 0,
+                disablekb: 1,
+                modestbranding: 1,
+                showinfo: 0
+            }
+        };
+        return <YoutubeReactPlayerComponent
+            width={364}
+            height={205}
+            url={props.url}
+            controls={false}
+            muted={true}
+            loop={true}
+            playing={props.playing}
+            config={config}/>;
+    }
+    else if (props.url.includes("vimeo"))
+    {
+        return <VimeoReactPlayerComponent
+            width={364}
+            height={205}
+            url={props.url}
+            controls={false}
+            muted={true}
+            loop={true}
+            playing={props.playing}/>;
+    }
+
+    throw new Error(`Unsupported video provider: ${props.url}`)
+}
 
 const maxresdefault = "maxresdefault" as const;
 const sddefault = "sddefault" as const;
@@ -138,7 +155,7 @@ const PieceThumbnail = (props: { className?: string, piece: PieceType, shouldPla
         {
             return (
                 <>
-                    <Image src={thumbnail} alt={piece.title} layout="fill"
+                    <Image src={thumbnail} alt={piece.title} fill={true}
                            className={`${props.className} opacity-100
                               aspect-[364/205]
                               group-hover:opacity-0
