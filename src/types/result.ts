@@ -12,6 +12,14 @@ export function ok<OkType>(okValue: OkType)
     };
 }
 
+export async function okAsync<OkType>(okValue: Promise<OkType>)
+{
+    return {
+        wasResultSuccessful: true as const,
+        ...(await okValue)
+    };
+}
+
 export function error<ErrorType>(errorType: ErrorType)
 {
     return {

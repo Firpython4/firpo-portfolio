@@ -1,4 +1,4 @@
-import { relativePath, safePath, tcms } from "./tcmsTypes";
+import { tcms } from "./tcmsTypes";
 
 const videoWithThumbnail = tcms.object({
     url: tcms.url(), thumbnail: tcms.image()

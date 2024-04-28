@@ -1,11 +1,10 @@
-import { promises as fileSystem } from "node:fs";
+import { type Dirent, promises as fileSystem } from "node:fs";
 import path from "node:path";
 import { promisify } from "util";
 import { z } from "zod";
 import { error, type ExtractErrorType, type ExtractOkType, ok, type Result } from "~/types/result";
 import { type Brand } from "../typeSafety";
-import { getExtension, getPath, sizeOfAsync } from "./fileManagement";
-import { readdir } from "node:fs/promises";
+import { getExtension, getPath, safeReadDir, sizeOfAsync } from "./fileManagement";
 
 type TCmsValue<Value, Error> = {
     readonly parse: Parser<Value, Error>
@@ -26,36 +25,38 @@ type Parser<OkType, ErrorType> = ((path: Path) => Promise<Result<OkType, ErrorTy
 type ImageError = "no matches" | "image not in the configured folder";
 type TCmsImage = {
     readonly type: "image";
-    readonly parse: Parser<Image, ImageError>
+    readonly parse: Parser<Image, ImageError>;
 }
 
 type MarkdownError = "no matches" | "invalid name";
 type TCmsMarkdown = {
     readonly type: "markdown";
-    readonly parse: Parser<Markdown, MarkdownError>
+    readonly parse: Parser<Markdown, MarkdownError>;
 }
+
+const couldNotReadDirectory = "could not read directory";
 
 interface TCmsObject<T extends Record<string, TCmsValue<unknown, unknown>>> {
     readonly type: "object";
-    readonly parse: Parser<InferTCmsObject<T>, "no matches">
+    readonly parse: Parser<InferTCmsObject<T>, "no matches" | typeof couldNotReadDirectory>
 }
 
 type UrlError = "no matches" | "invalid url";
 
 type TCmsUrl = {
     readonly type: "url";
-    readonly parse: Parser<Url, UrlError>
+    readonly parse: Parser<Url, UrlError>;
 }
 
 interface TCmsArray<ElementType extends TCmsValue<unknown, unknown>> {
     readonly type: "array";
     //@ts-expect-error type inference is expected to get deep
-    readonly parse: Parser<Infer<ElementType>[], "empty array">;
+    readonly parse: Parser<Infer<ElementType>[], "empty array" | typeof couldNotReadDirectory>;
 }
 
 interface TCmsUnion<T extends Readonly<[...TCmsValue<unknown, unknown>[]]>> {
     readonly type: "union";
-    readonly parse: Parser<InferTCmsUnion<T>, "no matches">
+    readonly parse: Parser<InferTCmsUnion<T>, "no matches">;
 }
 
 type Url = { type: "url", value: string } & TCmsEntity
@@ -206,8 +207,14 @@ const array = <ElementType extends TCmsValue<unknown, unknown>>(element: Element
     type: "array",
     async parse(path: Path)
     {
-        const dirents = await readdir(path, {withFileTypes: true});
-        const mapped = await Promise.all(dirents.map(async dirent => (element.parse(getPath(dirent)))));
+        const dirents = await safeReadDir(path);
+
+        if (!dirents.wasResultSuccessful)
+        {
+            return error(couldNotReadDirectory)
+        }
+
+        const mapped = await Promise.all(readDirResultToArray(dirents).map(async dirent => (element.parse(getPath(dirent)))));
         const filtered = mapped.filter((parsed): parsed is ExtractOkType<typeof parsed> => parsed.wasResultSuccessful) as Infer<ElementType>[];
         
         if (filtered.length == 0)
@@ -224,10 +231,17 @@ const object = <T extends Record<string, TCmsValue<unknown, unknown>>>(
 ): TCmsObject<T> => ({
     type: "object",
     async parse(path: Path) {
-        const dirents = await readdir(path, {withFileTypes: true});
+        const dirents = await safeReadDir(path);
+        if (!dirents.wasResultSuccessful)
+        {
+            return error(couldNotReadDirectory);
+        }
+
+        const asArray = readDirResultToArray(dirents);
+
         const result = await Promise.all(Object.entries(fields).map(async ([, value]) =>
                                                        {
-                                                            for (const dirent of dirents)
+                                                            for (const dirent of asArray)
                                                             {
                                                                 const parsed = await value.parse(getPath(dirent));
                                                                 if (parsed.wasResultSuccessful)
@@ -238,7 +252,7 @@ const object = <T extends Record<string, TCmsValue<unknown, unknown>>>(
 
                                                             return error("no matches");
                                                        }));
-        
+
         if (result.find(value => !value.wasResultSuccessful))
         {
             return error("no matches");
@@ -288,14 +302,14 @@ const videoWithThumb = object({video: url(), thumbnail: image()})
 const video = url();
 const schema = union(image(), video, union(image(), url(), videoWithThumb));
 
-export function safePath(path: string)
-{
-    return path as Path;
-}
-
-export function relativePath(relativePath: Path)
-{
-    return safePath(path.join(process.cwd(), relativePath));
-}
-
 const imageFolder = "public" as const;
+
+function readDirResultToArray(dirents: { wasResultSuccessful: true; } & Dirent[])
+{
+    const asArray: Dirent[] = [];
+    const copy: Dirent[] & {wasResultSuccessful? : true} = {...dirents};
+    delete copy.wasResultSuccessful;
+    Object.entries(copy).forEach(([, value]) => asArray.push(value));
+
+    return asArray;
+}

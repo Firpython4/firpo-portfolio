@@ -5,9 +5,10 @@ import {  type StringWithInnerSubstring } from "~/typeSafety";
 import {type Locale, locales} from "~/localization/localization";
 import {promisify} from "util";
 import sizeOf from "image-size";
-import { error, ok } from "../types/result";
+import { error, ok, okAsync } from "../types/result";
 import { type CollectionId } from "./cmsCompiler";
 import { type Path } from "./tcmsTypes";
+import { readdir } from "node:fs/promises";
 
 export function getCollectionsFromDirectories(directories: Dirent[])
 {
@@ -53,7 +54,7 @@ export const removeExtension = (name: Dirent) => name.name.replace(path.extname(
 
 export function getPath(dirent: Dirent)
 {
-    return path.join(dirent.path, dirent.name) as Path;
+    return safePath(path.join(dirent.path, dirent.name));
 }
 
 export function getExtension(path: Path)
@@ -64,7 +65,7 @@ export function getExtension(path: Path)
         return error("path doesn't have an extension")
     }
 
-    return ok(result[length - 1]);
+    return ok(result[length - 1]!);
 }
 
 export async function getVideoUrl(imageOrUrlPath: `${string}public${string}`)
@@ -76,7 +77,7 @@ export async function getSafe(imageOrUrlPath: Path)
 {
     try
     {
-        return ok(await fileSystem.readFile(imageOrUrlPath))
+        return okAsync(fileSystem.readFile(imageOrUrlPath))
     }
     catch (e)
     {
@@ -137,4 +138,31 @@ export async function importAsImage(imagePath: PublicFolderPath)
 export async function sizeOfAsync(input: string)
 {
     return promisify(sizeOf)(input);
+}
+
+export function safePath(path: string)
+{
+    return path as Path;
+}
+
+export function safeJoin(...paths: string[])
+{
+    return safePath(path.join(...paths));
+}
+
+export function relativePath(relativePath: Path)
+{
+    return safePath(path.join(process.cwd(), relativePath));
+}
+
+export async function safeReadDir(path: Path)
+{
+    try
+    {
+        return ok(await readdir(path, {withFileTypes: true}));
+    }
+    catch (e)
+    {
+        return error("could not read directory");
+    }
 }

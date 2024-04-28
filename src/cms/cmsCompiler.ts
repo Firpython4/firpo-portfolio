@@ -14,7 +14,9 @@ import {
     type PublicFolderPath,
     removeExtension,
     sizeOfAsync,
-    typeSafePathJoin
+    typeSafePathJoin,
+    relativePath,
+    safePath
 } from "~/cms/fileManagement";
 import { type PublicFolder, publicFolderValue } from "~/config";
 import { type LocalizedText } from "~/localization/localization";
@@ -26,7 +28,6 @@ import { type Brand, includesInner } from "~/typeSafety";
 import toContentObject from "../contentFormatting";
 import { mapMap, mapMapAsync } from "../functional";
 import { collection } from "./cmsSchemas";
-import { relativePath, safePath } from "./tcmsTypes";
 
 async function asImage(mediaDirent: Dirent, shared: PieceSharedType<LocalizedText>)
 {
@@ -52,7 +53,7 @@ async function asImage(mediaDirent: Dirent, shared: PieceSharedType<LocalizedTex
             return {
                 type: "image" as const,
                 url: absoluteToRelativePath(piecePath).replaceAll("\\", "/"),
-                title: mediaDirent.name.replace(getExtension(mediaDirent), ""),
+                title: mediaDirent.name.replace(getExtension(getPath(mediaDirent)), ""),
                 width: size.width,
                 height: size.height,
                 ...shared
@@ -72,8 +73,8 @@ async function asVideo(mediaDirent: Dirent, shared: PieceSharedType<LocalizedTex
             return {
                 type: "video" as const,
                 url: await getVideoUrl(piecePath),
-                title: mediaDirent.name.replace(getExtension(mediaDirent), ""),
-                ...shared
+                ...shared,
+                title: mediaDirent.name.replace(getExtension(getPath(mediaDirent)), ""),
             };
         }
     }
