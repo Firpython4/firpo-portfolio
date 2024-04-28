@@ -10,13 +10,14 @@ import html from "remark-html";
 import { Scaffold } from "../../components/scaffold";
 import "@total-typescript/ts-reset";
 import { VerticalCenterBox } from "../../components/verticalCenterBox";
+import { type PublicFolder, publicFolderValue } from "../../config";
 import {
     absoluteToRelativePath,
     getFirstMarkdownFile,
     filterImages,
     getWorksDirectoryEntities, removeMarkdownExtension, getPath, getWorkDirectory
 } from "../../path/fileManagement";
-import { includesInner, StringWithInnerSubstring } from "../../typeSafety";
+import { includesInner, type StringWithInnerSubstring } from "../../typeSafety";
 
 interface WorkProps
 {
@@ -52,7 +53,7 @@ export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQu
 
         const imagePaths: string[] = filterImages(directoryEntries);
         
-        const filteredPaths: StringWithInnerSubstring<"public">[] = imagePaths.filter((imagePath: string) => includesInner(imagePath, "public")) as StringWithInnerSubstring<"public">[];
+        const filteredPaths: StringWithInnerSubstring<PublicFolder>[] = imagePaths.filter((imagePath: string) => includesInner(imagePath, publicFolderValue)) as StringWithInnerSubstring<"public">[];
         
         const content: Dirent | undefined = getFirstMarkdownFile(directoryEntries)
         

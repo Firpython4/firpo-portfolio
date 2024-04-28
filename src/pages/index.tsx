@@ -9,6 +9,7 @@ import { Favicon } from "../components/favicon";
 import { Hero } from "../components/hero";
 import { PieceCollection } from "../components/pieceCollection";
 import { Scaffold } from "../components/scaffold";
+import { publicFolderValue } from "../config";
 import {
     absoluteToRelativePath, getFirstMarkdownFile,
     getPath,
@@ -70,7 +71,7 @@ function getPiece(parentDirectoryPath: `${string}public${string}`, title: string
 async function getPieces(subCollection: { parent: Dirent, sub: Dirent[] })
 {
     const parentDirectoryPath = getPath(subCollection.parent);
-    if (includesInner(parentDirectoryPath, "public"))
+    if (includesInner(parentDirectoryPath, publicFolderValue))
     {
         const firstMarkdownFileDirent = getFirstMarkdownFile(subCollection.sub);
         if (firstMarkdownFileDirent)
