@@ -4,7 +4,7 @@ import { promisify } from "util";
 import { type ZodObject, type ZodRawShape, z } from "zod";
 import html from "remark-html";
 import strip from "strip-markdown";
-import { error, type ExtractErrorTypeRaw, type ExtractOkType, ok, type Result } from "~/types/result";
+import { error, type ExtractErrorTypeRaw, type ExtractOkType, map, ok, type Result } from "~/types/result";
 import { type Brand } from "../typeSafety";
 import {  getPath, readFileSafe, safeReadDir, sizeOfAsync } from "./fileManagement";
 import matter from "gray-matter";
@@ -41,10 +41,11 @@ type TCmsMarkdown = {
 
 const couldNotReadDirectory = "could not read directory";
 
-interface TCmsObject<T extends Record<string, TCmsValue<unknown, unknown>>>
+interface TCmsObject<T extends TCmsRecord>
     extends TCmsValue<InferTCmsObject<T>, "no matches" | typeof couldNotReadDirectory>
 {
     readonly type: "object";
+    readonly withName: ReturnType<typeof objectWithName>;
 }
 type UrlError = "no matches" | "invalid url" | "invalid extension";
 
@@ -77,7 +78,7 @@ type Image = {
 export type Path = Brand<string, "path">;
 
 
-type InferTCmsObject<T extends Record<string, TCmsValue<unknown, unknown>>> = {
+type InferTCmsObject<T extends TCmsRecord> = {
     [Key in keyof T]: Infer<T[Key]>;
 };
 
@@ -89,9 +90,8 @@ type InferTCmsUnion<T extends Readonly<[...TCmsValue<unknown, unknown>[]]>> = {
         value: Infer<T[Key]>}
 }[ArrayIndices<T>]
 
-export type Infer<T extends TCmsValue<unknown, unknown>> =  T["parse"] extends Parser<infer OkType, unknown> ? OkType : never;
-export type InferError<T extends TCmsValue<unknown, unknown>> =  (ExtractErrorTypeRaw<Awaited<ReturnType<T["parse"]>>>);
-
+export type Infer<T extends TCmsValue<unknown, unknown>> =  T extends TCmsValue<infer OkType, unknown> ? OkType : never;
+export type InferError<T extends TCmsValue<unknown, unknown>> = T extends TCmsValue<unknown, infer ErrorType> ? ErrorType : never;
 
 export async function getUrl(imageOrUrlPath: Path)
 {
@@ -209,40 +209,72 @@ const array = <ElementType extends TCmsValue<unknown, unknown>>(element: Element
     }
 });
 
-const object = <T extends Record<string, TCmsValue<unknown, unknown>>>(
+type TCmsRecord = Record<string, TCmsValue<unknown, unknown>>;
+
+type InferTCmsObjectWithName<T extends TCmsRecord> = {
+    name: string;
+    parsedObject: InferTCmsObject<T>;
+};
+
+interface TCmsObjectWithName<T extends TCmsRecord>
+extends TCmsValue<InferTCmsObjectWithName<T>, "no matches" | "name does not match" | typeof couldNotReadDirectory>
+{
+    readonly type: "objectWithName";
+}
+
+const objectWithName = <T extends TCmsRecord> (parse: Parser<InferTCmsObject<T>, "no matches" | typeof couldNotReadDirectory>) => (namePattern?: string): TCmsObjectWithName<T> =>
+({
+    type: "objectWithName",
+    async parse(inPath: Path)
+    {
+        const name = path.basename(inPath, path.extname(inPath));
+        if (namePattern && !name.match(namePattern))
+        {
+            return error("name does not match");
+        }
+    
+        const parseResult = await parse(inPath);
+        return map(parseResult, okParse => ({name, parsedObject: okParse}));
+    }
+});
+
+const objectParse = <T extends TCmsRecord> (fields: T): Parser<InferTCmsObject<T>, typeof couldNotReadDirectory | "no matches"> => async (path: Path) =>
+{
+    const dirents = await safeReadDir(path);
+    if (!dirents.wasResultSuccessful)
+    {
+        return error(couldNotReadDirectory);
+    }
+
+
+    const result = await Promise.allSettled(Object.entries(fields).map(async ([, value]) =>
+    {
+        for (const dirent of dirents.okValue)
+        {
+            const parsed = await value.parse(getPath(dirent));
+            if (parsed.wasResultSuccessful)
+            {
+                return parsed;
+            }
+        }
+
+        return error("no matches" as const);
+    }));
+
+    const filtered = result.filter((value): value is PromiseFulfilledResult<ExtractOkType<Result<unknown, unknown>>> => value.status === "fulfilled" && value.value.wasResultSuccessful);
+    if (filtered.length !== result.length)
+    {
+        return error("no matches" as const);
+    }
+
+    return ok((filtered.map(value => value.value.okValue)) as InferTCmsObject<T>);
+};
+const object = <T extends TCmsRecord>(
     fields: T
 ): TCmsObject<T> => ({
     type: "object",
-    async parse(path: Path) {
-        const dirents = await safeReadDir(path);
-        if (!dirents.wasResultSuccessful)
-        {
-            return error(couldNotReadDirectory);
-        }
-
-
-        const result = await Promise.allSettled(Object.entries(fields).map(async ([, value]) =>
-                                                       {
-                                                            for (const dirent of dirents.okValue)
-                                                            {
-                                                                const parsed = await value.parse(getPath(dirent));
-                                                                if (parsed.wasResultSuccessful)
-                                                                {
-                                                                    return parsed;
-                                                                }
-                                                            }
-
-                                                            return error("no matches" as const);
-                                                       }));
-
-        const filtered = result.filter((value): value is PromiseFulfilledResult<ExtractOkType<Result<unknown, unknown>>> => value.status === "fulfilled" && value.value.wasResultSuccessful);
-        if (filtered.length !== result.length)
-        {
-            return error("no matches" as const);
-        }
-
-        return ok((filtered.map(value => value.value.okValue)) as InferTCmsObject<T>);
-    },
+    parse: objectParse<T>(fields),
+    withName: objectWithName<T>(objectParse<T>(fields))
 });
 
 const union = <T extends Readonly<[...TCmsValue<unknown, unknown>[]]>>(...types: T): TCmsUnion<T> => ({
@@ -267,7 +299,7 @@ const union = <T extends Readonly<[...TCmsValue<unknown, unknown>[]]>>(...types:
             }) 
         }
         
-        return error("no matches");
+        return error("no matches" as const);
     }
 });
 
@@ -319,7 +351,7 @@ const markdown = <T extends string>(namePattern?: T): TCmsMarkdown => (
         const extension = ".md";
         if (!path.endsWith(extension))
         {
-            return error("invalid extension");
+            return error("invalid extension" as const);
         }
         
         const name = getName(path);
@@ -346,8 +378,7 @@ export const tcms = {
     union
 };
 
-const videoWithThumb = object({video: url(), thumbnail: image()})
-const video = url();
-const schema = union(image(), video, union(image(), url(), videoWithThumb));
+const test = object({test: url()}).withName();
+type a = Infer<typeof test>;
 
 const imageFolder = "public" as const;

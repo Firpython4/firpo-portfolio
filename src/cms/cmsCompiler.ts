@@ -3,16 +3,16 @@ import path from "node:path";
 import {
     absoluteToRelativePath,
     exists,
-    getAllCollections,
     getExtension,
     getMarkdownFilesForLocales,
     getPath,
-    getCollectionsFromDirectories,
     getVideoUrl,
     importAsImage,
     isImageExtension,
     type PublicFolderPath,
+    relativePath,
     removeExtension,
+    safePath,
     sizeOfAsync,
     typeSafePathJoin,
 } from "~/cms/fileManagement";
@@ -20,11 +20,11 @@ import { type PublicFolder, publicFolderValue } from "~/config";
 import { type LocalizedText } from "~/localization/localization";
 import { promiseFullfilledPredicate, promiseRejectedPredicate, valueMapper } from "~/promises/promisePredicates";
 import log from "../logging";
-import { type UniqueCollectionType } from "../types/localizedCollectionType";
 import { type PieceSharedType, type PieceType } from "~/types/pieceType";
 import { type Brand, includesInner } from "~/typeSafety";
 import toContentObject from "../contentFormatting";
 import { mapMap, mapMapAsync } from "../functional";
+import { collections, CollectionsType } from "./cmsSchemas";
 
 async function asImage(mediaDirent: Dirent, shared: PieceSharedType<LocalizedText>)
 {
@@ -202,31 +202,15 @@ async function getPiecesFromCollection(collectionDirectory: CollectionDirectoryT
 
 async function compileCms()
 {
-    const directoryEntries = await getAllCollections();
-    const directories = directoryEntries.filter(dirent => dirent.isDirectory())
-    const subDirectories = await Promise.allSettled(getCollectionsFromDirectories(directories));
-    const fulfilledSubdirectories = subDirectories.filter(promiseFullfilledPredicate).map(valueMapper);
-    const rejectedSubdirectories = subDirectories.filter(promiseRejectedPredicate);
-
-    if (rejectedSubdirectories.length > 0)
+    const result = await collections.parse(relativePath(safePath("public/collections")));
+    if (result.wasResultSuccessful)
     {
-        throw new Error(`Some subdirectory reads failed: ${rejectedSubdirectories.toString()}`)
+        return result.okValue;
     }
-        
-    const collectionsWithPieces = await Promise.allSettled(fulfilledSubdirectories.map(getCollectionWithPiecesAndContent));
-    const promiseRejectedResults = collectionsWithPieces.filter(promiseRejectedPredicate);
-    if (promiseRejectedResults.length > 0)
+    else
     {
-        throw new Error(`Some pieces failed to resolve: ${JSON.stringify(promiseRejectedResults)}`)
+        throw result.errorValue;
     }
-    
-    const map = new Map<CollectionId, UniqueCollectionType>();
-    
-    const array = collectionsWithPieces.filter(promiseFullfilledPredicate).map(valueMapper);
-    
-    array.forEach(collection => map.set(collection.id, collection))
-
-    return { map, array };
 }
 
 export type CollectionId = Brand<string, "collectionId">;
@@ -247,10 +231,6 @@ async function getOrCacheCompiledCms()
     return cachedCms;
 }
 
-type ContentManagementSystem = {
-    map: Map<CollectionId, UniqueCollectionType>,
-    array: UniqueCollectionType[]
-}
-let cachedCms: ContentManagementSystem | null;
+let cachedCms: CollectionsType | null;
 
 export default getOrCacheCompiledCms;

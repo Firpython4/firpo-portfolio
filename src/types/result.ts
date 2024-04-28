@@ -30,6 +30,16 @@ export function error<ErrorType>(errorValue: ErrorType)
     };
 }
 
+export function map<OkType, ErrorType, NewOkType>(result: Result<OkType, ErrorType>, mapper: (okValue: OkType) => NewOkType)
+{
+    if (result.wasResultSuccessful)
+    {
+        return ok(mapper(result.okValue));
+    }
+
+    return result;
+}
+
 export type ExtractOkType<T> = T extends Result<infer OkType, unknown> ? {wasResultSuccessful: true, okValue: OkType} : never;
 export type ExtractOkTypeRaw<T> = T extends Result<infer OkType, unknown> ? OkType : never;
 export type ExtractErrorType<T> = T extends Result<unknown, infer ErrorType> ? {wasResultSuccessful: false, errorValue: ErrorType} : never;

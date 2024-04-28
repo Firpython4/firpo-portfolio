@@ -1,9 +1,9 @@
-import { safePath } from "./fileManagement";
+import { z } from "zod";
 import { type Infer, tcms } from "./tcmsTypes";
 
 const videoWithThumbnail = tcms.object({
     url: tcms.url(), thumbnail: tcms.image()
-});
+}).withName();
 
 const video = tcms.union(
     tcms.url(),
@@ -17,16 +17,11 @@ const piece = tcms.union(
 
 const pieces = tcms.array(piece);
 
-export const collection = tcms.object({
+const collection = tcms.object({
     pieces,
-    pt: tcms.markdown("pt"),
-    en: tcms.markdown("en")
-});
+    pt: tcms.markdown("pt").markdownWithContent(z.object({title: z.string()})),
+    en: tcms.markdown("en").markdownWithContent(z.object({title: z.string()}))
+}).withName();
 
-type CollectionType = Infer<typeof collection>;
-
-const parsed = await collection.parse(safePath("collections/internacional"));
-
-if (parsed.wasResultSuccessful)
-{
-}
+export const collections = tcms.array(collection);
+export type CollectionsType = Infer<typeof collections>;

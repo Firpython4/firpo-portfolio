@@ -5,8 +5,6 @@ import html from "remark-html";
 import strip from "strip-markdown";
 import { getPath, readFileSafe as readFileSafe, safePath } from "./cms/fileManagement";
 import type { Locale } from "./localization/localization";
-import { type ZodObject, type ZodRawShape, z } from "zod";
-import { tcms, type Path, type TCmsValue } from "./cms/tcmsTypes";
 
 const toContentObject: (locale: Locale, content: Dirent) => Promise<[Locale, {
     html: string;
@@ -43,5 +41,3 @@ const toContentObject: (locale: Locale, content: Dirent) => Promise<[Locale, {
 };
 
 export default toContentObject;
-
-const testParse = tcms.markdown().markdownWithContent(z.object({title: z.string()})).parse(safePath("test.md"));
