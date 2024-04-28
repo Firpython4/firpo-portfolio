@@ -1,7 +1,6 @@
-import { relativePath, safePath } from "~/cms/type-fs/fileManagement";
-import { type Brand } from "~/cms/type-fs/typeSafety";
 import { collections } from "./cmsSchemas";
 import { type CollectionsType } from "./schemaTypes";
+import { relativePath, safePath } from "./type-fs/fileManagement";
 
 export const replaceNewlines = (text: string) => {
   const literalNewLine = "\\n";
@@ -19,8 +18,6 @@ async function compileCms() {
     throw result.errorValue;
   }
 }
-
-export type CollectionId = Brand<string, "collectionId">;
 
 async function getOrCacheCompiledCms() {
   if (!cachedCms) {
