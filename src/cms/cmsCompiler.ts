@@ -206,7 +206,7 @@ async function compileCms()
     const rejectedSubdirectories = subDirectories.filter(promiseRejectedPredicate);
 
 
-    const resultP = await collection.parse(relativePath(safePath("public/collections")))
+    const resultP = await collection.parse(relativePath(safePath("public/collections/internacional")))
 
     if (resultP.wasResultSuccessful)
     {

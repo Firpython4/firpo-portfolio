@@ -121,8 +121,6 @@ const url = (): TCmsUrl => (
     }
 });
     
-
-
 const markdown = <T extends string>(namePattern?: T): TCmsMarkdown => (
 {
     type: "markdown",
@@ -209,7 +207,7 @@ const array = <ElementType extends TCmsValue<unknown, unknown>>(element: Element
     async parse(path: Path)
     {
         const dirents = await readdir(path, {withFileTypes: true});
-        const mapped = await Promise.all(dirents.map(async dirent => (await element.parse(getPath(dirent)))));
+        const mapped = await Promise.all(dirents.map(async dirent => (element.parse(getPath(dirent)))));
         const filtered = mapped.filter((parsed): parsed is ExtractOkType<typeof parsed> => parsed.wasResultSuccessful) as Infer<ElementType>[];
         
         if (filtered.length == 0)
