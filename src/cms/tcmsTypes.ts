@@ -25,8 +25,16 @@ type TCmsImage = {
     readonly type: "image";
 } & TCmsValue<Image, ImageError>
 
+type TCmsMarkdownWithContent<T extends ZodRawShape> = TCmsValue<{
+    html: string;
+    asString: string;
+    matters: z.infer<ZodObject<T>>;
+}, "could not read file" | "invalid matter"> & {type: "markdownWithContent"};
+
+
 type MarkdownError = "no matches" | "invalid name";
 type TCmsMarkdown = {
+    markdownWithContent: typeof markdownWithContent,
     readonly type: "markdown";
 } & TCmsValue<Markdown, MarkdownError>
 
@@ -120,30 +128,6 @@ const url = (): TCmsUrl => (
     }
 });
     
-const markdown = <T extends string>(namePattern?: T): TCmsMarkdown => (
-{
-    type: "markdown",
-    parse: promisify((path: Path) => {
-        const extension = ".md";
-        if (!path.endsWith(extension))
-        {
-            return error("invalid extension");
-        }
-        
-        const name = getName(path);
-        if (namePattern && !name.match(namePattern))
-        {
-            return error("invalid name");
-        }
-
-        return ok({
-            type: "markdown",
-            name,
-            value: url,
-        });
-    })
-});
-
 const image = (): TCmsImage => ({
     type: "image",
     parse: async (path: Path) => {
@@ -287,12 +271,6 @@ const union = <T extends Readonly<[...TCmsValue<unknown, unknown>[]]>>(...types:
     }
 });
 
-type TCmsMarkdownWithContent<T extends ZodRawShape> = TCmsValue<{
-    html: string;
-    asString: string;
-    matters: z.infer<ZodObject<T>>;
-}, "could not read file" | "invalid matter"> & {type: "markdownWithContent"};
-
 const parseMarkdownWithContent = <T extends ZodRawShape> (matters: ZodObject<T>) => ((async (path: Path) => {
     const contentFile = await readFileSafe(path);
 
@@ -332,6 +310,32 @@ const markdownWithContent = <T extends ZodRawShape> (matters: ZodObject<T>): TCm
     type: "markdownWithContent",
     parse: parseMarkdownWithContent(matters)
 })
+
+const markdown = <T extends string>(namePattern?: T): TCmsMarkdown => (
+{
+    type: "markdown",
+    markdownWithContent,
+    parse: promisify((path: Path) => {
+        const extension = ".md";
+        if (!path.endsWith(extension))
+        {
+            return error("invalid extension");
+        }
+        
+        const name = getName(path);
+        if (namePattern && !name.match(namePattern))
+        {
+            return error("invalid name");
+        }
+
+        return ok({
+            type: "markdown",
+            name,
+            value: url,
+        });
+    })
+});
+
 
 export const tcms = {
     url,
