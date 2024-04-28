@@ -20,7 +20,7 @@ export async function getCollectionPageContent(params: CollectionPageParams)
 {
     const cms = await getOrCompileCms();
 
-    const collectionId = params.collection as CollectionId;
+    const collectionId = params.collection;
     const locale = params.locale as Locale;
     
     const collection = cms.map.get(collectionId)!;
