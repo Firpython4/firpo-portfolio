@@ -137,7 +137,14 @@ export async function importAsImage(imagePath: PublicFolderPath)
 
 export async function sizeOfAsync(input: string)
 {
-    return promisify(sizeOf)(input);
+    try
+    {
+        return okAsync(promisify(sizeOf)(input));
+    }
+    catch (e)
+    {
+        return error("could not open file");
+    }
 }
 
 export function safePath(path: string)
