@@ -1,4 +1,4 @@
-import { Inter, Hepta_Slab } from "@next/font/google"
+import { Inter } from "next/font/google"
 
 const inter = Inter
 (

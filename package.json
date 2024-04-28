@@ -10,7 +10,6 @@
     "start": "next start"
   },
   "dependencies": {
-    "@next/font": "^14.0.4",
     "@t3-oss/env-nextjs": "^0.7.1",
     "next": "^14.0.3",
     "react": "18.2.0",
