@@ -40,7 +40,7 @@ const Piece = (props: {piece: PieceType}) =>
     {
         return (
             <div key={piece.url}>
-                <Image src={piece.url} width={512} height={512} alt={piece.title}/>
+                <Image src={piece.url} width={piece.width} height={piece.height} alt={piece.title}/>
             </div>
         );
     }
@@ -76,7 +76,7 @@ const BackIcon = (props: {className?: string}) => <Image className={props.classN
 function BackButton()
 {
     const router = useRouter();
-    return <div onClick={router.back}>
+    return <div onClick={router.back} className="cursor-pointer w-[31px] h-[31px]">
         <BackIcon/>
     </div>;
 }

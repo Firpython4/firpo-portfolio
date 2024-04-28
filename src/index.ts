@@ -6,7 +6,7 @@ import {
     getExtension,
     getPath, getSubdirectories,
     getVideoUrl, getAllCollections,
-    removeExtension, isImageExtension, type PublicFolderPath, typeSafePathJoin, importAsImage
+    removeExtension, isImageExtension, type PublicFolderPath, typeSafePathJoin, importAsImage, sizeOfAsync
 } from "~/cms/fileManagement";
 import path from "node:path";
 import {promiseFullfilledPredicate, promiseRejectedPredicate, valueMapper} from "~/promises/promisePredicates";
@@ -14,7 +14,6 @@ import {orderByConfig} from "~/cms/ordering";
 import {type PieceSharedType, type PieceType} from "~/types/pieceType";
 import { type Locale, useLocalizedContent } from "~/localization/localization";
 import { type CollectionId, getContent } from "./collection";
-
 async function asImage(mediaDirent: Dirent, shared: PieceSharedType)
 {
     const piecePath = getPath(mediaDirent);
@@ -23,10 +22,25 @@ async function asImage(mediaDirent: Dirent, shared: PieceSharedType)
     {
         if (isImageExtension(extension))
         {
+            const size = await sizeOfAsync(piecePath);
+            if (!size)
+            {
+                throw new Error(`Unable to read file ${piecePath}`)
+            }
+            if (!size.width)
+            {
+                throw new Error(`Invalid image width ${piecePath}`)
+            }
+            if (!size.height)
+            {
+                throw new Error(`Invalid image height ${piecePath}`)
+            }
             return {
                 type: "image" as const,
                 url: absoluteToRelativePath(piecePath),
                 title: mediaDirent.name.replace(getExtension(mediaDirent), ""),
+                width: size.width,
+                height: size.height,
                 ...shared
             };
         }
