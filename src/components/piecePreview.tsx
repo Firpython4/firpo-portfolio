@@ -6,15 +6,15 @@ import dynamic from "next/dynamic";
 import { type CSSProperties, useRef } from "react";
 import { type YouTubeConfig } from "react-player/youtube";
 import { useHover } from "usehooks-ts";
-import { type PieceType } from "~/types/pieceType";
 import { type Locale } from "~/localization/localization";
 import type PropsWithClassName from "../types/propsWithClassName";
 import LinkWithLocale from "./LinkWithLocale";
+import { getUrlFromPiece, type PieceType } from "~/cms/cmsSchemas";
 
 const YoutubeReactPlayerComponent = dynamic(() => import("react-player/youtube"), {ssr: false});
 const VimeoReactPlayerComponent = dynamic(() => import("react-player/vimeo"), {ssr: false});
 
-export const PiecePreview = (props: { piece: PieceType<string>, locale: Locale }) =>
+export const PiecePreview = (props: { piece: PieceType, locale: Locale, collectionName: string }) =>
 {
     const piece = props.piece;
     const ref = useRef(null);
@@ -22,7 +22,7 @@ export const PiecePreview = (props: { piece: PieceType<string>, locale: Locale }
     return (
         <LinkWithLocale
             className="relative aspect-[364/205] max-w-[364px] max-h-[205px] group overflow-hidden flex items-center"
-            href={piece.linkToCollection} ref={ref} locale={props.locale}>
+            href={getUrlFromPiece(piece)} ref={ref} locale={props.locale}>
             <div className="opacity-0
                             group-hover:opacity-100
                             transition-opacity
@@ -43,7 +43,7 @@ export const PiecePreview = (props: { piece: PieceType<string>, locale: Locale }
                             text-[12px]
                             p-6
                             whitespace-pre-wrap">
-                {piece.collectionName}
+                {props.collectionName}
             </div>
             <PieceThumbnail className="h-full w-full" piece={piece} shouldPlay={isHovering}/>
         </LinkWithLocale>
@@ -149,14 +149,14 @@ function getThumbnail(url: string, quality?: string)
 
 const pieceThumbnailSizes = `100svw, screen(mobile_lg) 364px`;
 
-const PieceThumbnail = (props: PropsWithClassName<{piece: PieceType<string>, shouldPlay: boolean }>) =>
+const PieceThumbnail = (props: PropsWithClassName<{piece: PieceType, shouldPlay: boolean }>) =>
 {
     const piece = props.piece;
-    const url = piece.url;
-    if (piece.type === "image")
+    const url = getUrlFromPiece(piece);
+    if (piece.option === 0)
     {
         return (
-            <ExportedImage className={`aspect-[${piece.width}/${piece.height}] object-cover ${props.className}`} width={piece.width} height={piece.height} src={url} alt={piece.title} sizes={pieceThumbnailSizes}/>
+            <ExportedImage className={`aspect-[${piece.value.width}/${piece.value.height}] object-cover ${props.className}`} width={piece.value.width} height={piece.value.height} src={url} alt={piece.value.title} sizes={pieceThumbnailSizes}/>
         )
     }
     else
@@ -170,7 +170,7 @@ const PieceThumbnail = (props: PropsWithClassName<{piece: PieceType<string>, sho
             }
         };
 
-        if (piece.type === "video")
+        if (piece.value.option === 0)
         {
             
             const thumbnail = getThumbnail(url);
@@ -178,7 +178,7 @@ const PieceThumbnail = (props: PropsWithClassName<{piece: PieceType<string>, sho
             {
                 return (
                     <>
-                        <ExportedImage src={thumbnail} alt={piece.title} fill={true} sizes={pieceThumbnailSizes} unoptimized={true}
+                        <ExportedImage src={thumbnail} alt={piece.value.value.name} fill={true} sizes={pieceThumbnailSizes} unoptimized={true}
                                className={`${props.className}
                                   opacity-100
                                   group-hover:opacity-0
@@ -194,11 +194,11 @@ const PieceThumbnail = (props: PropsWithClassName<{piece: PieceType<string>, sho
             
             return <PieceVideo className={props.className} url={url} playing={props.shouldPlay} width={364} height={205} youtubeConfig={youTubeConfig} muted={true} controls={false}/>;
         }
-        else if (piece.type === "videoWithThumbnail")
+        else
         {
             return (
                 <>
-                    <ExportedImage width={piece.thumbnail.width} height={piece.thumbnail.height} src={piece.thumbnail.url} alt={piece.title} sizes={pieceThumbnailSizes}
+                    <ExportedImage width={piece.value.value.parsed.thumbnail.width} height={piece.value.value.parsed.thumbnail.height} src={url} alt={piece.value.value.name} sizes={pieceThumbnailSizes}
                            className={`${props.className}
                               opacity-100
                               group-hover:opacity-0

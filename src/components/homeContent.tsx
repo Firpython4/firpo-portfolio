@@ -20,7 +20,7 @@ const HomeContent = (props: HomeProps) => <>
                         locale={props.locale}
                         localizedCopy={props.localizedCopy}/>
         <div className="pt-28">
-            <PieceCollection pieces={props.pieces} locale={props.locale}/>
+            <PieceCollection collections={props.collections} locale={props.locale}/>
         </div>
         <ContactForm className="pt-20" locale={props.locale} copy={props.localizedCopy}/>
         <BottomBar className="pt-20 pb-24" localizedCopy={props.localizedCopy}/>
