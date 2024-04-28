@@ -12,7 +12,7 @@ export const ExpositionText = () =>
             audiovisual são especialmente bem-vindos).
         </div>
         <div
-            className="w-[435px] h-[495px] text-black text-[17px] not-italic font-normal leading-[27px] tracking-[-0.17px] pt-[172px]"><span
+            className="w-[435px] text-black text-[17px] not-italic font-normal leading-[27px] tracking-[-0.17px] pt-[172px]"><span
             className="text-black text-base font-semibold font-['Inter'] leading-relaxed pt-3">Alguns clientes atendidos:<br/></span><span
             className="text-black text-base font-normal font-['Inter'] leading-relaxed">Grupo Telefónica, Petrobras, Vivo, Grupo Braskem, Edenred, Aegea, Banrisul, Grupo Gerdau, Midea-Carrier, Springer, GRU Airport, Husqvarna, Massey Ferguson, John Deere, Grupo RBS, Zero Hora, Ramarim, Klabin, Sicredi, Abicalçados, Sistema FIERGS, Paquetá, Gaston, Nutrella, Laghetto Hotéis, Piccadilly, Yara, Sescoop, Voopter, Op'n'Go, Vinhos Miolo, Oxiteno, Senac, Fecomércio, SC Internacional, UCS, Correio do Povo, Record, Hospital Moinhos de Vento, Governo do Rio Grande do Sul, Governo de Santa Catarina, Daer, Sulgás, Detran, CEEE, Corsan, Grupo Zaffari, Supermercados Angeloni, Tintas Renner, Sayerlack, Selenium, Cerâmicas Oxford, Student Travel Bureau, Lojas Colombo Stores, Rede de Concessionárias Fiat e as seguintes prefeituras: Porto Alegre, Passo Fundo, Bento Gonçalves, Gravataí, Santa Maria e Rio Grande. </span>
         </div>
