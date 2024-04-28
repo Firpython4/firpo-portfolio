@@ -7,6 +7,8 @@ export default {
     extend: {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
+        inter: ["var(--font-inter)"],
+        hepta_slab: ["var(--font-hepta-slab)"]
       },
     },
   },
