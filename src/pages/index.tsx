@@ -1,16 +1,9 @@
 import Head from "next/head";
-import { PropsWithChildren } from "react";
 import { BottomBar } from "../components/bottomBar";
 import { ExpositionText } from "../components/expositionText";
 import { Hero } from "../components/hero";
 import { PieceCollection } from "../components/pieceCollection";
-
-function HorizontalCenter(props: PropsWithChildren)
-{
-    return <div className="w-screen flex justify-center">
-        {props.children}
-    </div>;
-}
+import { HorizontalCenter } from "../components/horizontalCenter";
 
 const Home = () => (
     <>
