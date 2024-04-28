@@ -30,7 +30,7 @@ export function error<ErrorType>(errorValue: ErrorType)
     };
 }
 
-export function map<OkType, ErrorType, NewOkType>(result: Result<OkType, ErrorType>, mapper: (okValue: OkType) => NewOkType)
+export function map<OkType, ErrorType, NewOkType>(result: Result<OkType, ErrorType>, mapper: (okValue: OkType) => NewOkType): Result<NewOkType, ErrorType>
 {
     if (result.wasResultSuccessful)
     {

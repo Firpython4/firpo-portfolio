@@ -169,7 +169,11 @@ const objectParse = <T extends TCmsRecord, KeyType extends string | number | sym
         return error(couldNotReadDirectory);
     }
 
-    type ResultType = Result<{[Key in KeyType]: unknown}, "no matches">;
+    type NewRecordType = {
+        [Key in KeyType]: unknown;
+    };
+
+    type ResultType = Result<NewRecordType, "no matches">;
 
     const result = await Promise.allSettled(Object.entries(fields).map(async ([key, value]) =>
     {
@@ -188,7 +192,7 @@ const objectParse = <T extends TCmsRecord, KeyType extends string | number | sym
 
     const filtered = result.filter(((value: PromiseSettledResult<ResultType>): value is PromiseFulfilledResult<ResultType> => (value.status === "fulfilled")));
     const valueMapped = filtered.map(value => value.value);
-    const okValues = valueMapped.filter((value): value is {wasResultSuccessful: true, okValue: ResultType} => value.wasResultSuccessful);
+    const okValues = valueMapped.filter((value): value is {wasResultSuccessful: true, okValue: NewRecordType} => value.wasResultSuccessful);
     const mapped = okValues.map(value => value.okValue);
 
     if (okValues.length !== result.length)
