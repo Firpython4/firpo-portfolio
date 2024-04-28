@@ -8,6 +8,7 @@ import { type YouTubeConfig } from "react-player/youtube";
 import { useHover } from "usehooks-ts";
 import { type PieceType } from "~/types/pieceType";
 import { type Locale } from "~/localization/localization";
+import type PropsWithClassName from "../types/propsWithClassName";
 import LinkWithLocale from "./LinkWithLocale";
 
 const YoutubeReactPlayerComponent = dynamic(() => import("react-player/youtube"), {ssr: false});
@@ -38,6 +39,7 @@ export const PiecePreview = (props: { piece: PieceType<string>, locale: Locale }
                             text-white
                             text-center
                             text-[24px]
+                            p-6
                             whitespace-pre-wrap">
                 {piece.collectionName}
             </div>
@@ -46,14 +48,13 @@ export const PiecePreview = (props: { piece: PieceType<string>, locale: Locale }
     );
 };
 
-export const PieceVideo = (props: {
+export const PieceVideo = (props: PropsWithClassName<{
     url: string,
     playing: boolean,
-    className?: string
     width?: number,
     height?: number,
     youtubeConfig: YouTubeConfig
-}) =>
+}>) =>
 {
     if (props.url.includes("youtube"))
     {
@@ -139,7 +140,7 @@ function getThumbnail(url: string, quality?: string)
 
 const pieceThumbnailSizes = `100svw, screen(mobile_lg) 364px`;
 
-const PieceThumbnail = (props: { className?: string, piece: PieceType<string>, shouldPlay: boolean }) =>
+const PieceThumbnail = (props: PropsWithClassName<{piece: PieceType<string>, shouldPlay: boolean }>) =>
 {
     const piece = props.piece;
     const url = piece.url;
