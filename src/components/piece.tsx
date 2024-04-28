@@ -36,7 +36,7 @@ export const Piece = (props: {piece: PieceType}) =>
                             text-center
                             text-[24px]
                             whitespace-pre-wrap">
-                {piece.title}
+                {piece.collectionTitle}
             </div>
             <PieceThumbnail piece={piece} shouldPlay={isHovering}/>
         </Link>
@@ -58,9 +58,12 @@ const opts = {
 const PieceThumbnail = (props: {piece: PieceType, shouldPlay: boolean}) =>
 {
     const piece = props.piece;
-    if (piece.type === "image") {
+    if (piece.type === "image")
+    {
         return <Image width={364} height={205} src={piece.url} alt={piece.title}/>
-    } else {
+    }
+    else
+    {
         const config: YouTubeConfig = {
              playerVars: {
                  controls: 0,

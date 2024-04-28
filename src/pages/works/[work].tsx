@@ -60,16 +60,54 @@ export const getStaticPaths = (async () =>
     }
 }) satisfies GetStaticPaths
 
+const Work = (props: {work: ImageOrVideoUrlWork}) =>
+{
+    const work = props.work;
+    if (work.type === "image")
+    {
+        return (
+            <div key={work.path}>
+                <Image src={work.path} width={512} height={512} alt={work.path}/>
+            </div>
+        );
+    }
+    else
+    {
+
+        const config: YouTubeConfig = {
+            playerVars: {
+                controls: 1,
+                disablekb: 0,
+                modestbranding: 1,
+                showinfo: 1
+            }
+        };
+        return (
+            <ReactPlayerComponent
+                url={work.url}
+                controls={true}
+                muted={false}
+                loop={false}
+                config={config}/>
+        )
+    }
+};
+
 export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQuery, string | false | object | undefined>) =>
 {
     if (context.params && typeof(context.params.work) === "string")
     {
         const directoryEntries = await getWorkDirectory(context.params.work);
 
-        const imagePaths = await filterImagesAndUrls(directoryEntries);
+        const works = await filterImagesAndUrls(directoryEntries);
 
-        const fulfilledFilePaths = imagePaths.filter(promiseFullfilledPredicate).map(valueMapper);
-        const rejectedFilePaths = imagePaths.filter(promiseRejectedPredicate);
+        const fulfilledFilePaths = works.filter(promiseFullfilledPredicate).map(valueMapper);
+        const rejectedFilePaths = works.filter(promiseRejectedPredicate);
+
+        if (rejectedFilePaths.length > 0)
+        {
+            throw new Error("Some files were rejected: " + JSON.stringify(rejectedFilePaths))
+        }
 
         const content: Dirent | undefined = getFirstMarkdownFile(directoryEntries)
         
@@ -118,40 +156,7 @@ const WorkShowcase = (props: InferGetStaticPropsType<typeof getStaticProps>) =>
             </div>
         </VerticalCenterBox>
         <VerticalCenterBox className="pt-[74px] pb-[156px] space-y-[128px]">
-            {props.works.map((work) =>
-                {
-                    if (work.type === "image")
-                    {
-                        return (
-                          <div key={work.path}>
-                              <Image src={work.path} width={512} height={512} alt={work.path}/>
-                          </div>
-                        );
-                    }
-                    else
-                    {
-
-                        const config: YouTubeConfig = {
-                            playerVars: {
-                                controls: 0,
-                                disablekb: 1,
-                                modestbranding: 1,
-                                showinfo: 0
-                            }
-                        };
-                        return (
-                            <ReactPlayerComponent
-                                width={364}
-                                height={205}
-                                url={piece.url}
-                                controls={false}
-                                muted={true}
-                                loop={true}
-                                playing={props.shouldPlay}
-                                config={config}/>
-                        )
-                    }
-                }}
+            {props.works.map(work => <Work work={work}/>)}
         </VerticalCenterBox>
         <Link href="/" className="w-responsive-screen pl-[411px] pb-[74px]">
             <BackIcon/>
