@@ -156,7 +156,7 @@ const PieceThumbnail = (props: PropsWithClassName<{piece: PieceType, shouldPlay:
     if (piece.option === 0)
     {
         return (
-            <ExportedImage className={`aspect-[${piece.value.width}/${piece.value.height}] object-cover ${props.className}`} width={piece.value.width} height={piece.value.height} src={url} alt={piece.value.title} sizes={pieceThumbnailSizes}/>
+            <ExportedImage className={`aspect-[${piece.value.width}/${piece.value.height}] object-cover ${props.className}`} width={piece.value.width} height={piece.value.height} src={url} alt={piece.value.name} sizes={pieceThumbnailSizes}/>
         )
     }
     else
