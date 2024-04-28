@@ -1,7 +1,7 @@
 import ExportedImage from "next-image-export-optimizer";
 import background from "../../public/firpo-color.png";
 import { type PropsWithLocalizedCopy } from "../types/misc";
-import PropsWithClassName from "../types/propsWithClassName";
+import type PropsWithClassName from "../types/propsWithClassName";
 import { VerticalCenterBox } from "./verticalCenterBox";
 import { NavBar } from "./navBar";
 import {type PropsWithChildren} from "react";
