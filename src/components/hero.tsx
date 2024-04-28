@@ -3,6 +3,7 @@ import background from "../../public/firpo-color.png";
 import { VerticalCenterBox } from "./verticalCenterBox";
 import { NavBar } from "./navBar";
 import {locale} from "~/localization/localization";
+import {type PropsWithChildren} from "react";
 
 const HeroTitle = () =>
 (
@@ -67,10 +68,11 @@ const HeroText = (props: {className?: string}) =>
     </div>
 );
 
-const HeroBackground = (props: {className?: string}) =>
+const HeroBackground = (props: PropsWithChildren<{className?: string}>) =>
 (
     <div className={props.className}>
         <Image width={5760} height={2799} src={background.src} alt="Marcelo Firpo"/>
+        {props.children}
     </div>
 );
 
@@ -82,8 +84,8 @@ const HeroContent = () =>
                              right-[21%]
                              top-[5%]
                              mobile_lg:top-[8%]
-                             sm:top-[12%]
-                             md:top-[16%]
+                             sm:top-[16%]
+                             md:top-[18%]
                              lg:top-[20%]
                              xl:top-[27.22%]"/>
         <NavBar className="absolute
@@ -104,10 +106,9 @@ const HeroContent = () =>
 
 export const Hero = () =>
 (
-    <VerticalCenterBox className="w-responsive-screen overflow-hidden">
-        <div className="relative w-responsive-screen h-responsive-screen">
-            <HeroBackground className="relative top-[-2%] lg:top-[-11%]"/>
+    <VerticalCenterBox className="w-responsive max-h-responsive-screen overflow-hidden">
+        <HeroBackground className="relative top-[-2%] lg:top-[-11%]">
             <HeroContent/>
-        </div>
+        </HeroBackground>
     </VerticalCenterBox>
 );
