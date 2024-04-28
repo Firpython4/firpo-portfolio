@@ -9,7 +9,7 @@ import { PieceCollection } from "~/components/pieceCollection";
 import { Scaffold } from "~/components/scaffold";
 import { type PieceType } from "~/types/pieceType";
 import {getIndexProps} from "~/index";
-import { type Locale, locales } from "~/localization/localization";
+import { type Locale, locales, useLocaleTexts } from "~/localization/localization";
 
 export const getStaticPaths = (() =>
 {
@@ -29,8 +29,9 @@ const Home = (props: HomeProps) =>
 (
     <>
         <Head>
-            <title>Marcelo Firpo</title>
+            <title>Marcelo Firpo: CMO, Diretor de Criação, Consultor Criativo, Redator, Roteirista</title>
             <Favicon src="/favicon.ico"/>
+            <meta name="description" content={useLocaleTexts(props.locale).homeMetaDescription}/>
         </Head>
         <Scaffold>
             <Hero locale={props.locale}/>

@@ -1,17 +1,19 @@
 import {type LocalizedContentType} from "../pages/[locale]/collections/[collection]";
-import { en_us, pt_br, type LocaleTexts } from "./texts";
+import { en, pt, type LocaleTexts } from "./texts";
 
 const texts: Record<Locale, LocaleTexts> = {
-    "pt-BR": pt_br,
-    "en-US": en_us
+    pt: pt,
+    en: en
 }
 
-export type Locale = "pt-BR" | "en-US";
-export const locales = ["pt-BR" as const, "en-US" as const];
+export const ptLocale = "pt" as const;
+export const enLocale = "en" as const;
+export const locales = [ptLocale, enLocale];
+export type Locale = typeof ptLocale | typeof enLocale;
 
 export function useLocaleTexts(locale: Locale)
 {
-    if (locale && (locale === "pt-BR" || locale === "en-US"))
+    if (locale && (locale === ptLocale || locale === enLocale))
     {
         return texts[locale];
     }
@@ -31,10 +33,4 @@ export function useLocalizedContent(localizedContent: LocalizedContentType, loca
     {
         throw new Error("No default localized string found")
     }
-}
-
-
-export type LocalizedText = {
-    keys: Map<Locale, string>;
-    defaultLocale: Locale;
 }
