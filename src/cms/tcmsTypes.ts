@@ -1,11 +1,10 @@
-import { type Dirent, promises as fileSystem } from "node:fs";
+import { promises as fileSystem } from "node:fs";
 import path from "node:path";
 import { promisify } from "util";
 import { z } from "zod";
-import { error, type ExtractErrorType, type ExtractOkType, ok, type Result } from "~/types/result";
+import { error, type ExtractErrorTypeRaw, type ExtractOkType, type ExtractOkTypeRaw, ok, type Result } from "~/types/result";
 import { type Brand } from "../typeSafety";
 import {  getPath, safeReadDir, sizeOfAsync } from "./fileManagement";
-import { lstat } from "node:fs/promises";
 
 type TCmsValue<Value, Error> = {
     readonly parse: Parser<Value, Error>
@@ -52,7 +51,7 @@ type TCmsUrl = {
 interface TCmsArray<ElementType extends TCmsValue<unknown, unknown>> {
     readonly type: "array";
     //@ts-expect-error type inference is expected to get deep
-    readonly parse: Parser<Infer<ElementType>[], "empty array" | typeof couldNotReadDirectory>;
+    readonly parse: Parser<(Infer<ElementType>)[], "empty array" | typeof couldNotReadDirectory>;
 }
 
 interface TCmsUnion<T extends Readonly<[...TCmsValue<unknown, unknown>[]]>> {
@@ -84,8 +83,8 @@ type InferTCmsUnion<T extends Readonly<[...TCmsValue<unknown, unknown>[]]>> = {
         value: Infer<T[Key]>}
 }[ArrayIndices<T>]
 
-export type Infer<T extends TCmsValue<unknown, unknown>> =  ExtractOkType<Awaited<ReturnType<T["parse"]>>>;
-export type InferError<T extends TCmsValue<unknown, unknown>> =  ExtractErrorType<Awaited<ReturnType<T["parse"]>>>;
+export type Infer<T extends TCmsValue<unknown, unknown>> =  (ExtractOkTypeRaw<Awaited<ReturnType<T["parse"]>>>);
+export type InferError<T extends TCmsValue<unknown, unknown>> =  (ExtractErrorTypeRaw<Awaited<ReturnType<T["parse"]>>>);
 
 
 export async function getUrl(imageOrUrlPath: Path)
@@ -159,7 +158,7 @@ const image = (): TCmsImage => ({
             return error("invalid extension");
         }
         
-        const url = path.split(imageFolder)[1];
+        const url = path.split(imageFolder)[1]?.replaceAll(`\\`, "/");
 
         if (!url)
         {
@@ -216,14 +215,15 @@ const array = <ElementType extends TCmsValue<unknown, unknown>>(element: Element
         }
 
         const mapped = await Promise.allSettled(dirents.okValue.map(async dirent => (element.parse(getPath(dirent)))));
-        const filtered = mapped.filter((parsed): parsed is ExtractOkType<typeof parsed> => parsed.status === "fulfilled" && parsed.value.wasResultSuccessful) as Infer<ElementType>[];
+        const filtered = mapped.filter((parsed): parsed is PromiseFulfilledResult<ExtractOkType<Result<unknown, unknown>>> => parsed.status === "fulfilled" && parsed.value.wasResultSuccessful);
+        const remapped = filtered.map(parsed => parsed.value.okValue) as Infer<ElementType>[];
         
-        if (filtered.length == 0)
+        if (remapped.length == 0)
         {
             return error("empty array")
         }
 
-        return ok(filtered);
+        return ok(remapped);
     }
 });
 
@@ -250,15 +250,16 @@ const object = <T extends Record<string, TCmsValue<unknown, unknown>>>(
                                                                 }
                                                             }
 
-                                                            return error("no matches");
+                                                            return error("no matches" as const);
                                                        }));
 
-        if (result.find(value => value.status === "fulfilled" && !value.value.wasResultSuccessful))
+        const filtered = result.filter((value): value is PromiseFulfilledResult<ExtractOkType<Result<unknown, unknown>>> => value.status === "fulfilled" && value.value.wasResultSuccessful);
+        if (filtered.length !== result.length)
         {
-            return error("no matches");
+            return error("no matches" as const);
         }
 
-        return ok(result as InferTCmsObject<T>);
+        return ok((filtered.map(value => value.value.okValue)) as InferTCmsObject<T>);
     },
 });
 
@@ -270,17 +271,17 @@ const union = <T extends Readonly<[...TCmsValue<unknown, unknown>[]]>>(...types:
         {
             const typeSafeIndex = option as ArrayIndices<T>;
 
-            // @ts-expect-error TS does not recognize string indices as real indices
-            const parseResult = (await type.parse(path)) as Infer<T[ArrayIndices<T>]>
-
+            const parseResult = (await type.parse(path))
+            
             if (!parseResult.wasResultSuccessful)
             {
                 continue;
             }
-
+                
             return ok({
                 option: typeSafeIndex,
-                value: parseResult
+                // @ts-expect-error TS does not recognize string indices as real ind
+                value: (parseResult.okValue) as Infer<T[ArrayIndices<T>]>
             }) 
         }
         

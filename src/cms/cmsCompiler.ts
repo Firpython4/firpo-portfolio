@@ -38,15 +38,15 @@ async function asImage(mediaDirent: Dirent, shared: PieceSharedType<LocalizedTex
         if (isImageExtension(extension))
         {
             const size = await sizeOfAsync(piecePath);
-            if (!size)
+            if (!size.wasResultSuccessful || !size.okValue)
             {
                 throw new Error(`Unable to read file ${piecePath}`)
             }
-            if (!size.width)
+            if (!size.okValue.width)
             {
                 throw new Error(`Invalid image width for ${piecePath}`)
             }
-            if (!size.height)
+            if (!size.okValue.height)
             {
                 throw new Error(`Invalid image height for ${piecePath}`)
             }
@@ -54,8 +54,8 @@ async function asImage(mediaDirent: Dirent, shared: PieceSharedType<LocalizedTex
                 type: "image" as const,
                 url: absoluteToRelativePath(piecePath).replaceAll("\\", "/"),
                 title: mediaDirent.name.replace(getExtension(getPath(mediaDirent)), ""),
-                width: size.width,
-                height: size.height,
+                width: size.okValue.width,
+                height: size.okValue.height,
                 ...shared
             };
         }
@@ -96,7 +96,13 @@ async function asVideoWithThumbnail(mediaDirent: Dirent, shared: PieceSharedType
             }
 
             const size = await sizeOfAsync(thumbnail.absolutePath);
-            if (!size || !size.height || !size.width)
+        
+            if (!size.wasResultSuccessful)
+            {
+                return undefined;
+            }
+
+            if (!size.okValue || !size.okValue.height || !size.okValue.width)
             {
                 return undefined;
             }
@@ -105,8 +111,8 @@ async function asVideoWithThumbnail(mediaDirent: Dirent, shared: PieceSharedType
                 url: await getVideoUrl(videoUrlPath),
                 thumbnail: {
                     url: thumbnail.relativePath.replaceAll("\\", "/"),
-                    width: size.width,
-                    height: size.height
+                    width: size.okValue.width,
+                    height: size.okValue.height
                 },
                 title: mediaDirent.name,
                 ...shared
@@ -206,12 +212,31 @@ async function compileCms()
                                                                          .map(valueMapper);
     const rejectedSubdirectories = subDirectories.filter(promiseRejectedPredicate);
 
-    if (rejectedSubdirectories.length > 0)
+
+    try
     {
-        throw new Error(`Some subdirectory reads failed: ${rejectedSubdirectories.toString()}`)
+        const resultP = await collection.parse(relativePath(safePath("public/collections/internacional")))
+        
+        if (resultP.wasResultSuccessful)
+        {
+            resultP.okValue.forEach(value => console.log(value));
+        }
+        else
+        {
+            console.log(resultP.errorValue)
+        }
     }
-    
-    const collectionsWithPieces = await Promise.allSettled(fulfilledSubdirectories.map(getCollectionWithPiecesAndContent));
+    catch (e)
+    {
+        console.log(e)
+    }
+            
+            if (rejectedSubdirectories.length > 0)
+                {
+                    throw new Error(`Some subdirectory reads failed: ${rejectedSubdirectories.toString()}`)
+                }
+                
+                const collectionsWithPieces = await Promise.allSettled(fulfilledSubdirectories.map(getCollectionWithPiecesAndContent));
     const promiseRejectedResults = collectionsWithPieces.filter(promiseRejectedPredicate);
     if (promiseRejectedResults.length > 0)
     {
