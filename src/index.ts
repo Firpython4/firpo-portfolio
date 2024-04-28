@@ -1,26 +1,19 @@
+import { type Dirent } from "node:fs";
 import {includesInner, type StringWithInnerSubstring} from "~/typeSafety";
 import {type PublicFolder, publicFolderValue} from "~/config";
-import {type Dirent, promises as fileSystem} from "node:fs";
 import {
     absoluteToRelativePath, exists,
     getExtension,
-    getMarkdownFilesForLocales,
     getPath, getSubdirectories,
     getVideoUrl, getAllCollections,
     removeExtension
 } from "~/cms/fileManagement";
 import path from "node:path";
-import matter from "gray-matter";
 import {promiseFullfilledPredicate, promiseRejectedPredicate, valueMapper} from "~/promises/promisePredicates";
 import {orderByConfig} from "~/cms/ordering";
 import {type PieceSharedType, type PieceType} from "~/types/pieceType";
-import {getLocalizedContent} from "~/localization/localization";
-import {type CollectionId, getContent} from "~/pages/[locale]/collections/[collection]";
-
-function replaceNewLineWithNewLineLiterals(collectionTitle: string)
-{
-    return collectionTitle.replace("\\n", "\n");
-}
+import { type Locale, useLocalizedContent } from "~/localization/localization";
+import {type CollectionId, getContent} from "./pages/[locale]/collections/[collection]";
 
 async function asImage(mediaDirent: Dirent, shared: PieceSharedType)
 {
@@ -92,7 +85,7 @@ async function asVideoWithThumbnail(mediaDirent: Dirent, shared: PieceSharedType
     }
 }
 
-function getPiece(parentDirectoryPath: StringWithInnerSubstring<PublicFolder>, collectionId: CollectionId)
+function getPiece(parentDirectoryPath: StringWithInnerSubstring<PublicFolder>, collectionId: CollectionId, locale: Locale)
 {
     type PieceProvider = (mediaDirent: Dirent, shared: PieceSharedType, parentDirectoryPath: StringWithInnerSubstring<PublicFolder>, collectionId: CollectionId) => Promise<PieceType | undefined>;
     const providers: PieceProvider[] = [asImage, asVideo, asVideoWithThumbnail]
@@ -103,7 +96,7 @@ function getPiece(parentDirectoryPath: StringWithInnerSubstring<PublicFolder>, c
         const newLineChar = "\n";
         const shared = {
             linkToCollection: link,
-            collectionName: getLocalizedContent(await getContent(collectionId)).title.replace(literalNewLine, newLineChar)
+            collectionName: useLocalizedContent(await getContent(collectionId), locale).title.replace(literalNewLine, newLineChar)
         };
 
         for (const provider of providers)
@@ -121,32 +114,25 @@ function getPiece(parentDirectoryPath: StringWithInnerSubstring<PublicFolder>, c
 
 type SubcollectionType = { path: string, directoryEntities: Dirent[], collectionId: CollectionId };
 
-export async function getPieces(subCollection: SubcollectionType)
+export function getPiecesWithLocale(locale: Locale)
 {
-    if (includesInner(subCollection.path, publicFolderValue))
+    return async (subCollection: SubcollectionType) =>
     {
-        const firstMarkdownFileDirent = await getContent(subCollection.collectionId).get("pt-BR");
-        const firstMarkdownFile = firstMarkdownFileDirent?.name;
-        const contentFile = await fileSystem.readFile(getPath(firstMarkdownFileDirent));
-        const matterResult = matter(contentFile).data.title as unknown;
-        if (typeof(matterResult) === "string")
+        if (includesInner(subCollection.path, publicFolderValue))
         {
             const result = await Promise.allSettled(subCollection.directoryEntities
-                .map(getPiece(subCollection.path, subCollection.collectionId)));
+                .map(getPiece(subCollection.path, subCollection.collectionId, locale)));
 
             return result.filter(promiseFullfilledPredicate).map(valueMapper);
-
         }
-
-        throw new Error(`Wrong matter format in ${firstMarkdownFile}`)
-    }
-    else
-    {
-        throw new Error(`${subCollection.path} is not located in public`)
+        else
+        {
+            throw new Error(`${subCollection.path} is not located in public`)
+        }
     }
 }
 
-export async function getIndexProps()
+export async function getIndexProps(locale: Locale)
 {
     const directoryEntries = await getAllCollections();
     const directories = directoryEntries.filter(dirent => dirent.isDirectory())
@@ -166,7 +152,7 @@ export async function getIndexProps()
         throw new Error(`Some subdirectory reads failed: ${rejectedSubdirectories.toString()}`)
     }
 
-    const piecePromises = await Promise.allSettled(fulfilledSubdirectories.map(getPieces));
+    const piecePromises = await Promise.allSettled(fulfilledSubdirectories.map(getPiecesWithLocale(locale)));
     const promiseRejectedResults = piecePromises.filter(promiseRejectedPredicate);
     if (promiseRejectedResults.length > 0)
     {
@@ -179,7 +165,8 @@ export async function getIndexProps()
 
     return {
         props: {
-            pieces: pieces
+            pieces: pieces,
+            locale: locale
         }
     }
 }

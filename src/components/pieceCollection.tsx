@@ -1,12 +1,13 @@
 import { type PieceType } from "~/types/pieceType";
+import { type Locale } from "~/localization/localization";
 import { Piece } from "./piece";
 
-export const PieceCollection = (props: {images: PieceType[]}) =>
+export const PieceCollection = (props: {pieces: PieceType[], locale: Locale}) =>
 (
     <>
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-0">
             {
-                props.images.map((piece: PieceType) => <Piece piece={piece} key={piece.url}/>)
+                props.pieces.map((piece: PieceType) => <Piece piece={piece} key={piece.url} locale={props.locale}/>)
             }
         </div>
     </>

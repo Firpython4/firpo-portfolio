@@ -1,21 +1,21 @@
 import Image from "next/image";
-import Link from "next/link";
 import {type PieceType} from "~/types/pieceType";
 
 import {useRef} from "react";
 import {useHover} from "usehooks-ts";
 import dynamic from 'next/dynamic'
 import {type YouTubeConfig} from "react-player/youtube";
-import {getLocalizedString} from "~/localization/localization";
+import { type Locale } from "../localization/localization";
+import LinkWithLocale from "./LinkWithLocale";
 const ReactPlayerComponent = dynamic(() => import("react-player/youtube"), { ssr: false });
 
-export const Piece = (props: {piece: PieceType}) =>
+export const Piece = (props: {piece: PieceType, locale: Locale}) =>
 {
     const piece = props.piece;
     const ref = useRef(null);
     const isHovering = useHover(ref);
     return (
-        <Link className="relative aspect-[364/205] max-w-[364px] max-h-[205px] group overflow-hidden flex items-center" href={piece.linkToCollection} ref={ref}>
+        <LinkWithLocale className="relative aspect-[364/205] max-w-[364px] max-h-[205px] group overflow-hidden flex items-center" href={piece.linkToCollection} ref={ref} locale={props.locale}>
             <div className="opacity-0
                             group-hover:opacity-100
                             transition-opacity
@@ -36,7 +36,7 @@ export const Piece = (props: {piece: PieceType}) =>
                 {piece.collectionName}
             </div>
             <PieceThumbnail piece={piece} shouldPlay={isHovering}/>
-        </Link>
+        </LinkWithLocale>
 )
 }
 

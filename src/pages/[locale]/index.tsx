@@ -1,5 +1,6 @@
-import type {GetStaticPaths, GetStaticProps} from "next";
+import type { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import Head from "next/head";
+import type { ParsedUrlQuery } from "node:querystring";
 import { BottomBar } from "~/components/bottomBar";
 import { ExpositionText } from "~/components/expositionText";
 import { Favicon } from "~/components/favicon";
@@ -8,7 +9,7 @@ import { PieceCollection } from "~/components/pieceCollection";
 import { Scaffold } from "~/components/scaffold";
 import { type PieceType } from "~/types/pieceType";
 import {getIndexProps} from "~/index";
-import {locales} from "~/localization/localization";
+import { type Locale, locales } from "~/localization/localization";
 
 export const getStaticPaths = (() =>
 {
@@ -42,20 +43,21 @@ const Home = (props: HomeProps) =>
                                        lg:pt-[100px]
                                        xl:pt-[118px]"/>
             <div className="pt-28">
-                <PieceCollection images={props.pieces}/>
+                <PieceCollection pieces={props.pieces} locale={props.locale}/>
             </div>
-            <BottomBar className="pt-20 pb-24"/>
+            <BottomBar className="pt-20 pb-24" locale={props.locale}/>
         </Scaffold>
     </>
 );
 
-export const getStaticProps = (async () =>
+export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQuery, string | false | object | undefined>) =>
 {
-    return await getIndexProps();
+    return await getIndexProps(context.params!.locale as Locale);
 
 }) satisfies GetStaticProps<HomeProps>
 
 type HomeProps = {
-    pieces: PieceType[]
+    pieces: PieceType[],
+    locale: Locale
 }
 export default Home
