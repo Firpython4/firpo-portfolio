@@ -9,7 +9,7 @@ export const generateMetadata = async () => {
     const metadata: Metadata = {
         ...commonMetadata,
         title: "Marcelo Firpo: CMO, Diretor de Criação, Consultor Criativo, Redator, Roteirista",
-        description: pageContent.localizedTexts.homeMetaDescription
+        description: pageContent.localizedCopy.homeMetaDescription
     };
     return metadata
 }

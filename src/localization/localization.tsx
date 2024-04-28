@@ -14,7 +14,7 @@ export const enLocale = "en" as const;
 export const locales = [ptLocale, enLocale];
 export type Locale = typeof locales[number];
 
-export function getLocalizedTexts(locale: Locale)
+export function getLocalizedCopy(locale: Locale)
 {
     if (locale && (locale === ptLocale || locale === enLocale))
     {
