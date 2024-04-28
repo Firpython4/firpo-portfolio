@@ -26,7 +26,8 @@ export type LocalizedCopy = {
             lastName: string,
             email: string,
             subject: string,
-            content: string
+            content: string,
+            submitSuccessful: string,
             errors: ContactFormErrors
         }
     }
@@ -66,6 +67,7 @@ export const en: LocalizedCopy = {
             firstName: "First name",
             lastName: "Last name",
             subject: "Subject",
+            submitSuccessful: "Your message has been sent successfully, thanks for reaching out!",
             errors: {
                 invalidEmail: "Please insert a valid email.",
                 thisFieldIsTooLong: "This field is too long.",
@@ -115,6 +117,7 @@ export const pt: LocalizedCopy = {
             email: "E-mail",
             firstName: "Nome",
             lastName: "Sobrenome",
+            submitSuccessful: "A sua mensagem foi enviada com sucesso. Obrigado por entrar em contato!",
             errors: {
                 invalidEmail: "Por favor insira um e-mail válido.",
                 thisFieldIsMandatory: "Este campo é mandatório.",
