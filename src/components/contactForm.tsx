@@ -87,20 +87,21 @@ const ContactForm = (props: PropsWithClassName<{locale: Locale, copy: LocalizedC
     };
 
     const { register, handleSubmit, formState: { errors } } = useForm<ContactFormType>(formProps);
-    console.log(errors);
     const contactForm = props.copy.home.contactForm;
+    const submitContactForm = async (data: ContactFormType) =>
+    {
+        try
+        {
+            await fetch(submitLink(data));
+        }
+        catch (error)
+        {
+            //Okay to catch the error here. Google Forms won't return a well-formed response.
+        }
+    };
+
     return <form className={`${props.className} font-inter flex flex-col gap-y-8 items-center relative`}
-                                                                 onSubmit={handleSubmit(async (data) =>
-                                        {
-                                            try
-                                            {
-                                                await fetch(submitLink(data));
-                                            }
-                                            catch (error)
-                                            {
-                                                //Okay to catch the error here. Google Forms won't return a well-formed response.
-                                            }
-                                        })}>
+                                                       onSubmit={handleSubmit(submitContactForm)}>
         <div className="grid grid-cols-2 grid-rows-6 gap-x-3 gap-y-4">
             <FormItem placeholder={contactForm.firstName} name="First Name" register={register} options={{required: true}} errors={errors}/>
             <FormItem placeholder={contactForm.lastName} name="Last Name" register={register} options={{required: true}} errors={errors}/>
