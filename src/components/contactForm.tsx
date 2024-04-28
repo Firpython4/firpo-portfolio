@@ -47,7 +47,7 @@ function FormItem<FieldValuesType extends FieldValues, FieldNameType extends Fie
     {
         return (
             <>
-                <input className={`${props.className} ${formClassNames}`}
+                <input className={`${props.className} mt-[1.5rem] ${formClassNames}`}
                        type="text"
                        placeholder={props.placeholder} {...props.register(props.name, props.options)}/>
             </>
@@ -63,7 +63,7 @@ function FormArea<FieldValuesType extends FieldValues, FieldNameType extends Fie
         return (
             <div className={`flex flex-col ${props.gridClassNames}`}>
                 {<p className="text-red-500">{errorMessages}</p>}
-                <textarea className={`${formBorderClassNames} ${props.className}`}
+                <textarea className={`${formBorderClassNames} h-full ${props.className}`}
                        placeholder={props.placeholder} {...props.register(props.name, props.options)}/>
             </div>
         );
@@ -72,7 +72,7 @@ function FormArea<FieldValuesType extends FieldValues, FieldNameType extends Fie
     {
         return (
             <>
-                <textarea className={`${props.className} ${props.gridClassNames} ${formBorderClassNames}`}
+                <textarea className={`${props.className} mt-[1.5rem] ${props.gridClassNames} ${formBorderClassNames}`}
                        placeholder={props.placeholder} {...props.register(props.name, props.options)}/>
             </>
         );
@@ -100,8 +100,7 @@ const ContactForm = (props: PropsWithClassName<{locale: Locale, copy: LocalizedC
         }
     };
 
-    return <form className={`${props.className} font-inter flex flex-col gap-y-8 items-center relative`}
-                                                       onSubmit={handleSubmit(submitContactForm)}>
+    return <form className={`${props.className} font-inter flex flex-col gap-y-8 items-center relative`} onSubmit={handleSubmit(submitContactForm)}>
         <div className="grid grid-cols-2 grid-rows-6 gap-x-3 gap-y-4">
             <FormItem placeholder={contactForm.firstName} name="First Name" register={register} options={{required: true}} errors={errors}/>
             <FormItem placeholder={contactForm.lastName} name="Last Name" register={register} options={{required: true}} errors={errors}/>
