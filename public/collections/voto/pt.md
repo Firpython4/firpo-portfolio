@@ -1,3 +1,3 @@
 ---
-title: Voto
+title: Revista Voto
 ---

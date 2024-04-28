@@ -1,7 +1,7 @@
 import {type Dirent, promises as fileSystem} from "node:fs";
 import path from "node:path";
 import {collectionsPath, type PublicFolder, publicFolderValue} from "~/config";
-import {type StringWithInnerSubstring} from "~/typeSafety";
+import {  type StringWithInnerSubstring } from "~/typeSafety";
 import {type Locale, locales} from "~/localization/localization";
 
 export function getSubdirectories(directories: Dirent[])
@@ -46,7 +46,7 @@ export function getMarkdownFilesForLocales(directoryEntries: Dirent[])
     return files;
 }
 
-export const absoluteToRelativePath = (imagePath: StringWithInnerSubstring<PublicFolder>) => (imagePath.split(path.join(publicFolderValue)))[1]!;
+export const absoluteToRelativePath = (imagePath: PublicFolderPath) => (imagePath.split(path.join(publicFolderValue)))[1]! as PublicFolderPath;
 
 export const removeExtension = (name: Dirent) => name.name.replace(path.extname(name.name), "");
 
@@ -75,5 +75,34 @@ export async function exists(path: string)
     catch (error)
     {
         return false;
+    }
+}
+
+const supportedImageFormats = ["png" as const, "jpg" as const, "jpeg" as const, "webp"];
+export type ImageExtension = typeof supportedImageFormats[number];
+
+export function isImageExtension(extension: string): extension is ImageExtension
+{
+    return supportedImageFormats.includes(`.${extension}`);
+}
+
+export type PublicFolderPath = StringWithInnerSubstring<PublicFolder>;
+
+export function typeSafePathJoin<PathType extends string>(substringPath: StringWithInnerSubstring<PathType>, ...paths: string[])
+{
+    return path.join(substringPath, ...paths) as StringWithInnerSubstring<PathType>;
+}
+
+export async function importAsImage(imagePath: PublicFolderPath)
+{
+    for (const imageFormat of supportedImageFormats)
+    {
+        let relativePath: string | undefined = undefined;
+        const asFormat = `${imagePath}.${imageFormat}` as PublicFolderPath;
+        if ((await exists(asFormat)))
+        {
+            relativePath = absoluteToRelativePath(asFormat);
+            return relativePath;
+        }
     }
 }
