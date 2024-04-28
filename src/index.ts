@@ -122,6 +122,12 @@ export function getPiecesWithLocale(locale: Locale)
         {
             const result = await Promise.allSettled(subCollection.directoryEntities
                 .map(getPiece(subCollection.path, subCollection.collectionId, locale)));
+            
+            const promiseRejectedResults = result.filter(promiseRejectedPredicate);
+            if (promiseRejectedResults.length > 0)
+            {
+                console.warn(`Some pieces were unable to be rendered due to missing localizations: ${JSON.stringify(promiseRejectedResults)}`)
+            }
 
             return result.filter(promiseFullfilledPredicate).map(valueMapper);
         }
