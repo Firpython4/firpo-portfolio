@@ -2,44 +2,44 @@ import { type Dirent, promises as fileSystem } from "node:fs";
 import path from "node:path";
 import { promisify } from "util";
 import { z } from "zod";
-import { error, ok } from "~/types/result";
+import { error, ok, type Result } from "~/types/result";
 import { type Brand } from "../typeSafety";
 import { getExtension, getPath } from "./fileManagement";
 
-type TCmsValue<Value> = {readonly output: Value, readonly parse: Parser<Value>} & (TCmsImage | TCmsUrl | TCmsUnion<[...TCmsValue<unknown>[]]> | TCmsArray<TCmsValue<unknown>> | TCmsObject<Record<string, TCmsValue<unknown>>>);
+type TCmsValue<Value> = {readonly output: Value, readonly parse: Parser<Value, unknown>} & (TCmsImage | TCmsUrl | TCmsUnion<[...TCmsValue<unknown>[]]> | TCmsArray<TCmsValue<unknown>> | TCmsObject<Record<string, TCmsValue<unknown>>>);
 
 type TCmsEntity = {
     name: string
 }
 
-type Parser<OkType> = ((context: TCmsContext, relativePathPattern: Path) => Promise<OkType>);
+type Parser<OkType, ErrorType> = ((context: TCmsContext, relativePathPattern: Path) => Promise<Result<OkType, ErrorType>>);
 
 type TCmsImage = {
     readonly type: "image";
     readonly output: Image;
     readonly error: "no matches";
-    readonly parse: Parser<TCmsImage["output"]>
+    readonly parse: Parser<TCmsImage["output"], TCmsImage["error"]>
 }
 
 type TCmsMarkdown = {
     readonly type: "markdown";
     readonly output: Markdown;
     readonly error: "no matches" | "invalid name";
-    readonly parse: Parser<TCmsMarkdown["output"]>
+    readonly parse: Parser<TCmsMarkdown["output"], TCmsMarkdown["error"]>
 }
 
 interface TCmsObject<T extends Record<string, TCmsValue<unknown>>> {
     readonly type: "object";
     readonly output: InferTCmsObject<T>;
     readonly error: "no matches";
-    readonly parse: Parser<TCmsObject<T>["output"]>
+    readonly parse: Parser<TCmsObject<T>["output"], TCmsObject<T>["error"]>
 }
 
 type TCmsUrl = {
     readonly type: "url";
     readonly output: Url;
     readonly error: "no matches" | "invalid url";
-    readonly parse: Parser<TCmsUrl["output"]>
+    readonly parse: Parser<TCmsUrl["output"], TCmsUrl["error"]>
 }
 
 interface TCmsArray<ElementType extends TCmsValue<unknown>> {
@@ -47,14 +47,14 @@ interface TCmsArray<ElementType extends TCmsValue<unknown>> {
     //@ts-expect-error Since the user can nest schemas, it's expected for the following line to throw an error in regard to the type instantiation limit
     readonly output: ElementType["output"][]
     readonly error: "no matches";
-    readonly parse: Parser<TCmsArray<ElementType>["output"]>;
+    readonly parse: Parser<TCmsArray<ElementType>["output"], TCmsArray<ElementType>["error"]>;
 }
 
 interface TCmsUnion<T extends Readonly<[...TCmsValue<unknown>[]]>> {
     readonly type: "union";
     readonly output: InferTCmsUnion<T>;
     readonly error: "no matches";
-    readonly parse: Parser<TCmsUnion<T>["output"]>
+    readonly parse: Parser<TCmsUnion<T>["output"], TCmsUnion<T>["error"]>
 }
 
 type Url = { type: "url", value: string } & TCmsEntity
@@ -68,7 +68,7 @@ type InferTCmsObject<T extends Record<string, TCmsValue<unknown>>> = {
     [Key in keyof T]: Infer<T[Key]>;
 };
 
-type ArrayIndices<T extends Readonly<[...TCmsValue<unknown>[]]>> = Exclude<keyof T, keyof []>;
+type ArrayIndices<T extends Readonly<[...TCmsValue<unknown>[]]>> = Exclude<keyof T, keyof Array<unknown>>;
 
 type InferTCmsUnion<T extends Readonly<[...TCmsValue<unknown>[]]>> = {
     [Key in ArrayIndices<T>]: {
@@ -110,7 +110,7 @@ const url = (): TCmsUrl => (
         const dirent = context.dirents.find(value => value.name.match(relativePathPattern))
         if (!dirent)
         {
-            throw new Error();
+            return error(err);
         }
 
         const url = await getUrlFromDirent(dirent);
@@ -185,10 +185,10 @@ const array = <ElementType extends TCmsValue<unknown>>(element: ElementType): TC
     error: "no matches",
     async parse(context, relativePath)
     {
-        return await Promise.all(context.dirents.map(async dirent =>
+        return ok(await Promise.all(context.dirents.map(async dirent =>
                                                      {
                                                          return await element.parse(context, relativePath);
-                                                     }));
+                                                     })));
     }
 });
 
@@ -222,12 +222,13 @@ const union = <T extends Readonly<[...TCmsValue<unknown>[]]>>(...types: T): TCms
             try
             {
                 const typeSafeIndex = option as ArrayIndices<T>;
+
                 // @ts-expect-error TS does not recognize string indices as real indices
                 const parseResult = (await type.parse(context, relativePath)) as T[ArrayIndices<T>]["output"]
-                return {
+                return ok({
                     option: typeSafeIndex,
                     value: parseResult
-                } 
+                }) 
             }
             catch (error)
             {
@@ -235,7 +236,7 @@ const union = <T extends Readonly<[...TCmsValue<unknown>[]]>>(...types: T): TCms
             }
         }
         
-        throw new Error();
+        return error("no matches");
     }
 });
 
