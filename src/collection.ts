@@ -27,8 +27,22 @@ export async function getCollectionsStaticPaths()
 export async function getCollectionProps(context: GetStaticPropsContext<ParsedUrlQuery, string | false | object | undefined>)
 {
     const cms = await getOrCompileCms();
-    const collectionId = context.params!.collection as CollectionId;
-    const locale = context.params!.locale as Locale;
+    if (!context.params)
+    {
+        throw new Error("Invalid params");
+    }
+    if (typeof context.params.locale !== "string")
+    {
+        throw new Error("Invalid locale");
+    }
+    
+    if (typeof context.params.collection !== "string")
+    {
+        throw new Error("Invalid collection");
+    }
+
+    const collectionId = context.params.collection as CollectionId;
+    const locale = context.params.locale as Locale;
     
     const collection = cms.map.get(collectionId)!;
     const content = collection.content.get(locale);
@@ -43,7 +57,8 @@ export async function getCollectionProps(context: GetStaticPropsContext<ParsedUr
     return {
         props: {
             content,
-            pieces
+            pieces,
+            locale
         }
     };
 }

@@ -6,20 +6,20 @@ import {Scaffold} from "~/components/scaffold";
 import "@total-typescript/ts-reset";
 import {VerticalCenterBox} from "~/components/verticalCenterBox";
 import type {YouTubeConfig} from "react-player/youtube";
-import dynamic from "next/dynamic";
 import Head from "next/head";
 import {Favicon} from "~/components/favicon";
 import {type PieceType} from "~/types/pieceType";
-import {useRouter} from "next/router";
 import { getCollectionProps, getCollectionsStaticPaths } from "~/collection";
-import { type ContentType } from "../../../types/localizedCollectionType";
-
-const ReactPlayerComponent = dynamic(() => import("react-player/youtube"), { ssr: false });
+import LinkWithLocale from "~/components/LinkWithLocale";
+import { PieceVideo } from "~/components/piecePreview";
+import { type ContentType } from "~/types/localizedCollectionType";
+import { type Locale } from "../../../localization/localization";
 
 interface CollectionProps
 {
     content: ContentType,
-    pieces: PieceType<string>[]
+    pieces: PieceType<string>[],
+    locale: Locale
 }
 export const getStaticPaths = (async () =>
 {
@@ -33,14 +33,13 @@ const Piece = (props: {piece: PieceType<string>}) =>
     {
         return (
             <div key={piece.url}>
-                <Image src={piece.url} width={piece.width} height={piece.height} alt={piece.title}/>
+                <Image className={`aspect-[${piece.width}/${piece.height}]`} src={piece.url} width={piece.width} height={piece.height} alt={piece.title} sizes={`${piece.width.toString()}px`}/>
             </div>
         );
     }
     else
     {
-
-        const config: YouTubeConfig = {
+        const youTubeConfig: YouTubeConfig = {
             playerVars: {
                 controls: 1,
                 disablekb: 0,
@@ -48,14 +47,8 @@ const Piece = (props: {piece: PieceType<string>}) =>
                 showinfo: 1
             }
         };
-        return (
-            <ReactPlayerComponent
-                url={piece.url}
-                controls={true}
-                muted={false}
-                loop={false}
-                config={config}/>
-        )
+
+        return <PieceVideo playing={false} url={piece.url} youtubeConfig={youTubeConfig}/>
     }
 };
 
@@ -64,15 +57,18 @@ export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQu
     return await getCollectionProps(context);
 }) satisfies GetStaticProps<CollectionProps>
 
-const BackIcon = (props: {className?: string}) => <Image className={props.className} alt="home" src="/icons/back-icon.svg" width={31} height={31}/>;
+const BackIcon = (props: {className?: string}) => <Image className={props.className} alt="home" src="/icons/back-icon.svg" width={31} height={31} sizes="31px"/>;
 
-function BackButton()
+const BackButton = (props: {locale: Locale}) =>
 {
-    const router = useRouter();
-    return <div onClick={router.back} className="cursor-pointer w-[31px] h-[31px]">
-        <BackIcon/>
-    </div>;
-}
+    return (
+        <div className="w-[31px] aspect-square">
+            <LinkWithLocale href="/" locale={props.locale}>
+                <BackIcon/>
+            </LinkWithLocale>
+        </div>
+    );
+};
 
 const Collection = (props: InferGetStaticPropsType<typeof getStaticProps>) =>
 {
@@ -83,7 +79,7 @@ const Collection = (props: InferGetStaticPropsType<typeof getStaticProps>) =>
     return (
         <>
             <Head>
-                <title>Marcelo Firpo - {props.content.title}</title>
+                <title>{`Marcelo Firpo - ${props.content.title}`}</title>
                 <Favicon src="/favicon.ico"/>
                 <meta name="description" content={props.content.asString}/>
             </Head>
@@ -95,7 +91,7 @@ const Collection = (props: InferGetStaticPropsType<typeof getStaticProps>) =>
                                           lg:pl-[150px]
                                           xl:pl-[411px]
                                           pt-[44px]">
-                <BackButton/>
+                <BackButton locale={props.locale}/>
             </div>
                 <VerticalCenterBox className="gap-y-[16px]
                                               pt-[88px]">
@@ -108,7 +104,7 @@ const Collection = (props: InferGetStaticPropsType<typeof getStaticProps>) =>
                 </VerticalCenterBox>
                 <VerticalCenterBox className="gap-y-[30px]">
                     <VerticalCenterBox className="pt-[74px] pb-[156px] gap-y-[128px]">
-                        {props.pieces.map(piece => <Piece piece={piece}/>)}
+                        {props.pieces.map(piece => <Piece piece={piece} key={piece.url}/>)}
                     </VerticalCenterBox>
                     <div className="w-responsive-screen
                                                   pl-[40px]
@@ -117,7 +113,7 @@ const Collection = (props: InferGetStaticPropsType<typeof getStaticProps>) =>
                                                   lg:pl-[150px]
                                                   xl:pl-[411px]
                                                   pb-[74px]">
-                        <BackButton/>
+                        <BackButton locale={props.locale}/>
 
                     </div>
                 </VerticalCenterBox>
