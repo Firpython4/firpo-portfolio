@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@kodingdotninja/use-tailwind-breakpoint':
+    specifier: ^0.0.5
+    version: 0.0.5(react@18.2.0)
   '@t3-oss/env-nextjs':
     specifier: ^0.7.1
     version: 0.7.1(typescript@5.3.2)(zod@3.22.4)
@@ -163,6 +166,17 @@ packages:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
+
+  /@kodingdotninja/use-tailwind-breakpoint@0.0.5(react@18.2.0):
+    resolution: {integrity: sha512-7h52zL+l+14u9diyjVcGoS5NRIwrc6euIGlHDwtJXlrR3h31RNyTrOfimy7PJTvS4fFdNgbzyrNcGfhj3sDRfQ==}
+    peerDependencies:
+      react: '>=16.8'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /@next/env@14.0.3:
     resolution: {integrity: sha512-7xRqh9nMvP5xrW4/+L0jgRRX+HoNRGnfJpD+5Wq6/13j3dsdzxO3BCXn7D3hMqsDb+vjZnJq+vI7+EtgrYZTeA==}

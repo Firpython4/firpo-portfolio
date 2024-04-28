@@ -30,37 +30,40 @@ import piece3 from "../../public/pieces/ZH.png";
 import piece1 from "../../public/pieces/Banrisul Grande Banco do Sul.png";
 import { Piece } from "./piece";
 
-export const PieceCollection = (props: {className?: string}) => <>
-    <div className={`grid grid-cols-3 gap-0 w-[1092px] ${props.className}`}>
-        <Piece image={piece1}/>
-        <Piece image={piece2}/>
-        <Piece image={piece3}/>
-        <Piece image={piece4}/>
-        <Piece image={piece5}/>
-        <Piece image={piece6}/>
-        <Piece image={piece7}/>
-        <Piece image={piece8}/>
-        <Piece image={piece9}/>
-        <Piece image={piece10}/>
-        <Piece image={piece11}/>
-        <Piece image={piece12}/>
-        <Piece image={piece13}/>
-        <Piece image={piece14}/>
-        <Piece image={piece15}/>
-        <Piece image={piece16}/>
-        <Piece image={piece17}/>
-        <Piece image={piece18}/>
-        <Piece image={piece19}/>
-        <Piece image={piece20}/>
-        <Piece image={piece21}/>
-        <Piece image={piece22}/>
-        <Piece image={piece23}/>
-        <Piece image={piece24}/>
-        <Piece image={piece25}/>
-        <Piece image={piece26}/>
-        <Piece image={piece27}/>
-        <Piece image={piece28}/>
-        <Piece image={piece29}/>
-        <Piece image={piece30}/>
-    </div>
-</>;
+export const PieceCollection = (props: {className?: string}) =>
+(
+    <>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0">
+            <Piece image={piece1}/>
+            <Piece image={piece2}/>
+            <Piece image={piece3}/>
+            <Piece image={piece4}/>
+            <Piece image={piece5}/>
+            <Piece image={piece6}/>
+            <Piece image={piece7}/>
+            <Piece image={piece8}/>
+            <Piece image={piece9}/>
+            <Piece image={piece10}/>
+            <Piece image={piece11}/>
+            <Piece image={piece12}/>
+            <Piece image={piece13}/>
+            <Piece image={piece14}/>
+            <Piece image={piece15}/>
+            <Piece image={piece16}/>
+            <Piece image={piece17}/>
+            <Piece image={piece18}/>
+            <Piece image={piece19}/>
+            <Piece image={piece20}/>
+            <Piece image={piece21}/>
+            <Piece image={piece22}/>
+            <Piece image={piece23}/>
+            <Piece image={piece24}/>
+            <Piece image={piece25}/>
+            <Piece image={piece26}/>
+            <Piece image={piece27}/>
+            <Piece image={piece28}/>
+            <Piece image={piece29}/>
+            <Piece image={piece30}/>
+        </div>
+    </>
+);
