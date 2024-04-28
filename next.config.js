@@ -1,5 +1,3 @@
-import withExportImages from 'next-export-optimize-images'
-
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
  * for Docker builds.
@@ -7,9 +5,10 @@ import withExportImages from 'next-export-optimize-images'
 await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
-const config = withExportImages({
+const config = {
   reactStrictMode: true,
   output: "export",
-});
+  images: {unoptimized: true},
+};
 
 export default config;
