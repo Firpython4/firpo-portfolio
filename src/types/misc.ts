@@ -1,3 +1,3 @@
-import type { LocalizedTexts } from "../localization/texts";
+import type { LocalizedCopy } from "../localization/copy";
 
-export type LocalizedTextsProps = { localizedTexts: LocalizedTexts };
+export type LocalizedTextsProps = { localizedTexts: LocalizedCopy };
