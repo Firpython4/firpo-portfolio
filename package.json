@@ -15,8 +15,7 @@
     "next": "^14.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "zod": "^3.22.4",
-    "@react-buddy/ide-toolbox-next": "^2.4.1"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^14.0.3",
