@@ -4,9 +4,16 @@ export type PieceType<GenericTextType extends TextType> = (ImagePieceType | Vide
 
 export type ImagePieceType = {
     type: "image",
+} & ImageSize
+
+type ImageSize = {
     width: number,
     height: number
 }
+
+export type Thumbnail = {
+    url: string
+} & ImageSize
 
 export type VideoPieceType = {
     type: "video",
@@ -14,7 +21,7 @@ export type VideoPieceType = {
 
 export type VideoWithThumbnailPieceType = {
     type: "videoWithThumbnail",
-    thumbnailUrl: string,
+    thumbnail: Thumbnail,
 }
 
 export type PieceSharedType<GenericTextType extends TextType> = {

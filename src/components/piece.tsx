@@ -18,7 +18,7 @@ export const Piece = (props: { piece: PieceType<string>, locale: Locale }) =>
     const isHovering = useHover(ref);
     return (
         <LinkWithLocale
-            className="relative aspect-[364/205] max-w-[364px] max-h-[205px] group overflow-hidden flex items-center"
+            className="relative max-w-[364px] max-h-[205px] group overflow-hidden flex items-center"
             href={piece.linkToCollection} ref={ref} locale={props.locale}>
             <div className="opacity-0
                             group-hover:opacity-100
@@ -147,7 +147,7 @@ const PieceThumbnail = (props: { className?: string, piece: PieceType<string>, s
     if (piece.type === "image")
     {
         return (
-            <Image className={`aspect-[${piece.width}/${piece.height}] cover ${props.className}`} width={piece.width} height={piece.height} src={url} alt={piece.title}/>
+            <Image className={`aspect-[${piece.width}/${piece.height}] object-cover ${props.className}`} width={piece.width} height={piece.height} src={url} alt={piece.title}/>
         )
     }
     else if (piece.type === "video")
@@ -158,14 +158,13 @@ const PieceThumbnail = (props: { className?: string, piece: PieceType<string>, s
             return (
                 <>
                     <Image src={thumbnail} alt={piece.title} fill={true}
-                           className={`${props.className} opacity-100
-                              aspect-[364/205]
+                           className={`${props.className}
+                              opacity-100
                               group-hover:opacity-0
                               transition-opacity
                               ease-in-out
                               duration-300
-                              w-full
-                              h-full
+                              object-cover
                               absolute`}/>
                     <PreviewVideo className={props.className} url={url} playing={props.shouldPlay}/>
                 </>
@@ -178,14 +177,14 @@ const PieceThumbnail = (props: { className?: string, piece: PieceType<string>, s
     {
         return (
             <>
-                <Image width={364} height={205} src={piece.thumbnailUrl} alt={piece.title}
-                       className={`${props.className} opacity-100
+                <Image width={piece.thumbnail.width} height={piece.thumbnail.height} src={piece.thumbnail.url} alt={piece.title}
+                       className={`${props.className}
+                          opacity-100
                           group-hover:opacity-0
                           transition-opacity
                           ease-in-out
                           duration-300
-                          w-full
-                          h-full
+                          object-cover
                           absolute`}/>
                 <PreviewVideo className={props.className} url={url} playing={props.shouldPlay}/>
             </>
