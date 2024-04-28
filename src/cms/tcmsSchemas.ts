@@ -252,8 +252,26 @@ const union = <T extends Readonly<[...TCmsValue<unknown, unknown>[]]>>(...types:
     }
 });
 
-const parseMarkdownWithContent = <T extends ZodRawShape> (matters: ZodObject<T>) => ((async (path: Path) => {
-    const contentFile = await readFileSafe(path);
+const parseMarkdownWithContent = <T extends ZodRawShape> (matters: ZodObject<T>, namePattern?: string) => ((async (inPath: Path) => {
+    
+    const mdExtension = ".md";
+    const extension = path.extname(inPath);
+    if (extension !== mdExtension)
+    {
+        return error("no matches" as const);
+    }
+
+    const name = getName(inPath);
+    if (namePattern !== undefined)
+    {
+        const matches = name.match(namePattern);
+        if (matches === null)
+        {
+            return error("invalid name" as const);
+        }
+    }
+
+    const contentFile = await readFileSafe(inPath);
 
     if (!contentFile.wasResultSuccessful)
     {
@@ -270,10 +288,25 @@ const parseMarkdownWithContent = <T extends ZodRawShape> (matters: ZodObject<T>)
         .process(matterResult.content);
     
     const matterData = matterResult.data;
+
+    type RecordType = Record<string, unknown>;
+
+    const newLineMapped = Object.entries(matterData).map(([key, value]) =>
+    {
+        if (typeof value === "string")
+        {
+            return {[key]: value.replaceAll("\\n", "\n")}
+        }
+
+        return {[key]: value as unknown} as RecordType;
+    });
+
+    const newLineReplaced = newLineMapped.reduce((previous, current) => Object.assign(previous, current), {})
+
     if (matters.safeParse(matterData))
     {
         return ok({
-                matters: matterData as z.infer<typeof matters>,
+                matters: newLineReplaced as z.infer<typeof matters>,
                 html: processedContent.toString(),
                 asString: processedAsString.toString()
             });
@@ -284,39 +317,42 @@ const parseMarkdownWithContent = <T extends ZodRawShape> (matters: ZodObject<T>)
     }
 }));
 
-const withMatter: MarkdownWithMatter = <T extends ZodRawShape> (matters: ZodObject<T>) => ({
+const withMatter: MarkdownWithMatter = nameWithPattern => <T extends ZodRawShape> (matters: ZodObject<T>) => ({
     type: "markdownWithContent",
-    parse: parseMarkdownWithContent(matters)
+    parse: parseMarkdownWithContent(matters, nameWithPattern)
 })
+
+const parseMarkdown = (namePattern?: string): Parser<Markdown, MarkdownError> => promisify((inPath: Path) =>
+{
+    const mdExtension = ".md";
+    const extension = path.extname(inPath);
+    if (extension !== mdExtension)
+    {
+        return error("invalid extension" as const);
+    }
+
+    const name = getName(inPath);
+    if (namePattern !== undefined)
+    {
+        const matches = name.match(namePattern);
+        if (matches === null)
+        {
+            return error("invalid name");
+        }
+    }
+
+    return ok({
+        type: "markdown",
+        name,
+        value: url,
+    });
+});
 
 const markdown = <T extends string>(namePattern?: T): TCmsMarkdown => (
 {
     type: "markdown",
-    withMatter: withMatter,
-    parse: promisify((inPath: Path) => {
-        const mdExtension = ".md";
-        const extension = path.extname(inPath);
-        if (extension !== mdExtension)
-        {
-            return error("invalid extension" as const);
-        }
-        
-        const name = getName(inPath);
-        if (namePattern !== undefined)
-        {
-            const matches = name.match(namePattern);
-            if (matches !== null && matches.length === 0)
-            {
-                return error("invalid name");
-            }
-        }
-
-        return ok({
-            type: "markdown",
-            name,
-            value: url,
-        });
-    })
+    withMatter: withMatter(namePattern),
+    parse: parseMarkdown(namePattern)
 });
 
 export const tcms = {

@@ -21,13 +21,14 @@ export type TCmsMarkdownWithContent<T extends ZodRawShape> = TCmsValue<{
     html: string;
     asString: string;
     matters: z.infer<ZodObject<T>>;
-}, "could not read file" | "invalid matter"> & {type: "markdownWithContent"};
+}, "could not read file" | "invalid matter" | MarkdownError> & {type: "markdownWithContent"};
 
 
-export type MarkdownWithMatter = <T extends ZodRawShape>(matters: ZodObject<T>) => TCmsMarkdownWithContent<T>;
-type MarkdownError = "no matches" | "invalid name";
+export type MarkdownWithMatter = (namePattern?: string) => <T extends ZodRawShape>(matters: ZodObject<T>) => TCmsMarkdownWithContent<T>;
+export type Markdown = { type: "markdown", path: Path } & TCmsEntity;
+export type MarkdownError = "no matches" | "invalid name";
 export type TCmsMarkdown = {
-    withMatter: MarkdownWithMatter,
+    withMatter: ReturnType<MarkdownWithMatter>,
     readonly type: "markdown";
 } & TCmsValue<Markdown, MarkdownError>
 
@@ -63,7 +64,6 @@ export interface TCmsUnion<T extends Readonly<[...TCmsValue<unknown, unknown>[]]
 
 type Url = { type: "url", value: string } & TCmsEntity
 
-type Markdown = { type: "markdown", path: Path } & TCmsEntity;
 type Image = {
     type: "image",
     url: `${string}${typeof imageFolder}/${string}`
