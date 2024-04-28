@@ -3,7 +3,7 @@
 import {
     type FieldErrors, type FieldPath,
     type FieldValues, type RegisterOptions,
-    useForm, UseFormProps,
+    useForm, type UseFormProps,
     type UseFormRegister,
 } from "react-hook-form";
 import { z } from "zod";
