@@ -1,7 +1,7 @@
 import {orderFilePath} from "~/config";
 import {getFileRelative} from "~/cms/fileManagement";
 import log from "../logging";
-import { type PieceType } from "./cmsSchemas";
+import { type PieceType } from "./schemaTypes";
 
 export async function orderByConfig(pieces: PieceType[])
 {

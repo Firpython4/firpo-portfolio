@@ -1,23 +1,27 @@
+"use client"
+
 import ExportedImage from "next-image-export-optimizer";
 
-import { useRef } from "react";
+import { forwardRef, useRef, type PropsWithChildren } from "react";
 import { type YouTubeConfig } from "react-player/youtube";
 import { useHover } from "usehooks-ts";
 import { type Locale } from "~/localization/localization";
 import type PropsWithClassName from "../types/propsWithClassName";
 import LinkWithLocale from "./LinkWithLocale";
-import { getUrlFromPiece, type PieceType } from "~/cms/cmsSchemas";
 import { PieceVideo } from "./PieceVideo";
+import { getUrlFromPiece, type PieceType } from "~/cms/schemaTypes";
 
-export const PiecePreview = (props: { piece: PieceType, locale: Locale, collectionName: string }) =>
-{
-    const piece = props.piece;
-    const ref = useRef(null);
-    const isHovering = useHover(ref);
+type HoverablePieceProps = PropsWithChildren<{
+    url: string;
+    locale: Locale;
+    collectionName: string;
+}>;
+
+const HoverablePiecePreview = forwardRef<HTMLAnchorElement, HoverablePieceProps>((props: HoverablePieceProps, ref) => {
     return (
         <LinkWithLocale
             className="relative aspect-[364/205] max-w-[364px] max-h-[205px] group overflow-hidden flex items-center"
-            href={getUrlFromPiece(piece)} ref={ref} locale={props.locale}>
+            href={props.url} ref={ref} locale={props.locale}>
             <div className="opacity-0
                             group-hover:opacity-100
                             transition-opacity
@@ -40,17 +44,28 @@ export const PiecePreview = (props: { piece: PieceType, locale: Locale, collecti
                             whitespace-pre-wrap">
                 {props.collectionName}
             </div>
-            <PieceThumbnail className="h-full w-full" piece={piece} shouldPlay={isHovering}/>
         </LinkWithLocale>
+)});
+
+export const PiecePreview = (props: { piece: PieceType, locale: Locale, collectionName: string }) =>
+{
+    const piece = props.piece;
+    const url = getUrlFromPiece(piece)
+    const ref = useRef<HTMLAnchorElement>(null);
+    const isHovering = useHover(ref);
+    return (
+        <HoverablePiecePreview locale={props.locale} url={url} collectionName={props.collectionName} ref={ref}>
+            <PieceThumbnail className="h-full w-full" piece={piece} shouldPlay={isHovering}/>
+        </HoverablePiecePreview>
     );
 };
 
-const maxresdefault = "maxresdefault" as const;
-const sddefault = "sddefault" as const;
+const maxresdefault = "maxresdefault";
+const sddefault = "sddefault";
 const mqdefault = "mqdefault";
 const hqdefault = "hqdefault";
 
-const qualityTypes = [maxresdefault, sddefault, mqdefault, hqdefault];
+const qualityTypes = [maxresdefault, sddefault, mqdefault, hqdefault] as const;
 
 type QualityType = typeof qualityTypes[number];
 

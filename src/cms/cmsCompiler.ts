@@ -3,7 +3,8 @@ import {
     safePath,
 } from "~/cms/fileManagement";
 import { type Brand } from "~/typeSafety";
-import { collections, type CollectionsType } from "./cmsSchemas";
+import { collections } from "./cmsSchemas";
+import { type CollectionsType } from "./schemaTypes";
 
 export const replaceNewlines = (text: string) =>
 {

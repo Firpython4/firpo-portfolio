@@ -47,7 +47,7 @@ const image = (): TCmsImage => ({
             return error("invalid extension");
         }
         
-        const url = path.split(imageFolder)[1]?.replaceAll(`\\`, "/");
+        const url = path.replaceAll("\\", "/").split(imageFolder)[1];
 
         if (!url)
         {
@@ -169,6 +169,8 @@ const objectParse = <T extends TCmsRecord, KeyType extends string | number | sym
         return error(couldNotReadDirectory);
     }
 
+    type ResultType = Result<{[Key in KeyType]: unknown}, "no matches">;
+
     const result = await Promise.allSettled(Object.entries(fields).map(async ([key, value]) =>
     {
         for (const dirent of dirents.okValue)
@@ -176,19 +178,17 @@ const objectParse = <T extends TCmsRecord, KeyType extends string | number | sym
             const parsed = await value.parse(getPath(dirent));
             if (parsed.wasResultSuccessful)
             {
-                return ok({[key as KeyType]: parsed.okValue} as Record<KeyType, unknown>);
+                return ok({[key as KeyType]: parsed.okValue}) as ResultType;
             }
         }
 
         return error("no matches" as const);
     }));
 
-    type ResultType = Result<Record<KeyType, unknown>, "no matches">;
 
     const filtered = result.filter(((value: PromiseSettledResult<ResultType>): value is PromiseFulfilledResult<ResultType> => (value.status === "fulfilled")));
-    const okValues = (filtered.map(value => value.value)).filter(value => value.wasResultSuccessful);
-    // Eslint is not as smart as TS in this case, so:
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    const valueMapped = filtered.map(value => value.value);
+    const okValues = valueMapped.filter((value): value is {wasResultSuccessful: true, okValue: ResultType} => value.wasResultSuccessful);
     const mapped = okValues.map(value => value.okValue);
 
     if (okValues.length !== result.length)

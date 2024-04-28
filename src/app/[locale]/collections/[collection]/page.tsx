@@ -11,8 +11,8 @@ import { type CollectionPageParams } from "~/types/params";
 import commonMetadata from "../../../../metadata";
 import { getContainedByAspectRatioStyle } from "../../../../styles/styleUtilities";
 import type PropsWithClassName from "../../../../types/propsWithClassName";
-import { type PieceType } from "~/cms/cmsSchemas";
 import { replaceNewlines } from "~/cms/cmsCompiler";
+import { type PieceType } from "~/cms/schemaTypes";
 
 export const generateStaticParams = async () =>
 {

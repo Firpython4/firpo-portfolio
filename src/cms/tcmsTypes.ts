@@ -114,4 +114,4 @@ extends TCmsValue<InferTCmsObjectWithName<T>, "no matches" | "name does not matc
     readonly type: "objectWithName";
 }
 
-export const imageFolder = "public" as const;
+export const imageFolder = "public/" as const;
