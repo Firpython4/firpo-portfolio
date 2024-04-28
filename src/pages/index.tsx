@@ -2,11 +2,10 @@ import type { GetStaticProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { type PieceType } from "~/types/pieceType";
-import {getIndexProps} from "~/index";
-import { type Locale, ptLocale, useLocaleTexts } from "~/localization/localization";
+import { ptLocale } from "~/localization/localization";
 import { Favicon } from "../components/favicon";
-import Home from "./[locale]";
+import { getIndexProps } from "../index";
+import Home, { type HomeProps } from "./[locale]";
 
 const FallbackHome = (props: HomeProps) =>
 {
@@ -17,9 +16,9 @@ const FallbackHome = (props: HomeProps) =>
             <Head>
                 <title>Marcelo Firpo: CMO, Diretor de Criação, Consultor Criativo, Redator, Roteirista</title>
                 <Favicon src="/favicon.ico"/>
-                <meta name="description" content={useLocaleTexts(props.locale).homeMetaDescription}/>
+                <meta name="description" content={props.localizedTexts.homeMetaDescription}/>
             </Head>
-            <Home locale={props.locale} pieces={props.pieces}/>
+            <Home locale={props.locale} pieces={props.pieces} localizedTexts={props.localizedTexts}/>
         </>
     );
 };
@@ -27,11 +26,6 @@ const FallbackHome = (props: HomeProps) =>
 export const getStaticProps = (async () =>
 {
     return await getIndexProps(ptLocale);
-    
 }) satisfies GetStaticProps<HomeProps>
 
-type HomeProps = {
-    pieces: PieceType[],
-    locale: Locale
-}
 export default FallbackHome

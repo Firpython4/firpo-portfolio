@@ -7,9 +7,10 @@ import { Favicon } from "~/components/favicon";
 import { Hero } from "~/components/hero";
 import { PieceCollection } from "~/components/pieceCollection";
 import { Scaffold } from "~/components/scaffold";
+import { type Locale, locales } from "~/localization/localization";
 import { type PieceType } from "~/types/pieceType";
-import {getIndexProps} from "~/index";
-import { type Locale, locales, useLocaleTexts } from "~/localization/localization";
+import { getIndexProps } from "../../index";
+import { type LocalizedTexts } from "../../localization/texts";
 
 export const getStaticPaths = (() =>
 {
@@ -31,10 +32,10 @@ const Home = (props: HomeProps) =>
         <Head>
             <title>Marcelo Firpo: CMO, Diretor de Criação, Consultor Criativo, Redator, Roteirista</title>
             <Favicon src="/favicon.ico"/>
-            <meta name="description" content={useLocaleTexts(props.locale).homeMetaDescription}/>
+            <meta name="description" content={props.localizedTexts.homeMetaDescription}/>
         </Head>
         <Scaffold>
-            <Hero locale={props.locale}/>
+            <Hero localizedTexts={props.localizedTexts}/>
             <ExpositionText className="pt-[10px]
                                        mobile_sm:pt-[25px]
                                        mobile_md:pt-[40px]
@@ -42,23 +43,26 @@ const Home = (props: HomeProps) =>
                                        sm:pt-[70px]
                                        md:pt-[85px]
                                        lg:pt-[100px]
-                                       xl:pt-[118px]" locale={props.locale}/>
+                                       xl:pt-[118px]"
+                            locale={props.locale}
+                            localizedTexts={props.localizedTexts}/>
             <div className="pt-28">
                 <PieceCollection pieces={props.pieces} locale={props.locale}/>
             </div>
-            <BottomBar className="pt-20 pb-24" locale={props.locale}/>
+            <BottomBar className="pt-20 pb-24" localizedTexts={props.localizedTexts}/>
         </Scaffold>
     </>
 );
 
 export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQuery, string | false | object | undefined>) =>
 {
-    return await getIndexProps(context.params!.locale as Locale);
-
+    const locale = context.params!.locale as Locale;
+    return await getIndexProps(locale);
 }) satisfies GetStaticProps<HomeProps>
 
-type HomeProps = {
-    pieces: PieceType[],
+export type HomeProps = {
+    pieces: PieceType<string>[],
+    localizedTexts: LocalizedTexts,
     locale: Locale
 }
 export default Home
