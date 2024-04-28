@@ -11,7 +11,7 @@ This is a static portfolio website for my dad. I made it as thanks for all the l
   - Zero Javascript by default. Since most of the site is static, this ensures that no unnecessary Javascript is shipped to the client.
 - I'm using Tailwind. This ensures that styling is colocated, and that I can scaffold styles and even animations quickly
 - I'm using the file system itself as my content management system. This makes it very easy for designers to add new works, and to always have the history available
-- I'm using Typescript. Coming from type-safe languages such as C#, Java, and C++, I believe very strongly that type-safety is essential for software maintainability.
+- I'm using TypeScript. Coming from type-safe languages such as C#, Java, and C++, I believe very strongly that type-safety is essential for software maintainability.
 
 ## Roadmap
 Next steps are basically:
