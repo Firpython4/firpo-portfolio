@@ -1,4 +1,6 @@
 import Image from "next/image"
+import Link from "next/link";
+import { emailLink, linkedInLink } from "../config";
 
 export const BottomBar = () =>
 (
@@ -8,8 +10,12 @@ export const BottomBar = () =>
         </p>
         <div className="h-full">
             <div className=" flex flex-row items-center space-x-[26px]">
-                <Image alt="email" src="/icons/email-icon.svg" width={38.48} height={34.2}/>
-                <Image alt="LinkedIn" src="/icons/linkedin-icon.svg" width={34.21} height={34.21}/>
+                <Link href={emailLink}>
+                    <Image alt="email" src="/icons/email-icon.svg" width={38.48} height={34.2}/>
+                </Link>
+                <Link href={linkedInLink}>
+                    <Image alt="LinkedIn" src="/icons/linkedin-icon.svg" width={34.21} height={34.21}/>
+                </Link>
             </div>
         </div>
     </div>
