@@ -208,35 +208,15 @@ async function compileCms()
     const directoryEntries = await getAllCollections();
     const directories = directoryEntries.filter(dirent => dirent.isDirectory())
     const subDirectories = await Promise.allSettled(getCollectionsFromDirectories(directories));
-    const fulfilledSubdirectories = subDirectories.filter(promiseFullfilledPredicate)
-                                                                         .map(valueMapper);
+    const fulfilledSubdirectories = subDirectories.filter(promiseFullfilledPredicate).map(valueMapper);
     const rejectedSubdirectories = subDirectories.filter(promiseRejectedPredicate);
 
-
-    try
+    if (rejectedSubdirectories.length > 0)
     {
-        const resultP = await collection.parse(relativePath(safePath("public/collections/internacional")))
+        throw new Error(`Some subdirectory reads failed: ${rejectedSubdirectories.toString()}`)
+    }
         
-        if (resultP.wasResultSuccessful)
-        {
-            resultP.okValue.forEach(value => console.log(value));
-        }
-        else
-        {
-            console.log(resultP.errorValue)
-        }
-    }
-    catch (e)
-    {
-        console.log(e)
-    }
-            
-            if (rejectedSubdirectories.length > 0)
-                {
-                    throw new Error(`Some subdirectory reads failed: ${rejectedSubdirectories.toString()}`)
-                }
-                
-                const collectionsWithPieces = await Promise.allSettled(fulfilledSubdirectories.map(getCollectionWithPiecesAndContent));
+    const collectionsWithPieces = await Promise.allSettled(fulfilledSubdirectories.map(getCollectionWithPiecesAndContent));
     const promiseRejectedResults = collectionsWithPieces.filter(promiseRejectedPredicate);
     if (promiseRejectedResults.length > 0)
     {
