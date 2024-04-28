@@ -7,7 +7,7 @@ import {promisify} from "util";
 import sizeOf from "image-size";
 import { error, ok } from "../types/result";
 import { type CollectionId } from "./cmsCompiler";
-import { Path } from "./tcmsTypes";
+import { type Path } from "./tcmsTypes";
 
 export function getCollectionsFromDirectories(directories: Dirent[])
 {

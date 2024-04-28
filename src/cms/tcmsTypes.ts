@@ -1,10 +1,11 @@
-import { type Dirent, promises as fileSystem } from "node:fs";
+import { promises as fileSystem } from "node:fs";
 import path from "node:path";
 import { promisify } from "util";
 import { z } from "zod";
 import { error, ok, type Result } from "~/types/result";
 import { type Brand } from "../typeSafety";
 import { getExtension, getPath } from "./fileManagement";
+import { readdir } from "node:fs/promises";
 
 type TCmsValue<Value> = {readonly output: Value, readonly parse: Parser<Value, unknown>} & (TCmsImage | TCmsUrl | TCmsUnion<[...TCmsValue<unknown>[]]> | TCmsArray<TCmsValue<unknown>> | TCmsObject<Record<string, TCmsValue<unknown>>>);
 
@@ -17,7 +18,7 @@ type Parser<OkType, ErrorType> = ((path: Path) => Promise<Result<OkType, ErrorTy
 type TCmsImage = {
     readonly type: "image";
     readonly output: Image;
-    readonly error: "no matches";
+    readonly error: "no matches" | "image not in the configured folder";
     readonly parse: Parser<TCmsImage["output"], TCmsImage["error"]>
 }
 
@@ -44,7 +45,7 @@ type TCmsUrl = {
 
 interface TCmsArray<ElementType extends TCmsValue<unknown>> {
     readonly type: "array";
-    //@ts-expect-error Since the user can nest schemas, it's expected for the following line to throw an error in regard to the type instantiation limit
+    //@ts-expect-error type inference is expected to get deep
     readonly output: ElementType["output"][]
     readonly error: "no matches";
     readonly parse: Parser<TCmsArray<ElementType>["output"], TCmsArray<ElementType>["error"]>;
@@ -60,7 +61,7 @@ interface TCmsUnion<T extends Readonly<[...TCmsValue<unknown>[]]>> {
 type Url = { type: "url", value: string } & TCmsEntity
 
 type Markdown = { type: "markdown", path: Path } & TCmsEntity;
-type Image = { type: "image", path: Path } & TCmsEntity;
+type Image = { type: "image", path: `${string}public/${string}` } & TCmsEntity;
 export type Path = Brand<string, "path">;
 
 
@@ -89,17 +90,6 @@ export async function getUrlFromPath(path: Path)
     return (await fileSystem.readFile(path)).toString();
 }
 
-
-function safeJoin(...pathSegments: Path[])
-{
-    return path.join(...pathSegments) as Path;
-}
-
-type TCmsContext = {
-    basePath: Path,
-    dirents: Dirent[]
-}
-
 declare const defaultUrl: Url;
 declare const err: "invalid url" | "no matches";
 const url = (): TCmsUrl => (
@@ -116,7 +106,10 @@ const url = (): TCmsUrl => (
         
         const url = await getUrlFromPath(path);
         
-        z.string().url().parse(url);
+        if (!z.string().url().safeParse(url))
+        {
+            return error("invalid url");
+        }
         
         return ok({
             type: "url",
@@ -124,22 +117,33 @@ const url = (): TCmsUrl => (
             value: url,
         });
     }
-);
+});
     
 
 declare const markdownDefault: Markdown;
 
-const markdown = <T extends string>(name?: T): TCmsMarkdown => (
+const markdown = <T extends string>(namePattern?: T): TCmsMarkdown => (
 {
     type: "markdown",
     output: markdownDefault,
     error: "no matches",
-    parse: promisify((path, callback: (err?: any)) => {
+    parse: promisify((path: Path) => {
         const extension = ".md";
         if (!path.endsWith(extension))
         {
             return error("invalid extension");
         }
+
+        if (namePattern && !path.match(namePattern))
+        {
+            return error("invalid name");
+        }
+
+        return ok({
+            type: "markdown",
+            name: getName(path),
+            value: url,
+        });
     })
 });
 
@@ -148,22 +152,43 @@ const image = (): TCmsImage => ({
     type: "image",
     output: defaultImage,
     error: "no matches",
-    parse: promisify(path => {
-        const dirent = context.dirents.find(value => value.name.match(relativePathPattern))
-        if (!dirent)
+    parse: promisify((path: Path) => {
+        const extensions = [".jpg", ".webp", ".png", ".svg", ".ico"];
+        const split = path.split(".");
+        const extension = split[split.length - 1];
+        if (!extension
+         || extensions.includes(extension))
         {
-            return error("no matches" as const);
+            return error("invalid extension");
         }
         
-        //TODO: test extension
-        
+        const url = path.split(imageFolder)[1];
+
+        if (!url)
+        {
+            return error("image is not in the configured folder")
+        }
+
         return ok({
-                      type: "image",
-                      name: dirent.name.replace(getExtension(dirent), ""),
-                      path: safeJoin(context.basePath, relativePathPattern),
-                  });
+            type: "url",
+            name: getName(path),
+            url: url as `${string}public/${string}`
+        });
     })
 });
+
+function getName(inPath: Path)
+{
+    const split = inPath.split(path.delimiter);
+    
+    const name = split[split.length - 1];
+    if (!name)
+    {
+        return inPath;
+    }
+
+    return name;
+}
 
 declare function makeDefaultArray<T extends TCmsValue<unknown>>(element: T): Infer<T>[];
 const array = <ElementType extends TCmsValue<unknown>>(element: ElementType): TCmsArray<ElementType> => ({
@@ -172,10 +197,10 @@ const array = <ElementType extends TCmsValue<unknown>>(element: ElementType): TC
     error: "no matches",
     async parse(path: Path)
     {
-        return ok(await Promise.all(context.dirents.map(async dirent =>
-                                                     {
-                                                         return await element.parse(context, relativePath);
-                                                     })));
+        const dirents = await readdir(path, {withFileTypes: true});
+        const mapped = await Promise.all(dirents.map(async dirent => (await element.parse(getPath(dirent)))));
+        const filtered = mapped.filter(parsed => parsed.wasResultSuccessful);
+        return ok(filtered);
     }
 });
 
@@ -187,12 +212,26 @@ const object = <T extends Record<string, TCmsValue<unknown>>>(
     error: "no matches",
     output: makeDefaultObject(fields),
     async parse(path: Path) {
-
+        const dirents = await readdir(path, {withFileTypes: true});
         const result = await Promise.all(Object.entries(fields).map(async ([, value]) =>
                                                        {
-                                                           return value.parse(context, relativePath);
+                                                            for (const dirent of dirents)
+                                                            {
+                                                                const parsed = await value.parse(getPath(dirent));
+                                                                if (parsed.wasResultSuccessful)
+                                                                {
+                                                                    return parsed;
+                                                                }
+                                                            }
+
+                                                            return error("no matches");
                                                        }));
         
+        if (result.find(value => !value.wasResultSuccessful))
+        {
+            return error("no matches");
+        }
+
         return ok(result as TCmsObject<T>["output"]);
     },
 });
@@ -211,7 +250,7 @@ const union = <T extends Readonly<[...TCmsValue<unknown>[]]>>(...types: T): TCms
                 const typeSafeIndex = option as ArrayIndices<T>;
 
                 // @ts-expect-error TS does not recognize string indices as real indices
-                const parseResult = (await type.parse(context, relativePath)) as T[ArrayIndices<T>]["output"]
+                const parseResult = (await type.parse(path)) as T[ArrayIndices<T>]["output"]
                 return ok({
                     option: typeSafeIndex,
                     value: parseResult
@@ -249,3 +288,15 @@ if (hg.option === "2")
         const gr = result.value.thumbnail;
     }
 }
+
+export function safePath(path: string)
+{
+    return path as Path;
+}
+
+export function relativePath(relativePath: Path)
+{
+    return path.join(process.cwd(), relativePath);
+}
+
+const imageFolder = "public";
