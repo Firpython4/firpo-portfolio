@@ -132,11 +132,6 @@ const arrayParse = <ElementType extends TCmsValue> (element: ElementType): Parse
     const filtered = mapped.filter((parsed): parsed is PromiseFulfilledResult<ExtractOkType<Result<unknown, unknown>>> => parsed.status === "fulfilled" && parsed.value.wasResultSuccessful);
     const remapped = filtered.map(parsed => parsed.value.okValue) as InferOk<ElementType>[];
 
-    if (remapped.length == 0)
-    {
-        return error("empty array" as const);
-    }
-
     return ok(remapped);
 };
 

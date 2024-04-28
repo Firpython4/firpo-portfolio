@@ -28,7 +28,7 @@ export async function getCollectionPageContent(params: CollectionPageParams)
     {
         return {
             locale,
-            pieces: collection.parsed.pieces,
+            pieces: [ collection.parsed.thumbnail.parsed.thumbnail, ...collection.parsed.pieces.parsed],
             content: collection.parsed[locale]
         };
     }

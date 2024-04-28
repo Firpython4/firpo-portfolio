@@ -18,6 +18,7 @@ const pieces = tcms.array(piece).withName("pieces");
 
 export const collection = tcms.object({
     pieces,
+    thumbnail: tcms.object({thumbnail: piece}).withName("thumbnail"),
     pt: tcms.markdown("pt").withMatter(z.object({title: z.string()})),
     en: tcms.markdown("en").withMatter(z.object({title: z.string()}))
 }).withName();

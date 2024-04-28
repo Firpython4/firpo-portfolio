@@ -10,10 +10,14 @@ const pieceMapper = (locale: Locale, collectionName: string, collectionPrettyNam
 
 export const PieceCollection = (props: {collections: CollectionType[], locale: Locale}) =>
 {
-    const pieces = props.collections.map(collection => collection.parsed.pieces.parsed.map(pieceMapper(props.locale, collection.name, collection.parsed[props.locale].matters.title))).flat();
+    const thumbnails = props.collections.map(collection => {
+        const thumbnail = collection.parsed.thumbnail.parsed.thumbnail;
+        return pieceMapper(props.locale, collection.name, collection.parsed[props.locale].matters.title)(thumbnail);
+    });
+
     return (<>
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-1">
-            {pieces}
+            {thumbnails}
         </div>
     </>
     );
