@@ -14,7 +14,7 @@ import { type PublicFolder, publicFolderValue } from "../../config";
 import {
     absoluteToRelativePath,
     getFirstMarkdownFile,
-    filterImages,
+    filterImagesAndUrls,
     getWorksDirectoryEntities, removeMarkdownExtension, getPath, getWorkDirectory
 } from "~/cms/fileManagement";
 import { includesInner, type StringWithInnerSubstring } from "../../typeSafety";
@@ -51,7 +51,7 @@ export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQu
     {
         const directoryEntries = await getWorkDirectory(context.params.work);
 
-        const imagePaths: string[] = filterImages(directoryEntries);
+        const imagePaths: string[] = filterImagesAndUrls(directoryEntries);
         
         const filteredPaths: StringWithInnerSubstring<PublicFolder>[] = imagePaths.filter((imagePath: string) => includesInner(imagePath, publicFolderValue)) as StringWithInnerSubstring<"public">[];
         
