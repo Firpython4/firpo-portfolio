@@ -11,7 +11,7 @@ import LinkWithLocale from "./LinkWithLocale";
 const YoutubeReactPlayerComponent = dynamic(() => import("react-player/youtube"), {ssr: false});
 const VimeoReactPlayerComponent = dynamic(() => import("react-player/vimeo"), {ssr: false});
 
-export const Piece = (props: { piece: PieceType, locale: Locale }) =>
+export const Piece = (props: { piece: PieceType<string>, locale: Locale }) =>
 {
     const piece = props.piece;
     const ref = useRef(null);
@@ -140,7 +140,7 @@ function getThumbnail(url: string, quality?: string)
     return false;
 }
 
-const PieceThumbnail = (props: { className?: string, piece: PieceType, shouldPlay: boolean }) =>
+const PieceThumbnail = (props: { className?: string, piece: PieceType<string>, shouldPlay: boolean }) =>
 {
     const piece = props.piece;
     const url = piece.url;

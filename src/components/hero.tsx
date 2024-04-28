@@ -1,11 +1,11 @@
 import Image from "next/image";
 import background from "../../public/firpo-color.png";
+import { type LocalizedTextsProps } from "../types/misc";
 import { VerticalCenterBox } from "./verticalCenterBox";
 import { NavBar } from "./navBar";
 import {type PropsWithChildren} from "react";
-import { type Locale, useLocaleTexts } from "~/localization/localization";
 
-const HeroTitle = (props: {locale: Locale}) =>
+const HeroTitle = (props: LocalizedTextsProps) =>
 (
     <h2 className="shrink-0
                    text-white
@@ -23,11 +23,11 @@ const HeroTitle = (props: {locale: Locale}) =>
                    tracking-[-2px]
                    mobile_lg:tracking-[-3.745px]
                    font-hepta_slab">
-        {useLocaleTexts(props.locale).name}
+        {props.localizedTexts.name}
     </h2>
 );
 
-const HeroSubtitle = (props: {locale: Locale}) =>
+const HeroSubtitle = (props: LocalizedTextsProps) =>
 (
     <h3 className="w-[30svw]
                    mobile_md:w-[160px]
@@ -48,11 +48,11 @@ const HeroSubtitle = (props: {locale: Locale}) =>
                    md:leading-[40px]
                    lg:leading-[50px]
                    font-hepta_slab">
-        {useLocaleTexts(props.locale).subtitle}
+        {props.localizedTexts.subtitle}
     </h3>
 );
 
-const HeroText = (props: {className?: string, locale: Locale}) =>
+const HeroText = (props: {className?: string} & LocalizedTextsProps) =>
 (
     <div className={`flex
         flex-col
@@ -63,8 +63,8 @@ const HeroText = (props: {className?: string, locale: Locale}) =>
         lg:gap-y-8
         xl:gap-y-10
         ${props.className}`}>
-        <HeroTitle locale={props.locale}/>
-        <HeroSubtitle locale={props.locale}/>
+        <HeroTitle localizedTexts={props.localizedTexts}/>
+        <HeroSubtitle localizedTexts={props.localizedTexts}/>
     </div>
 );
 
@@ -76,7 +76,7 @@ const HeroBackground = (props: PropsWithChildren<{className?: string}>) =>
     </div>
 );
 
-const HeroContent = (props: {locale: Locale}) =>
+const HeroContent = (props: LocalizedTextsProps) =>
 {
     const iconPaths = {
         email: "/icons/hero-icons/email-icon.svg",
@@ -94,7 +94,8 @@ const HeroContent = (props: {locale: Locale}) =>
                              sm:top-[14%]
                              md:top-[16%]
                              lg:top-[20%]
-                             xl:top-[27%]" locale={props.locale}/>
+                             xl:top-[27%]"
+                      localizedTexts={props.localizedTexts}/>
             <NavBar
                 iconPaths={iconPaths}
                 className="absolute
@@ -113,7 +114,7 @@ const HeroContent = (props: {locale: Locale}) =>
     );
 };
 
-export const Hero = (props: {locale: Locale}) =>
+export const Hero = (props: LocalizedTextsProps) =>
 (
     <VerticalCenterBox className="relative
                                   w-responsive
@@ -128,6 +129,6 @@ export const Hero = (props: {locale: Locale}) =>
                                   xl:min-h-[600px]
                                   overflow-hidden">
         <HeroBackground className="relative top-[-2%] lg:top-[-11%]"/>
-        <HeroContent locale={props.locale}/>
+        <HeroContent localizedTexts={props.localizedTexts}/>
     </VerticalCenterBox>
 );

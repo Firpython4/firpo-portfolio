@@ -1,26 +1,18 @@
 import type { GetStaticPropsContext } from "next";
-import path from "node:path";
 import type { ParsedUrlQuery } from "node:querystring";
-import { getAllCollections, getMarkdownFilesForLocales, readCollectionDirectory } from "./cms/fileManagement";
-import { collectionsPath } from "./config";
-import toContentObject from "./contentFormatting";
-import { mapMap, mapMapAsync } from "./functional";
-import { getPiecesWithLocale } from "./index";
-import { type Locale, locales } from "./localization/localization";
-import type { PieceType } from "./types/pieceType";
-import type { Brand } from "./typeSafety";
+import getOrCompileCms, { type CollectionId } from "./cms/cmsCompiler";
+import getOrCacheCompiledCms from "./cms/cmsCompiler";
+import { getLocalizedPiece, type Locale, locales } from "./localization/localization";
 
 export async function getCollectionsStaticPaths()
 {
-    const directories: string[] = (await getAllCollections())
-    .filter((dirent) => dirent.isDirectory())
-    .map((directory) => directory.name);
+    const cms = await getOrCacheCompiledCms();
     
-    const paths = locales.map(locale => directories.map(directoryName =>
+    const paths = locales.map(locale => cms.array.map(collection =>
                                                         {
                                                             return {
                                                                 params: {
-                                                                    collection: directoryName,
+                                                                    collection: collection.id,
                                                                     locale: locale
                                                                 }
                                                             };
@@ -32,60 +24,27 @@ export async function getCollectionsStaticPaths()
     };
 }
 
-export async function getCollectionProps(context: GetStaticPropsContext<ParsedUrlQuery, string | false | object | undefined>): Promise<{
-    props: { works: PieceType[]; content: { html: string; title: string, asString: string } }
-}>
+export async function getCollectionProps(context: GetStaticPropsContext<ParsedUrlQuery, string | false | object | undefined>)
 {
-    if (context.params && typeof (context.params.collection) === "string")
+    const cms = await getOrCompileCms();
+    const collectionId = context.params!.collection as CollectionId;
+    const locale = context.params!.locale as Locale;
+    
+    const collection = cms.map.get(collectionId)!;
+    const content = collection.content.get(locale);
+    
+    if (!content)
     {
-        const collection = context.params.collection as CollectionId;
-        
-        const pieces = await getPiecesAsProps(collection, context.params.locale as Locale);
-        const content = await getContent(collection);
-        
-        if (content)
-        {
-            const literalNewLine = "\\n";
-            const newLineChar = "\r\n";
-            return {
-                props: {
-                    content: mapMap(content, (locale, contentObject) =>
-                    {
-                        const titleWithNewLines = contentObject.title.replaceAll(literalNewLine, newLineChar);
-                        return [locale, {
-                            html: contentObject.html,
-                            title: titleWithNewLines,
-                            asString: contentObject.asString
-                        }];
-                    }).get(context.params.locale as Locale)!,
-                    works: pieces
-                }
-            };
+        throw new Error(`Collection ${collectionId}doesn't have the ${locale} localization`);
+    }
+    
+    const pieces = collection.pieces.map(piece => getLocalizedPiece(piece, locale));
+    
+    return {
+        props: {
+            content,
+            pieces
         }
-        
-        throw new Error("Invalid matter");
-    }
-    
-    throw new Error("Unable to locate markdown file for content");
+    };
 }
 
-export type CollectionId = Brand<string, "collectionId">;
-
-export async function getContent(collectionId: CollectionId)
-{
-    const directoryEntries = await readCollectionDirectory(collectionId);
-    const content = getMarkdownFilesForLocales(directoryEntries)
-    return await mapMapAsync(content, toContentObject);
-}
-
-export async function getPiecesAsProps(collectionId: CollectionId, locale: Locale)
-{
-    const directoryEntries = await readCollectionDirectory(collectionId);
-    const directoriesWithParent = {
-        path: path.join(process.cwd(), collectionsPath, collectionId),
-        directoryEntities: directoryEntries,
-        collectionId: collectionId
-    }
-    
-    return (getPiecesWithLocale(locale))(directoriesWithParent);
-}

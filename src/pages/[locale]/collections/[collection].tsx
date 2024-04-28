@@ -11,29 +11,22 @@ import Head from "next/head";
 import {Favicon} from "~/components/favicon";
 import {type PieceType} from "~/types/pieceType";
 import {useRouter} from "next/router";
-import { type Locale } from "~/localization/localization";
 import { getCollectionProps, getCollectionsStaticPaths } from "~/collection";
+import { type ContentType } from "../../../types/localizedCollectionType";
 
 const ReactPlayerComponent = dynamic(() => import("react-player/youtube"), { ssr: false });
-
-type ContentType = {
-    html: string,
-    title: string
-};
-
-export type LocalizedContentType = Map<Locale, ContentType>;
 
 interface CollectionProps
 {
     content: ContentType,
-    works: PieceType[]
+    pieces: PieceType<string>[]
 }
 export const getStaticPaths = (async () =>
 {
     return await getCollectionsStaticPaths();
 }) satisfies GetStaticPaths
 
-const Piece = (props: {piece: PieceType}) =>
+const Piece = (props: {piece: PieceType<string>}) =>
 {
     const piece = props.piece;
     if (piece.type === "image")
@@ -115,7 +108,7 @@ const Collection = (props: InferGetStaticPropsType<typeof getStaticProps>) =>
                 </VerticalCenterBox>
                 <VerticalCenterBox className="gap-y-[30px]">
                     <VerticalCenterBox className="pt-[74px] pb-[156px] gap-y-[128px]">
-                        {props.works.map(work => <Piece piece={work}/>)}
+                        {props.pieces.map(piece => <Piece piece={piece}/>)}
                     </VerticalCenterBox>
                     <div className="w-responsive-screen
                                                   pl-[40px]
