@@ -66,12 +66,12 @@ const HeroText = (props: {className?: string, locale: Locale}) =>
         <HeroTitle locale={props.locale}/>
         <HeroSubtitle locale={props.locale}/>
     </div>
-)
+);
 
 const HeroBackground = (props: PropsWithChildren<{className?: string}>) =>
 (
     <div className={props.className}>
-        <Image src={background} alt="Marcelo Firpo" priority={true}/>
+        <Image width={5760} height={2799} src={background.src} alt="Marcelo Firpo" priority={true}/>
         {props.children}
     </div>
 );
