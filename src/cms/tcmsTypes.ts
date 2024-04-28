@@ -12,7 +12,7 @@ type TCmsEntity = {
     name: string
 }
 
-type Parser<OkType, ErrorType> = ((context: TCmsContext, relativePathPattern: Path) => Promise<Result<OkType, ErrorType>>);
+type Parser<OkType, ErrorType> = ((path: Path) => Promise<Result<OkType, ErrorType>>);
 
 type TCmsImage = {
     readonly type: "image";
@@ -84,10 +84,11 @@ export async function getUrl(imageOrUrlPath: Path)
     return (await fileSystem.readFile(imageOrUrlPath)).toString();
 }
 
-export async function getUrlFromDirent(imageOrUrlPath: Dirent)
+export async function getUrlFromPath(path: Path)
 {
-    return (await fileSystem.readFile(getPath(imageOrUrlPath))).toString();
+    return (await fileSystem.readFile(path)).toString();
 }
+
 
 function safeJoin(...pathSegments: Path[])
 {
@@ -106,25 +107,25 @@ const url = (): TCmsUrl => (
     type: "url",
     output: defaultUrl,
     error: err,
-    parse: async (context: TCmsContext, relativePathPattern: Path) => {
-        const dirent = context.dirents.find(value => value.name.match(relativePathPattern))
-        if (!dirent)
+    parse: async path => {
+        const extension = ".url";
+        if (!path.endsWith(extension))
         {
-            return error(err);
+            return error("invalid extension");
         }
-
-        const url = await getUrlFromDirent(dirent);
+        
+        const url = await getUrlFromPath(path);
         
         z.string().url().parse(url);
         
         return ok({
             type: "url",
-            name: dirent.name.replace(getExtension(dirent), ""),
+            name: getExtension(path),
             value: url,
         });
     }
-}
 );
+    
 
 declare const markdownDefault: Markdown;
 
@@ -133,26 +134,12 @@ const markdown = <T extends string>(name?: T): TCmsMarkdown => (
     type: "markdown",
     output: markdownDefault,
     error: "no matches",
-    parse: promisify((context: TCmsContext, relativePathPattern: Path) => {
-        const dirent = context.dirents.find(value => value.name.match(relativePathPattern))
-        if (!dirent)
+    parse: promisify((path, callback: (err?: any)) => {
+        const extension = ".md";
+        if (!path.endsWith(extension))
         {
-            return error("no matches" as const);
+            return error("invalid extension");
         }
-        
-        const foundName = dirent.name.replace(getExtension(dirent), "");
-        if (name && name !== foundName)
-        {
-            return error("invalid name" as const)
-        }
-        
-        //TODO: test extension
-        
-            return ok({
-                                  type: "markdown",
-                                  foundName,
-                                  path: safeJoin(context.basePath, relativePathPattern),
-                              });
     })
 });
 
@@ -161,7 +148,7 @@ const image = (): TCmsImage => ({
     type: "image",
     output: defaultImage,
     error: "no matches",
-    parse: promisify((context: TCmsContext, relativePathPattern: Path) => {
+    parse: promisify(path => {
         const dirent = context.dirents.find(value => value.name.match(relativePathPattern))
         if (!dirent)
         {
@@ -183,7 +170,7 @@ const array = <ElementType extends TCmsValue<unknown>>(element: ElementType): TC
     type: "array",
     output: makeDefaultArray(element),
     error: "no matches",
-    async parse(context, relativePath)
+    async parse(path: Path)
     {
         return ok(await Promise.all(context.dirents.map(async dirent =>
                                                      {
@@ -199,7 +186,7 @@ const object = <T extends Record<string, TCmsValue<unknown>>>(
     type: "object",
     error: "no matches",
     output: makeDefaultObject(fields),
-    async parse(context, relativePath) {
+    async parse(path: Path) {
 
         const result = await Promise.all(Object.entries(fields).map(async ([, value]) =>
                                                        {
@@ -215,7 +202,7 @@ const union = <T extends Readonly<[...TCmsValue<unknown>[]]>>(...types: T): TCms
     type: "union",
     error: "no matches",
     output: makeDefaultUnion<T>(...types),
-    async parse(context: TCmsContext, relativePath: Path)
+    async parse(path: Path)
     {
         for (const [option, type] of types.entries())
         {

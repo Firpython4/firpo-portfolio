@@ -56,9 +56,15 @@ export function getPath(dirent: Dirent)
     return path.join(dirent.path, dirent.name) as Path;
 }
 
-export function getExtension(imageDirent: Dirent)
+export function getExtension(path: Path)
 {
-    return path.extname(getPath(imageDirent));
+    const result = path.split(".");
+    if (result.length < 2)
+    {
+        return error("path doesn't have an extension")
+    }
+
+    return ok(result[length - 1]);
 }
 
 export async function getVideoUrl(imageOrUrlPath: `${string}public${string}`)
