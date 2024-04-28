@@ -18,12 +18,12 @@ const Home = () =>
         <Main>
             <Hero/>
             <ExpositionText/>
-            <div className="pt-[113px]">
+            <div className="pt-28">
                 <HorizontalCenter>
                     <PieceCollection/>
                 </HorizontalCenter>
             </div>
-            <div className="pt-[88px] pb-[90.79px]">
+            <div className="pt-20 pb-24">
                 <HorizontalCenter>
                     <BottomBar/>
                 </HorizontalCenter>

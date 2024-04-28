@@ -2,7 +2,7 @@ import Image from "next/image"
 
 export const BottomBar = () =>
 (
-    <div className="flex flex-col space-y-[11px] md:flex-row md:items-center space-x-[11px]">
+    <div className="flex flex-col space-y-[11px] md:flex-row md:justify-center space-x-[11px]">
         <div
         className={`w-[412px] text-black text-xl font-semibold font-inter leading-normal`}>
             Resolva seus problemas de comunicação:
