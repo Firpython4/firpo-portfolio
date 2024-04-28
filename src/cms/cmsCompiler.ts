@@ -1,6 +1,6 @@
 import { collections } from "./cmsSchemas";
 import { type CollectionsType } from "./schemaTypes";
-import { relativePath, safePath } from "./type-fs/fileManagement";
+import { relativePath, safePath } from "./type-fs/src/fileManagement";
 
 export const replaceNewlines = (text: string) => {
   const literalNewLine = "\\n";

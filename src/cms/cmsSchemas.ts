@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { typefs } from "./type-fs/schemas";
+import { typefs } from "./type-fs/src/schemas";
 
 const videoWithThumbnail = typefs.object({
   url: typefs.url(),

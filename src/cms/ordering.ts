@@ -1,7 +1,7 @@
 import { orderFilePath } from "~/config";
 import log from "../logging";
 import { type PieceType } from "./schemaTypes";
-import { getFileRelative } from "./type-fs/fileManagement";
+import { getFileRelative } from "./type-fs/src/fileManagement";
 
 export async function orderByConfig(pieces: PieceType[]) {
   const orderFile = await getFileRelative(orderFilePath);

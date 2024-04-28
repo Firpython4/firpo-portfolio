@@ -1,8 +1,8 @@
 import { type Dirent } from "fs";
-import { getPath } from "./type-fs/fileManagement";
+import { getPath } from "./type-fs/src/fileManagement";
 import { readdir } from "fs/promises";
 import path from "path";
-import { type Brand } from "./type-fs/typeSafety";
+import { type Brand } from "./type-fs/src/typeSafety";
 
 export type CollectionId = Brand<string, "collectionId">;
 
