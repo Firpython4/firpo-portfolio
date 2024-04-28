@@ -166,7 +166,7 @@ const PieceThumbnail = (props: PropsWithClassName<{piece: PieceType, shouldPlay:
         {
             return (
                 <>
-                    <ExportedImage width={piece.value.value.parsed.thumbnail.width} height={piece.value.value.parsed.thumbnail.height} src={url} alt={piece.value.value.name} sizes={pieceThumbnailSizes}
+                    <ExportedImage width={piece.value.value.thumbnail.width} height={piece.value.value.thumbnail.height} src={url} alt={piece.value.value.url.name} sizes={pieceThumbnailSizes}
                            className={`${props.className}
                               opacity-100
                               group-hover:opacity-0

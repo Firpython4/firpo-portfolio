@@ -10,15 +10,15 @@ export async function orderByConfig(pieces: PieceType[])
     const lines = asString.split("\r\n");
 
     pieces.sort((leftElement, rightElement) => {
-        let nameA;
-        let nameB;
+        let nameA: string;
+        let nameB: string;
         if (leftElement.option === 0)
         {
             nameA = leftElement.value.name;
         }
         else
         {
-            nameA = leftElement.value.value.name;
+            nameA = leftElement.value.option === 0 ? leftElement.value.value.name : leftElement.value.value.url.name;
         }
         if (rightElement.option === 0)
         {
@@ -26,7 +26,8 @@ export async function orderByConfig(pieces: PieceType[])
         }
         else
         {
-            nameB = rightElement.value.value.name;
+            nameB = rightElement.value.option === 0 ? rightElement.value.value.name : rightElement.value.value.url.name;
+
         }
 
             const aIndex = lines.indexOf(nameA);

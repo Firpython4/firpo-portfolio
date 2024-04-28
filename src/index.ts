@@ -16,7 +16,6 @@ export async function getIndexPageContent(locale: Locale)
     return {
         collections: collections,
         localizedCopy: getLocalizedCopy(locale),
-        locale
     };
 }
 

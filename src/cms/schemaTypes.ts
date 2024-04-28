@@ -8,4 +8,4 @@ export type CollectionsType = InferOk<typeof collections>;
 export const getUrlFromPiece = (piece: PieceType) => piece.option === 0 ? piece.value.url
                                                                  : piece.value.option === 0
                                                                      ? piece.value.value.value
-                                                                     : piece.value.value.parsed.url.value;
+                                                                     : piece.value.value.url.value;

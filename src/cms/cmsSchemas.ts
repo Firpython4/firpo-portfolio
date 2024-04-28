@@ -4,7 +4,7 @@ import { tcms } from "./tcmsSchemas";
 const videoWithThumbnail = tcms.object({
     url: tcms.url(),
     thumbnail: tcms.image()
-}).withName();
+});
 
 const video = tcms.union(
     tcms.url(),

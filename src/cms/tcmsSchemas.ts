@@ -28,7 +28,8 @@ const url = (): TCmsUrl => (
         }
         
         const urlOkValue = url.okValue;
-        if (!z.string().url().safeParse(urlOkValue))
+        const parseResult = z.string().url().safeParse(urlOkValue)
+        if (parseResult.success)
         {
             return error("invalid url");
         }
@@ -104,9 +105,13 @@ const arrayWithName = <T extends TCmsValue<unknown, unknown>> (parse: Parser<Inf
     async parse(inPath: Path)
     {
         const name = path.basename(inPath);
-        if (namePattern && !name.match(namePattern))
+        if (namePattern !== undefined)
         {
-            return error("name does not match" as const);
+            const matches = name.match(namePattern);
+            if (matches !== null && matches.length === 0)
+            {
+                return error("name does not match" as const);
+            }
         }
     
         const parseResult = await parse(inPath);
@@ -157,9 +162,13 @@ const objectWithName = <T extends TCmsRecord> (parse: Parser<InferTCmsObject<T>,
     async parse(inPath: Path)
     {
         const name = path.basename(inPath);
-        if (namePattern && !name.match(namePattern))
+        if (namePattern !== undefined)
         {
-            return error("name does not match" as const);
+            const matches = name.match(namePattern);
+            if (matches !== null && matches.length === 0)
+            {
+                return error("name does not match" as const);
+            }
         }
     
         const parseResult = await parse(inPath);
@@ -203,7 +212,6 @@ const objectParse = <T extends TCmsRecord, KeyType extends string | number | sym
 
     if (okValues.length !== result.length)
     {
-        return error("no matches" as const);
     }
 
     const spread = mapped.reduce((previous, current) => Object.assign(previous, current) as Record<KeyType, unknown>, {}) as InferTCmsObject<T>;
@@ -292,9 +300,13 @@ const markdown = <T extends string>(namePattern?: T): TCmsMarkdown => (
         }
         
         const name = getName(path);
-        if (namePattern && !name.match(namePattern))
+        if (namePattern !== undefined)
         {
-            return error("invalid name");
+            const matches = name.match(namePattern);
+            if (matches !== null && matches.length === 0)
+            {
+                return error("invalid name");
+            }
         }
 
         return ok({
@@ -304,7 +316,6 @@ const markdown = <T extends string>(namePattern?: T): TCmsMarkdown => (
         });
     })
 });
-
 
 export const tcms = {
     url,
