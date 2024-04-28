@@ -1,16 +1,22 @@
+import matter from "gray-matter";
 import type { GetStaticProps, GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import { type GetStaticPaths } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { type Dirent, promises as fileSystem } from "node:fs";
-import path from "node:path";
+import { type ParsedUrlQuery } from "node:querystring";
 import { remark } from "remark";
+import html from "remark-html";
 import { Scaffold } from "../../components/scaffold";
 import "@total-typescript/ts-reset";
 import { VerticalCenterBox } from "../../components/verticalCenterBox";
-import Link from "next/link";
-import { type ParsedUrlQuery } from "node:querystring";
-import html from "remark-html";
-import matter from "gray-matter";
+import {
+    absoluteToRelativePath,
+    getFirstMarkdownFile,
+    filterImages,
+    getWorksDirectoryEntities, removeMarkdownExtension, getPath, getWorkDirectory
+} from "../../path/fileManagement";
+import { includesInner, StringWithInnerSubstring } from "../../typeSafety";
 
 interface WorkProps
 {
@@ -21,8 +27,7 @@ interface WorkProps
 
 export const getStaticPaths = (async () =>
 {
-    const imageDirectory: string = path.join(process.cwd(), '/public/pieces');
-    const directories: string[] = (await fileSystem.readdir(imageDirectory, {withFileTypes: true}))
+    const directories: string[] = (await getWorksDirectoryEntities())
         .filter((dirent: Dirent) => dirent.isDirectory())
         .map((directory: Dirent) => directory.name);
     
@@ -43,21 +48,13 @@ export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQu
 {
     if (context.params && typeof(context.params.work) === "string")
     {
-        const pageDirectory: string = path.join(process.cwd(), '/public/pieces', context.params.work);
-        const directoryEntries: Dirent[] = await fileSystem.readdir(pageDirectory, {withFileTypes: true});
+        const directoryEntries = await getWorkDirectory(context.params.work);
 
-        const imagePaths: string[] = directoryEntries
-            .filter((dirent: Dirent) => dirent.isFile())
-            .filter((dirent: Dirent) =>
-                {
-                    const extension: string = path.extname(getPath(dirent)).toLowerCase();
-                    return extension === ".png" || extension === ".jpg";
-                })
-            .map((dirent: Dirent) => getPath(dirent));
+        const imagePaths: string[] = filterImages(directoryEntries);
         
-        const content: Dirent | undefined = directoryEntries
-            .filter((dirent: Dirent) => dirent.isFile())
-            .filter((dirent: Dirent) => path.extname(getPath(dirent)).toLowerCase() === ".md")[0]
+        const filteredPaths: StringWithInnerSubstring<"public">[] = imagePaths.filter((imagePath: string) => includesInner(imagePath, "public")) as StringWithInnerSubstring<"public">[];
+        
+        const content: Dirent | undefined = getFirstMarkdownFile(directoryEntries)
         
         if (content)
         {
@@ -70,9 +67,9 @@ export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQu
             const contentHtml = processedContent.toString();
             return {
                 props: {
-                    title: content.name.replace(".md", ""),
+                    title: removeMarkdownExtension(content.name),
                     contentHtml: contentHtml,
-                    imagePaths: imagePaths.map((imagePath: string) => (imagePath.split(path.join("public")))[1]).filter((element: string | undefined) => element !== undefined) as string[]
+                    imagePaths: filteredPaths.map(absoluteToRelativePath).filter((element: string | undefined) => element !== undefined) 
                 }
             }
         }
@@ -83,11 +80,6 @@ export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQu
     
     throw new Error("Invalid URL")
 }) satisfies GetStaticProps<WorkProps>
-
-function getPath(dirent: Dirent)
-{
-    return path.join(dirent.path, dirent.name);
-}
 
 const BackIcon = (props: {className?: string}) => <Image className={props.className} alt="home" src="/icons/back-icon.svg" width={31} height={31}/>;
 
@@ -110,11 +102,11 @@ const WorkShowcase = (props: InferGetStaticPropsType<typeof getStaticProps>) =>
         </VerticalCenterBox>
         <VerticalCenterBox className="pt-[74px] pb-[156px] space-y-[128px]">
             {props.imagePaths.map((imagePath: string) =>
-                                      (
-                                          <div key={imagePath}>
-                                              <Image src={imagePath} width={512} height={512} alt={imagePath}/>
-                                          </div>
-                                      ))}
+                (
+                  <div key={imagePath}>
+                      <Image src={imagePath} width={512} height={512} alt={imagePath}/>
+                  </div>
+                ))}
         </VerticalCenterBox>
         <Link href="/" className="w-responsive-screen pl-[411px] pb-[74px]">
             <BackIcon/>
