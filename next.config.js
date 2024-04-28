@@ -8,7 +8,12 @@ await import("./src/env.js");
 const config = {
   reactStrictMode: true,
   output: "export",
-  images: {unoptimized: true}
+  images: {unoptimized: true},
+  i18n: {
+    locales: ["pt-BR", "en-US"],
+    defaultLocale: "pt-BR"
+  }
+
 };
 
 export default config;

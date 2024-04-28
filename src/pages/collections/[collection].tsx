@@ -2,7 +2,6 @@ import matter from "gray-matter";
 import type {GetStaticProps, GetStaticPropsContext, InferGetStaticPropsType} from "next";
 import {type GetStaticPaths} from "next";
 import Image from "next/image";
-import Link from "next/link";
 import {type Dirent, promises as fileSystem} from "node:fs";
 import {type ParsedUrlQuery} from "node:querystring";
 import {remark} from "remark";
@@ -24,6 +23,7 @@ import {type PieceType} from "~/types/pieceType";
 import {collectionsPath} from "~/config";
 import path from "node:path";
 import { getPieces } from "~/index";
+import {useRouter} from "next/router";
 
 const ReactPlayerComponent = dynamic(() => import("react-player/youtube"), { ssr: false });
 
@@ -155,6 +155,14 @@ export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQu
 
 const BackIcon = (props: {className?: string}) => <Image className={props.className} alt="home" src="/icons/back-icon.svg" width={31} height={31}/>;
 
+function BackButton()
+{
+    const router = useRouter();
+    return <div onClick={router.back}>
+        <BackIcon/>
+    </div>;
+}
+
 const Collection = (props: InferGetStaticPropsType<typeof getStaticProps>) =>
 {
     const dangerouslySetInnerHTML = {
@@ -168,22 +176,39 @@ const Collection = (props: InferGetStaticPropsType<typeof getStaticProps>) =>
                 <Favicon src="/favicon.ico"/>
             </Head>
             <Scaffold>
-                <Link href="/" className="w-responsive-screen pl-[411px] pt-[44px]">
-                    <BackIcon/>
-                </Link>
-                <VerticalCenterBox className="gap-y-[16px] pt-[88px]">
-                    <h2 className="font-extrabold font-inter text-[17px] text-neutral-700 text-center">
+            <div className="w-responsive-screen
+                                          pl-[40px]
+                                          sm:pl-[50px]
+                                          md:pl-[100px]
+                                          lg:pl-[150px]
+                                          xl:pl-[411px]
+                                          pt-[44px]">
+                <BackButton/>
+            </div>
+                <VerticalCenterBox className="gap-y-[16px]
+                                              pt-[88px]">
+                    <h2 className="px-[30px] font-extrabold font-inter text-[17px] text-neutral-700 text-center">
                         {props.collectionTitle}
                     </h2>
-                        <div className="font-inter text-[17px] text-neutral-700 text-center whitespace-pre-wrap" dangerouslySetInnerHTML={dangerouslySetInnerHTML}>
+                    <div className="font-inter text-[17px] text-neutral-700 text-center whitespace-pre-wrap"
+                         dangerouslySetInnerHTML={dangerouslySetInnerHTML}>
                     </div>
                 </VerticalCenterBox>
-                <VerticalCenterBox className="pt-[74px] pb-[156px] gap-y-[128px]">
-                    {props.works.map(work => <Piece piece={work}/>)}
+                <VerticalCenterBox className="gap-y-[30px]">
+                    <VerticalCenterBox className="pt-[74px] pb-[156px] gap-y-[128px]">
+                        {props.works.map(work => <Piece piece={work}/>)}
+                    </VerticalCenterBox>
+                    <div className="w-responsive-screen
+                                                  pl-[40px]
+                                                  sm:pl-[50px]
+                                                  md:pl-[100px]
+                                                  lg:pl-[150px]
+                                                  xl:pl-[411px]
+                                                  pb-[74px]">
+                        <BackButton/>
+
+                    </div>
                 </VerticalCenterBox>
-                <Link href="/" className="w-responsive-screen pl-[411px] pb-[74px]">
-                    <BackIcon/>
-                </Link>
             </Scaffold>
         </>
     )
