@@ -9,13 +9,6 @@ const config = {
   reactStrictMode: true,
   output: "export",
   images: {unoptimized: true},
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      require('./scripts/generate-sitemap.js')
-    }
-
-    return config
-  },
 };
 
 export default config;
