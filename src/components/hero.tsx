@@ -77,33 +77,41 @@ const HeroBackground = (props: PropsWithChildren<{className?: string}>) =>
 );
 
 const HeroContent = () =>
-(
-    <>
-        <HeroText className="absolute
+{
+    const iconPaths = {
+        email: "/icons/hero-icons/email-icon.svg",
+        linkedin: "/icons/hero-icons/linkedin-icon.svg"
+    };
+
+    return (
+        <>
+            <HeroText className="absolute
                              w-[23%]
                              right-[21%]
                              top-[26%]
+                             mobile_md:top-[16%]
                              mobile_lg:top-[13%]
                              sm:top-[14%]
                              md:top-[16%]
                              lg:top-[20%]
                              xl:top-[27%]"/>
-        <NavBar className="absolute
+            <NavBar
+                iconPaths={iconPaths}
+                className="absolute
                            right-[0%]
-                           max-mobile_lg:left-[16px]
-                           mobile_lg:right-[5%]
+                           max-sm:left-[16px]
                            sm:right-[14%]
                            md:right-[16%]
                            lg:right-[18%]
                            xl:right-[21.56%]
                            top-[16px]
-                           mobile_lg:top-[4%]
                            sm:top-[5%]
                            md:top-[6%]
                            lg:top-[10%]
                            xl:top-[12.6%]"/>
-    </>
-);
+        </>
+    );
+};
 
 export const Hero = () =>
 (
