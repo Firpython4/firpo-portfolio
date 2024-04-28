@@ -1,3 +1,5 @@
 import { type StaticImageData } from "next/image";
+import Image from "next/image";
 
-export const Piece = (props: {image: StaticImageData}) => <img className="w-[364px] h-[205px]" src={props.image.src}/>;
+//TODO: make alt required
+export const Piece = (props: {image: StaticImageData, alt: string}) => <Image width={364} height={205} src={props.image.src} alt={props.alt}/>;
