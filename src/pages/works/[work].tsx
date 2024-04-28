@@ -16,7 +16,7 @@ import {
     getFirstMarkdownFile,
     filterImages,
     getWorksDirectoryEntities, removeMarkdownExtension, getPath, getWorkDirectory
-} from "../../path/fileManagement";
+} from "~/cms/fileManagement";
 import { includesInner, type StringWithInnerSubstring } from "../../typeSafety";
 
 interface WorkProps
@@ -68,7 +68,7 @@ export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQu
             const contentHtml = processedContent.toString();
             return {
                 props: {
-                    title: removeMarkdownExtension(content.name),
+                    collectionTitle: removeMarkdownExtension(content.name),
                     contentHtml: contentHtml,
                     imagePaths: filteredPaths.map(absoluteToRelativePath).filter((element: string | undefined) => element !== undefined) 
                 }

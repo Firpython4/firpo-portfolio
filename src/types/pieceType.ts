@@ -1,1 +1,1 @@
-export type PieceType = { image: string, link: string, title: string };
+export type PieceType = { image: string, link: string, collectionTitle: string, title: string };

@@ -1,7 +1,8 @@
 import { type Dirent, promises as fileSystem } from "node:fs";
 import path from "node:path";
-import { type PublicFolder, publicFolderValue, worksPath } from "../config";
-import { type StringWithInnerSubstring } from "../typeSafety";
+import {orderFilePath, type PublicFolder, publicFolderValue, worksPath} from "~/config";
+import { type StringWithInnerSubstring } from "~/typeSafety";
+import {type PieceType} from "~/types/pieceType";
 
 export function getSubdirectories(directories: Dirent[])
 {
@@ -39,6 +40,11 @@ export async function getWorksDirectoryEntities()
 export async function getWorkDirectory(work: string)
 {
     return await fileSystem.readdir(path.join(process.cwd(), worksPath, work), {withFileTypes: true});
+}
+
+export async function getFileRelative(filePath: string)
+{
+    return await fileSystem.readFile(path.join(process.cwd(), filePath));
 }
 
 export function getFirstMarkdownFile(directoryEntries: Dirent[])
