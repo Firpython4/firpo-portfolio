@@ -11,7 +11,7 @@ export const Hero = () =>
                 <div className="relative top-[-120px]">
                     <Image width={5760} height={2799} src={background.src} alt="Marcelo Firpo"/>
                 </div>
-                <h2 className={`absolute w-[752px] shrink-0 text-white text-[107px] not-italic font-semibold leading-[98px] tracking-[-3.745px] left-[54.63%] top-[27.22%]  font-hepta_slab`}>
+                <h2 className={`absolute w-[752px] shrink-0 text-white text- not-italic font-semibold leading-[98px] tracking-[-3.745px] left-[54.63%] top-[27.22%]  font-hepta_slab`}>
                     Marcelo Firpo
                 </h2>
                 <h3 className={`absolute w-[500px] h-[345px] text-white text-[44px] not-italic font-bold leading-[50px] left-[54.73%] top-[54.76%] font-hepta_slab`}>
