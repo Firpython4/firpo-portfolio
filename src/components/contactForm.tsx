@@ -94,7 +94,6 @@ const ContactForm = (props: PropsWithClassName<{locale: Locale, copy: LocalizedC
     };
 
     const { register, handleSubmit, formState: {errors, isSubmitSuccessful, isDirty,  }, reset } = useForm<ContactFormType>(formProps);
-    console.log(isDirty);
     const contactForm = props.copy.home.contactForm;
     const submitContactForm = async (data: ContactFormType) =>
     {
