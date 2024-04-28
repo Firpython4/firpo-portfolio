@@ -36,10 +36,10 @@ export const NavBar = (props: PropsWithClassName<{iconPaths: {linkedin: string, 
     return (
         <div className={`${props.className} flex flex-row gap-x-[8px] sm:gap-x-[12px] md:gap-x-[18px] lg:gap-x-[22px] xl:gap-x-[26px]`}>
             <Link href={emailLink}>
-                <ExportedImage alt="email" className={`aspect-[39/34] ${emailIconSize}`} src={props.iconPaths.email} width={39} height={34} sizes={iconImageSizes}/>
+                <ExportedImage unoptimized={true} alt="email" className={`aspect-[39/34] ${emailIconSize}`} src={props.iconPaths.email} width={39} height={34} sizes={iconImageSizes}/>
             </Link>
             <Link href={linkedInLink}>
-                <ExportedImage alt="LinkedIn" className={`aspect-square ${linkedIconSize}`} src={props.iconPaths.linkedin} width={34} height={34} sizes={iconImageSizes}/>
+                <ExportedImage unoptimized={true} alt="LinkedIn" className={`aspect-square ${linkedIconSize}`} src={props.iconPaths.linkedin} width={34} height={34} sizes={iconImageSizes}/>
             </Link>
         </div>
     );
