@@ -55,13 +55,13 @@ function FormItem<FieldValuesType extends FieldValues, FieldNameType extends Fie
     }
 }
 
-function FormArea<FieldValuesType extends FieldValues, FieldNameType extends FieldPath<FieldValuesType>>(props: PropsWithClassName<{ placeholder: string, register: UseFormRegister<FieldValuesType>, name: FieldNameType, options?: RegisterOptions, errors: FieldErrors<FieldValuesType>}>)
+function FormArea<FieldValuesType extends FieldValues, FieldNameType extends FieldPath<FieldValuesType>>(props: PropsWithClassName<{ gridClassNames?: string, placeholder: string, register: UseFormRegister<FieldValuesType>, name: FieldNameType, options?: RegisterOptions, errors: FieldErrors<FieldValuesType>}>)
 {
     const errorMessages = props.errors[props.name]?.message;
     if (typeof errorMessages == "string")
     {
         return (
-            <div className={`flex flex-col`}>
+            <div className={`flex flex-col ${props.gridClassNames}`}>
                 {<p className="text-red-500">{errorMessages}</p>}
                 <textarea className={`${formBorderClassNames} ${props.className}`}
                        placeholder={props.placeholder} {...props.register(props.name, props.options)}/>
@@ -72,7 +72,7 @@ function FormArea<FieldValuesType extends FieldValues, FieldNameType extends Fie
     {
         return (
             <>
-                <textarea className={`${props.className} ${formBorderClassNames}`}
+                <textarea className={`${props.className} ${props.gridClassNames} ${formBorderClassNames}`}
                        placeholder={props.placeholder} {...props.register(props.name, props.options)}/>
             </>
         );
@@ -106,9 +106,11 @@ const ContactForm = (props: PropsWithClassName<{locale: Locale, copy: LocalizedC
             <FormItem placeholder={contactForm.lastName} name="Last Name" register={register} options={{required: true}} errors={errors}/>
             <FormItem className="col-span-2" placeholder={contactForm.email} name="Email" register={register} options={{required: true}} errors={errors}/>
             <FormItem className="col-span-2" placeholder={contactForm.subject} name={"Subject"} register={register} errors={errors}/>
-            <FormArea className={`col-span-2 row-span-4 px-2 py-1 resize-none`} placeholder={contactForm.content} name="Content" register={register} options={{required: true}} errors={errors}/>
+            <FormArea gridClassNames="col-span-2 row-span-4" className="px-2 py-1 resize-none" placeholder={contactForm.content} name="Content" register={register} options={{required: true}} errors={errors}/>
         </div>
-        <input className="border-2 border-gray-300 rounded-md w-[20%] cursor-pointer" type="submit" value="Send"
+        <input className="border-2 border-gray-300 rounded-md w-[20%] cursor-pointer"
+               type="submit"
+               value="Send"
                lang={props.locale}/>
     </form>
 }
