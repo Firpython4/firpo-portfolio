@@ -1,21 +1,26 @@
-# Create T3 App
+# Firpo Portfolio
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+This is a static portfolio website for my dad. I made it as thanks for all the love and support he gave me through my life. Love you dad!
 
-## What's next? How do I make an app with this?
+## Technical decisions
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- I'm using Next. To avoid having to host a server, I'm using ```output: export```
+  - I could have chosen something like Astro, but I figured that it would be best to use a proven technology, as well as gain some Next experience
+- I opted to use Next's App Router. There are some reasons for it:
+  - The App Router has better support for ```output: export```
+  - Zero Javascript by default. Since most of the site is static, this ensures that no unnecessary Javascript is shipped to the client.
+- I'm using Tailwind. This ensures that styling is colocated, and that I can scaffold styles and even animations quickly
+- I'm using the file system itself as my content management system. This makes it very easy for designers to add new works, and to always have the history available
+- I'm using Typescript. Coming from type-safe languages such as C#, Java, and C++, I believe very strongly that type-safety is essential for software maintainability.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## Roadmap
+Next steps are basically:
+- Add a contact form to the home page
+- Replace embedded video players with their lite counterparts to reduce bundle size.
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+## T3 Stack
 
-## Learn More
-
+This project is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
 To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
 
 - [Documentation](https://create.t3.gg/)
@@ -23,6 +28,12 @@ To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the fo
 
 You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
 
-## How do I deploy this?
+## Technologies
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+These are the main technologies used in this project.
+
+- [Next.js](https://nextjs.org)
+- [Tailwind CSS](https://tailwindcss.com)
+- [Remark.js](https://github.com/remarkjs)
+- [Gray Matter](https://github.com/jonschlinkert/gray-matter)
+
