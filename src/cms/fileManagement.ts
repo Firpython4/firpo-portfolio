@@ -78,12 +78,12 @@ export async function exists(path: string)
     }
 }
 
-const supportedImageFormats = ["png" as const, "jpg" as const, "jpeg" as const, "webp"];
+const supportedImageFormats = [".png" as const, ".jpg" as const, ".jpeg" as const, ".webp" as const];
 export type ImageExtension = typeof supportedImageFormats[number];
 
 export function isImageExtension(extension: string): extension is ImageExtension
 {
-    return supportedImageFormats.includes(`.${extension}`);
+    return supportedImageFormats.includes(extension);
 }
 
 export type PublicFolderPath = StringWithInnerSubstring<PublicFolder>;
@@ -98,7 +98,7 @@ export async function importAsImage(imagePath: PublicFolderPath)
     for (const imageFormat of supportedImageFormats)
     {
         let relativePath: string | undefined = undefined;
-        const asFormat = `${imagePath}.${imageFormat}` as PublicFolderPath;
+        const asFormat = `${imagePath}${imageFormat}` as PublicFolderPath;
         if ((await exists(asFormat)))
         {
             relativePath = absoluteToRelativePath(asFormat);
