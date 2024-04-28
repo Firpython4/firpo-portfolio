@@ -90,7 +90,7 @@ export const pt: LocalizedCopy = {
         },
         about: {
             expositionFirst: `Tenho
-                mais de 30 de experiência em comunicação, publicidade e branding, e já fui premiado em múltiplos
+                mais de 30 anos de experiência em comunicação, publicidade e branding, e já fui premiado em múltiplos
                 festivais.
                 Como CMO, sou o responsável pelo marketing e estratégias de prospecção de uma empresa
                 global de soluções de TI e dados, atendendo a clientes nos EUA, Europa e LATAM.
