@@ -58,11 +58,12 @@ const opts = {
 const PieceThumbnail = (props: {piece: PieceType, shouldPlay: boolean}) =>
 {
     const piece = props.piece;
+    const url = piece.url;
     if (piece.type === "image")
     {
-        return <Image width={364} height={205} src={piece.url} alt={piece.title}/>
+        return <Image width={364} height={205} src={url} alt={piece.title}/>
     }
-    else
+    else if (piece.type === "video")
     {
         const config: YouTubeConfig = {
              playerVars: {
@@ -76,7 +77,7 @@ const PieceThumbnail = (props: {piece: PieceType, shouldPlay: boolean}) =>
             <ReactPlayerComponent
                          width={364}
                          height={205}
-                         url={piece.url}
+                         url={url}
                          controls={false}
                          muted={true}
                          loop={true}
