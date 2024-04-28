@@ -83,11 +83,14 @@ type InferTCmsObject<T extends TCmsRecord> = {
     [Key in keyof T]: InferOk<T[Key]>;
 };
 
-type ArrayIndices<T extends Readonly<[...TCmsValue<unknown, unknown>[]]>> = Exclude<keyof T, keyof Array<unknown>>;
+type ParseInt<T> = T extends `${infer N extends number}` ? N : never
+
+ // @ts-expect-error TS does not recognize number indices as real indices
+type ArrayIndices<T extends Readonly<[...TCmsValue<unknown, unknown>[]]>> = {[Key in Exclude<keyof T, keyof Array<unknown>>]: ParseInt<Key>}[ParseInt<Exclude<keyof T, keyof Array<unknown>>>]
 
 type InferTCmsUnion<T extends Readonly<[...TCmsValue<unknown, unknown>[]]>> = {
     [Key in ArrayIndices<T>]: {
-        option: Key, // @ts-expect-error TS does not recognize string indices as real indices
+        option: Key,
         value: InferOk<T[Key]>}
 }[ArrayIndices<T>]
 
@@ -333,7 +336,7 @@ const union = <T extends Readonly<[...TCmsValue<unknown, unknown>[]]>>(...types:
             return ok({
                 option: typeSafeIndex,
                 // @ts-expect-error TS does not recognize string indices as real ind
-                value: (parseResult.okValue) as InferOk<T[ArrayIndices<T>]>
+                value: (parseResult.okValue) as InferOk<T[ArrayIndicesString<T>]>
             }) 
         }
         

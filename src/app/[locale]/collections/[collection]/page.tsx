@@ -33,7 +33,7 @@ export const generateMetadata = async (props: {params: PageParams}) => {
 const Piece = (props: PropsWithClassName<{piece: PieceType}>) =>
 {
     const piece = props.piece;
-    if (piece.option === "0")
+    if (piece.option === 0)
     {
         const style = getContainedByAspectRatioStyle("90vw", "90svh", piece.value.width, piece.value.height);
 
@@ -55,7 +55,7 @@ const Piece = (props: PropsWithClassName<{piece: PieceType}>) =>
         
         const style = getContainedByAspectRatioStyle("90vw", "90svh", 16, 9);
         
-        const url = piece.value.option === "0" ? piece.value.value.value
+        const url = piece.value.option === 0 ? piece.value.value.value
                                                : piece.value.value.parsed.url.value;
         return <PieceVideo className={props.className} style={style} playing={false} url={url} youtubeConfig={youTubeConfig} muted={false} controls={true}/>
     }
@@ -75,8 +75,8 @@ const BackButton = (props: {locale: Locale}) =>
 };
 
 const getUrl = (piece: PieceType) => {
-    return piece.option === "0" ? piece.value.url
-                                : piece.value.option === "0"
+    return piece.option === 0 ? piece.value.url
+                                : piece.value.option === 0
                                     ? piece.value.value.value
                                     : piece.value.value.parsed.url.value;
 };
