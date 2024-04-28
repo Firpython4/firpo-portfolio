@@ -1,3 +1,5 @@
+import {type LocalizedText} from "~/localization/localization";
+
 export type PieceType = ImagePieceType | VideoPieceType | VideoWithThumbnailPieceType;
 
 export type ImagePieceType = {
@@ -15,7 +17,7 @@ export type VideoWithThumbnailPieceType = {
 
 export type PieceSharedType = {
     linkToCollection: string,
-    collectionTitle: string,
+    collectionName: string,
 }
 
 type PieceCommonType = {

@@ -1,4 +1,4 @@
-import type { GetStaticProps  } from "next";
+import type {GetStaticPaths, GetStaticProps} from "next";
 import Head from "next/head";
 import { BottomBar } from "~/components/bottomBar";
 import { ExpositionText } from "~/components/expositionText";
@@ -8,6 +8,21 @@ import { PieceCollection } from "~/components/pieceCollection";
 import { Scaffold } from "~/components/scaffold";
 import { type PieceType } from "~/types/pieceType";
 import {getIndexProps} from "~/index";
+import {locales} from "~/localization/localization";
+
+export const getStaticPaths = (() =>
+{
+    return {
+        paths: locales.map(locale => {
+            return {
+                params: {
+                    locale: locale
+                }
+            }
+        }),
+        fallback: false
+    }
+}) satisfies GetStaticPaths
 
 const Home = (props: HomeProps) =>
 (

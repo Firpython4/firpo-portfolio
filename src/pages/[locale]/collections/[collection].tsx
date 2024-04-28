@@ -9,12 +9,7 @@ import html from "remark-html";
 import {Scaffold} from "~/components/scaffold";
 import "@total-typescript/ts-reset";
 import {VerticalCenterBox} from "~/components/verticalCenterBox";
-import {
-    getFirstMarkdownFile,
-    getPath,
-    readCollectionDirectory,
-    getAllCollections,
-} from "~/cms/fileManagement";
+import {getAllCollections, getMarkdownFilesForLocales, getPath, readCollectionDirectory,} from "~/cms/fileManagement";
 import type {YouTubeConfig} from "react-player/youtube";
 import dynamic from "next/dynamic";
 import Head from "next/head";
@@ -22,18 +17,24 @@ import {Favicon} from "~/components/favicon";
 import {type PieceType} from "~/types/pieceType";
 import {collectionsPath} from "~/config";
 import path from "node:path";
-import { getPieces } from "~/index";
+import {getPieces} from "~/index";
 import {useRouter} from "next/router";
+import {getLocalizedContent, type Locale} from "~/localization/localization";
+import {mapMap, mapMapAsync} from "~/functional";
+import {type Brand} from "~/typeSafety";
 
 const ReactPlayerComponent = dynamic(() => import("react-player/youtube"), { ssr: false });
 
-interface WorkProps
+type ContentType = {
+    html: string,
+    title: string
+};
+
+export type LocalizedContentType = Map<Locale, ContentType>;
+
+interface CollectionProps
 {
-    collectionTitle: string,
-    content: {
-        html: string,
-        title: string
-    },
+    content: LocalizedContentType,
     works: PieceType[]
 }
 
@@ -89,11 +90,13 @@ const Piece = (props: {piece: PieceType}) =>
     }
 };
 
-async function getContent(collection: string)
+export type CollectionId = Brand<string, "collectionId">;
+
+export async function getContent(collectionId: CollectionId)
 {
-    const directoryEntries = await readCollectionDirectory(collection);
-    const content: Dirent | undefined = getFirstMarkdownFile(directoryEntries)
-    if (content)
+    const directoryEntries = await readCollectionDirectory(collectionId);
+    const content = getMarkdownFilesForLocales(directoryEntries)
+    return await mapMapAsync(content, async (locale, content) =>
     {
         const contentFile: Buffer = await fileSystem.readFile(getPath(content));
         const matterResult: matter.GrayMatterFile<Buffer> = matter(contentFile);
@@ -106,20 +109,26 @@ async function getContent(collection: string)
         {
             const literalNewLine = "\\n";
             const newLineChar = "\r\n";
-            return {
+            const contentObject = {
                 title: title.replaceAll(literalNewLine, newLineChar),
                 html: processedContent.toString()
-            }
+            };
+            return [locale, contentObject];
         }
-    }
+        else
+        {
+            throw new Error("Title is malformed")
+        }
+    });
 }
 
-async function getPiecesAsProps(collection: string)
+async function getPiecesAsProps(collectionId: CollectionId)
 {
-    const directoryEntries = await readCollectionDirectory(collection);
+    const directoryEntries = await readCollectionDirectory(collectionId);
     const directoriesWithParent = {
-        path: path.join(process.cwd(), collectionsPath, collection),
-        directoryEntities: directoryEntries
+        path: path.join(process.cwd(), collectionsPath, collectionId),
+        directoryEntities: directoryEntries,
+        collectionId: collectionId
     }
     
     return getPieces(directoriesWithParent);
@@ -129,7 +138,7 @@ export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQu
 {
     if (context.params && typeof (context.params.collection) === "string")
     {
-        const collection = context.params.collection;
+        const collection = context.params.collection as CollectionId;
 
         const pieces = await getPiecesAsProps(collection);
         const content = await getContent(collection);
@@ -140,8 +149,14 @@ export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQu
             const newLineChar = "\r\n";
             return {
                 props: {
-                    collectionTitle: content.title.replaceAll(literalNewLine, newLineChar),
-                    content: content,
+                    content: mapMap(content, (locale, contentObject) =>
+                    {
+                        const titleWithNewLines = contentObject.title.replaceAll(literalNewLine, newLineChar);
+                        return [locale, {
+                            html: contentObject.html,
+                            title: titleWithNewLines
+                        }];
+                    }),
                     works: pieces
                 }
             }
@@ -151,7 +166,7 @@ export const getStaticProps = (async (context: GetStaticPropsContext<ParsedUrlQu
     }
 
     throw new Error("Unable to locate markdown file for content");
-}) satisfies GetStaticProps<WorkProps>
+}) satisfies GetStaticProps<CollectionProps>
 
 const BackIcon = (props: {className?: string}) => <Image className={props.className} alt="home" src="/icons/back-icon.svg" width={31} height={31}/>;
 
@@ -165,14 +180,15 @@ function BackButton()
 
 const Collection = (props: InferGetStaticPropsType<typeof getStaticProps>) =>
 {
+    const localizedContent = getLocalizedContent(props.content);
     const dangerouslySetInnerHTML = {
-        __html: props.content.html
+        __html: localizedContent.html
     };
 
     return (
         <>
             <Head>
-                <title>Marcelo Firpo - {props.collectionTitle}</title>
+                <title>Marcelo Firpo - {props.content}</title>
                 <Favicon src="/favicon.ico"/>
             </Head>
             <Scaffold>
@@ -188,7 +204,7 @@ const Collection = (props: InferGetStaticPropsType<typeof getStaticProps>) =>
                 <VerticalCenterBox className="gap-y-[16px]
                                               pt-[88px]">
                     <h2 className="px-[30px] font-extrabold font-inter text-[17px] text-neutral-700 text-center">
-                        {props.collectionTitle}
+                        {props.content}
                     </h2>
                     <div className="font-inter text-[17px] text-neutral-700 text-center whitespace-pre-wrap"
                          dangerouslySetInnerHTML={dangerouslySetInnerHTML}>
