@@ -11,7 +11,7 @@ import Head from "next/head";
 import {Favicon} from "~/components/favicon";
 import {type PieceType} from "~/types/pieceType";
 import {useRouter} from "next/router";
-import { type Locale} from "~/localization/localization";
+import { type Locale } from "~/localization/localization";
 import { getCollectionProps, getCollectionsStaticPaths } from "~/collection";
 
 const ReactPlayerComponent = dynamic(() => import("react-player/youtube"), { ssr: false });
@@ -92,9 +92,10 @@ const Collection = (props: InferGetStaticPropsType<typeof getStaticProps>) =>
             <Head>
                 <title>Marcelo Firpo - {props.content.title}</title>
                 <Favicon src="/favicon.ico"/>
+                <meta name="description" content={props.content.asString}/>
             </Head>
             <Scaffold>
-            <div className="w-responsive-screen
+                <div className="w-responsive-screen
                                           pl-[40px]
                                           sm:pl-[50px]
                                           md:pl-[100px]
