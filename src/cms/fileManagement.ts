@@ -37,7 +37,7 @@ export function getMarkdownFilesForLocales(directoryEntries: Dirent[])
     const files = new Map<Locale, Dirent>();
     for (const locale of locales)
     {
-        const file = directoryEntries.find(file => file.name === locale);
+        const file = directoryEntries.find(file => file.name === `${locale}.md`);
         if (file)
         {
             files.set(locale, file);

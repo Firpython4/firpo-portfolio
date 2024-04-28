@@ -1,6 +1,6 @@
 import {useRouter} from "next/router";
 import React from "react";
-import {type LocalizedContentType} from "~/pages/[locale]/collections/[collection]";
+import {type LocalizedContentType} from "../pages/[locale]/collections/[collection]";
 
 type LocaleTexts = {
     clients: React.JSX.Element;
@@ -133,25 +133,8 @@ export function useLocaleTexts()
     }
 }
 
-export function useLocale()
+export function useLocalizedString(localizedText: LocalizedText, locale: Locale)
 {
-    const router = useRouter();
-
-    const locale = router.query.locale;
-    if (locale && (locale === "pt-BR" || locale === "en-US"))
-    {
-        return locale;
-    }
-    else
-    {
-        throw new Error("Unsupported locale");
-    }
-}
-
-export function getLocalizedString(localizedText: LocalizedText)
-{
-    const locale = useLocale();
-
     const keys: Map<Locale, string> = localizedText.keys;
     if (keys.has(locale))
     {
@@ -166,9 +149,8 @@ export function getLocalizedString(localizedText: LocalizedText)
     return defaultLocalizedText;
 }
 
-export function getLocalizedContent(localizedContent: LocalizedContentType)
+export function useLocalizedContent(localizedContent: LocalizedContentType, locale: Locale)
 {
-    const locale = useLocale();
     const content = localizedContent.get(locale);
     if (content)
     {
