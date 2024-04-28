@@ -20,7 +20,11 @@ const Home = () => (
                     <PieceCollection/>
                 </HorizontalCenter>
             </div>
-            <BottomBar/>
+            <div className="p-[88px]">
+                <HorizontalCenter>
+                    <BottomBar/>
+                </HorizontalCenter>
+            </div>
         </main>
     </>
 );

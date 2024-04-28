@@ -1,4 +1,4 @@
-import { Hepta_Slab } from "@next/font/google";
+import { Hepta_Slab } from "next/font/google";
 import background from "../../public/firpo-color.png";
 import Image from "next/image"
 
