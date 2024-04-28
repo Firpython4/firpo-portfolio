@@ -10,11 +10,13 @@
     "start": "next start"
   },
   "dependencies": {
+    "@next/font": "^14.0.4",
     "@t3-oss/env-nextjs": "^0.7.1",
     "next": "^14.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "@react-buddy/ide-toolbox-next": "^2.4.1"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^14.0.3",
