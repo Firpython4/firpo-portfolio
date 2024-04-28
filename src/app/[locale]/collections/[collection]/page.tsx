@@ -106,7 +106,8 @@ const Collection = async (props: {params: PageParams}) =>
                     mobile_md:px-3
                     mobile_sm:px-2
                     mobile_xsm:px-1
-                    pb-[156px]
+                    sm:pb-[156px]
+                    pb-[80px]
                     xl:gap-y-[128px]
                     lg:gap-y-[128px]
                     md:gap-y-[128px]
