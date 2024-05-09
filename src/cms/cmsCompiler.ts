@@ -27,6 +27,6 @@ async function getOrCacheCompiledCms() {
   return cachedCms;
 }
 
-let cachedCms: CollectionsType | null;
+let cachedCms: CollectionsType | null = null;
 
 export default getOrCacheCompiledCms;
