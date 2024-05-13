@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { typefs } from "./type-fs/src/schemas";
+import log from "~/logging";
 
 const videoWithThumbnail = typefs.object({
   url: typefs.url(),
@@ -26,5 +27,5 @@ export const collection = typefs
   .withName();
 
 export const collections = typefs.array(collection).error((error: string) => {
-  return console.log("firpy" + error);
+  log.error(`A collection item failed loading: ${error}`);
 });

@@ -1,6 +1,6 @@
 import { type Locale, type LocalizedText } from "~/localization/localization";
-import { type CollectionId } from "~/cms/cmsCompiler";
 import { type PieceType } from "./pieceType";
+import { type CollectionId } from "./params";
 
 export type LocalizedContentType = Map<Locale, ContentType>;
 

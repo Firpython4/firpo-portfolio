@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import HomeContent from "../../components/homeContent";
 import { getIndexPageContent } from "../../index";
 import { type LocalePageParams } from "~/types/params";
-import { locales, ptLocale } from "../../localization/localization";
+import { locales } from "../../localization/localization";
 import commonMetadata from "../../metadata";
 
 type PageParams = LocalePageParams;
