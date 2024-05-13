@@ -103,7 +103,7 @@ const ContactForm = (props: PropsWithClassName<{locale: Locale, copy: LocalizedC
         }
         catch (error)
         {
-            //Okay to catch the error here. Google Forms won't return a well-formed response.
+            //Okay to ignore the error here. Google Forms won't return a well-formed response.
         }
         
         reset();
