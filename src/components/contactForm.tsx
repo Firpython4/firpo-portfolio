@@ -111,7 +111,7 @@ const ContactForm = (props: PropsWithClassName<{locale: Locale, copy: LocalizedC
 
     return <div className={`${props.className} font-inter flex flex-col items-center gap-y-6`}>
         {(isSubmitSuccessful) && <p className="text-green-500">{contactForm.submitSuccessful}</p>}
-        <form className="flex flex-col gap-y-8 items-center relative" onSubmit={handleSubmit(submitContactForm)}>
+        <form className="flex flex-col gap-y-8 items-center relative px-3" onSubmit={handleSubmit(submitContactForm)}>
             <div className="grid grid-cols-2 grid-rows-6 gap-x-3 gap-y-4">
                 <FormItem placeholder={contactForm.firstName} name="First Name" register={register} options={{required: true}} errors={errors}/>
                 <FormItem placeholder={contactForm.lastName} name="Last Name" register={register} options={{required: true}} errors={errors}/>
