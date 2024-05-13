@@ -1,5 +1,7 @@
-import { type CollectionId } from "~/cms/collectionManagement";
+import { type Brand } from "~/cms/type-fs/src/typeSafety";
 import { type Locale } from "~/localization/localization";
+
+export type CollectionId = Brand<string, "collectionId">;
 
 export type LocalePageParams = {
     locale: Locale,
