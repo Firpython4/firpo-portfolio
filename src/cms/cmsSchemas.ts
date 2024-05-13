@@ -25,4 +25,6 @@ export const collection = typefs
   })
   .withName();
 
-export const collections = typefs.array(collection);
+export const collections = typefs.array(collection).error((error: string) => {
+  return console.log("firpy" + error);
+});
