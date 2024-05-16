@@ -26,6 +26,6 @@ export const collection = typefs
   })
   .withName();
 
-export const collections = typefs.array(collection).error((error: string) => {
+export const collections = typefs.array(collection).withErrorHandler((error: string) => {
   log.error(`A collection item failed loading: ${error}`);
 });
