@@ -1,9 +1,9 @@
-import { orderFilePath } from "~/config";
 import log from "../logging";
 import { type PieceType } from "./schemaTypes";
 import { getFileRelative } from "./type-fs/src/fileManagement";
+import { type Path } from "./type-fs/src/types";
 
-export async function orderByConfig(pieces: PieceType[]) {
+export async function orderByConfig(pieces: PieceType[], orderFilePath: Path) {
   const orderFile = await getFileRelative(orderFilePath);
   const asString = orderFile.toString();
   const lines = asString.split("\r\n");
