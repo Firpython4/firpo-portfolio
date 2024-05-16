@@ -21,12 +21,23 @@ export const collection = typefs
   .object({
     pieces,
     thumbnail: typefs.object({ thumbnail: piece }).withName("thumbnail"),
-    pt: typefs.markdown().withMatter(z.object({ title: z.string() })).withName("pt"),
-    en: typefs.markdown().withMatter(z.object({ title: z.string() })).withName("en"),
-    order: typefs.textFile().withName("order").optional()
+    pt: typefs
+      .markdown()
+      .withMatter(z.object({ title: z.string() }))
+      .withName("pt"),
+    en: typefs
+      .markdown()
+      .withMatter(z.object({ title: z.string() }))
+      .withName("en"),
+    order: typefs.textFile().withName("order").optional(),
   })
   .withName();
 
-export const collections = typefs.array(collection).withErrorHandler((error: string) => {
-  log.error(`A collection item failed loading: ${error}`);
+export const collections = typefs.object({
+  collections: typefs
+    .array(collection)
+    .withErrorHandler((error: string) =>
+      log.error(`A collection item failed loading: ${error}`),
+    ),
+  order: typefs.textFile().withName("order").optional(),
 });

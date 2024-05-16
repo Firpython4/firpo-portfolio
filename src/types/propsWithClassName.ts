@@ -1,3 +1,5 @@
-type PropsWithClassName<PropsType = object> = PropsType & {className?: string};
+type PropsWithClassName<PropsType = object> = PropsType & {
+  className?: string;
+};
 
-export default PropsWithClassName
+export default PropsWithClassName;

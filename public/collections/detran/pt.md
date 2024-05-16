@@ -1,3 +1,3 @@
 ---
-title: Detran-RS 
+title: Detran-RS
 ---

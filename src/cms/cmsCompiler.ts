@@ -9,9 +9,7 @@ export const replaceNewlines = (text: string) => {
 };
 
 async function compileCms() {
-  const result = await collections.parse(
-    relativePath(safePath("public/collections")),
-  );
+  const result = await collections.parse(relativePath(safePath("public")));
   if (result.wasResultSuccessful) {
     return result.okValue;
   } else {

@@ -4,9 +4,9 @@ import { type Locale } from "~/localization/localization";
 export type CollectionId = Brand<string, "collectionId">;
 
 export type LocalePageParams = {
-    locale: Locale,
-}
+  locale: Locale;
+};
 
 export type CollectionPageParams = {
-    collection: CollectionId,
-} & LocalePageParams
+  collection: CollectionId;
+} & LocalePageParams;

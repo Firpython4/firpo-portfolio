@@ -4,18 +4,17 @@ import { type LocalizedCopy } from "./localization/copy";
 import { type CollectionType } from "./cms/schemaTypes";
 
 export type HomeProps = {
-    collections: CollectionType[];
-    localizedCopy: LocalizedCopy;
-    locale: Locale
+  collections: CollectionType[];
+  localizedCopy: LocalizedCopy;
+  orderFile?: Buffer;
+  locale: Locale;
 };
 
-export async function getIndexPageContent(locale: Locale)
-{
-    const collections = await getOrCacheCompiledCms();
+export async function getIndexPageContent(locale: Locale) {
+  const cms = await getOrCacheCompiledCms();
 
-    return {
-        collections: collections,
-        localizedCopy: getLocalizedCopy(locale),
-    };
+  return {
+    cms,
+    localizedCopy: getLocalizedCopy(locale),
+  };
 }
-

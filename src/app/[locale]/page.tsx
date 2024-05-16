@@ -7,32 +7,35 @@ import commonMetadata from "../../metadata";
 
 type PageParams = LocalePageParams;
 
-export const generateStaticParams = () =>
-{
-    return locales.map(locale =>
-                       {
-                           return {
-                               locale
-                           }
-                       });
-};
-
-export const generateMetadata = async (props: {params: LocalePageParams}) => {
-    const pageContent = await getIndexPageContent(props.params.locale);
-    const metadata: Metadata = {
-        ...commonMetadata,
-        title: "Marcelo Firpo: CMO, Diretor de Criação, Consultor Criativo, Redator, Roteirista",
-        description: pageContent.localizedCopy.home.meta.description
+export const generateStaticParams = () => {
+  return locales.map((locale) => {
+    return {
+      locale,
     };
-    return metadata
-}
-
-const Home = async (props: {params: PageParams}) =>
-{
-    const content = await getIndexPageContent(props.params.locale);
-    return (
-        <HomeContent locale={props.params.locale} localizedCopy={content.localizedCopy} collections={content.collections}/>
-    );
+  });
 };
 
-export default Home
+export const generateMetadata = async (props: { params: LocalePageParams }) => {
+  const pageContent = await getIndexPageContent(props.params.locale);
+  const metadata: Metadata = {
+    ...commonMetadata,
+    title:
+      "Marcelo Firpo: CMO, Diretor de Criação, Consultor Criativo, Redator, Roteirista",
+    description: pageContent.localizedCopy.home.meta.description,
+  };
+  return metadata;
+};
+
+const Home = async (props: { params: PageParams }) => {
+  const content = await getIndexPageContent(props.params.locale);
+  return (
+    <HomeContent
+      locale={props.params.locale}
+      localizedCopy={content.localizedCopy}
+      collections={content.cms.collections}
+      orderFile={content.cms.order?.parsed}
+    />
+  );
+};
+
+export default Home;

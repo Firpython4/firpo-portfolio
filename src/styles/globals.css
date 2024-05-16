@@ -3,91 +3,72 @@
 @tailwind utilities;
 
 input {
-	display: block;
-	width: 100%;
+  display: block;
+  width: 100%;
 }
 
-:root
-{
-	--small-font: 6px;
-	--medium-font: 8px;
-	--large-font: 24px;
+:root {
+  --small-font: 6px;
+  --medium-font: 8px;
+  --large-font: 24px;
 }
 
-@media (min-width: 320px)
-{
-	:root
-	{
-		--small-font: 8px;
-		--medium-font: 10px;
-		--large-font: 28px;
-	}
+@media (min-width: 320px) {
+  :root {
+    --small-font: 8px;
+    --medium-font: 10px;
+    --large-font: 28px;
+  }
 }
 
-@media (min-width: 375px)
-{
-	:root
-	{
-		--small-font: 8px;
-		--medium-font: 12px;
-		--large-font: 32px;
-	}
+@media (min-width: 375px) {
+  :root {
+    --small-font: 8px;
+    --medium-font: 12px;
+    --large-font: 32px;
+  }
 }
 
-@media (min-width: 425px)
-{
-	:root
-	{
-		--small-font: 8px;
-		--medium-font: 16px;
-		--large-font: 38px;
-	}
+@media (min-width: 425px) {
+  :root {
+    --small-font: 8px;
+    --medium-font: 16px;
+    --large-font: 38px;
+  }
 }
 
-@media (min-width: 640px)
-{
-	:root
-	{
-		--small-font: 8px;
-		--medium-font: 21px;
-		--large-font: 52px;
-	}
+@media (min-width: 640px) {
+  :root {
+    --small-font: 8px;
+    --medium-font: 21px;
+    --large-font: 52px;
+  }
 }
-@media (min-width: 768px)
-{
-	:root
-	{
-		--small-font: 10px;
-		--medium-font: 25px;
-		--large-font: 62px;
-	}
+@media (min-width: 768px) {
+  :root {
+    --small-font: 10px;
+    --medium-font: 25px;
+    --large-font: 62px;
+  }
 }
-@media (min-width: 1024px)
-{
-	:root
-	{
-		--small-font: 12px;
-		--medium-font: 31px;
-		--large-font: 74px;
-	}
+@media (min-width: 1024px) {
+  :root {
+    --small-font: 12px;
+    --medium-font: 31px;
+    --large-font: 74px;
+  }
 }
-@media (min-width: 1280px)
-{
-	:root
-	{
-		--small-font: 14px;
-		--medium-font: 37px;
-		--large-font: 89px;
-	}
-
-
+@media (min-width: 1280px) {
+  :root {
+    --small-font: 14px;
+    --medium-font: 37px;
+    --large-font: 89px;
+  }
 }
-@media (min-width: 1536px)
-{
-	:root
-	{
-		--small-font: 17px;
-		--medium-font: 44px;
-		--large-font: 107px;
-	}
+@media (min-width: 1536px) {
+  :root {
+    --small-font: 17px;
+    --medium-font: 44px;
+    --large-font: 107px;
+  }
 }

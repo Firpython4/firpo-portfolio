@@ -1,10 +1,7 @@
 import log from "../logging";
-import { type PieceType } from "./schemaTypes";
-import { getFileRelative } from "./type-fs/src/fileManagement";
-import { type Path } from "./type-fs/src/types";
+import { type CollectionType, type PieceType } from "./schemaTypes";
 
-export async function orderByConfig(pieces: PieceType[], orderFilePath: Path) {
-  const orderFile = await getFileRelative(orderFilePath);
+export function orderPiecesByConfig(pieces: PieceType[], orderFile: Buffer) {
   const asString = orderFile.toString();
   const lines = asString.split("\r\n");
 
@@ -25,6 +22,32 @@ export async function orderByConfig(pieces: PieceType[], orderFilePath: Path) {
     } else {
       nameB = rightElement.value.url.name;
     }
+
+    const aIndex = lines.indexOf(nameA);
+    const bIndex = lines.indexOf(nameB);
+    const correctedAIndex = aIndex === -1 ? 9999 : aIndex;
+    if (aIndex === -1) {
+      log.error(`No ordering found for ${nameA}`);
+    }
+
+    if (bIndex === -1) {
+      log.error(`No ordering found for ${nameB}`);
+    }
+
+    return correctedAIndex - bIndex;
+  });
+}
+
+export function orderCollectionsByConfig(
+  collections: CollectionType[],
+  orderFile: Buffer,
+) {
+  const asString = orderFile.toString();
+  const lines = asString.split("\r\n");
+
+  collections.sort((leftElement, rightElement) => {
+    const nameA = leftElement.name;
+    const nameB = rightElement.name;
 
     const aIndex = lines.indexOf(nameA);
     const bIndex = lines.indexOf(nameB);
