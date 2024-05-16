@@ -12,7 +12,7 @@ export const PieceCollection = (props: {collections: CollectionType[], locale: L
 {
     const thumbnails = props.collections.map(collection => {
         const thumbnail = collection.parsed.thumbnail.parsed.thumbnail;
-        return pieceMapper(props.locale, collection.name, collection.parsed[props.locale].matters.title)(thumbnail);
+        return pieceMapper(props.locale, collection.name, collection.parsed[props.locale].parsed.matters.title)(thumbnail);
     });
 
     return (<>

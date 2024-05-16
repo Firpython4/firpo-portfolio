@@ -21,8 +21,8 @@ export const collection = typefs
   .object({
     pieces,
     thumbnail: typefs.object({ thumbnail: piece }).withName("thumbnail"),
-    pt: typefs.markdown("pt").withMatter(z.object({ title: z.string() })),
-    en: typefs.markdown("en").withMatter(z.object({ title: z.string() })),
+    pt: typefs.markdown().withMatter(z.object({ title: z.string() })).withName("pt"),
+    en: typefs.markdown().withMatter(z.object({ title: z.string() })).withName("en"),
   })
   .withName();
 
