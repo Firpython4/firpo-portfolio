@@ -23,6 +23,7 @@ export const collection = typefs
     thumbnail: typefs.object({ thumbnail: piece }).withName("thumbnail"),
     pt: typefs.markdown().withMatter(z.object({ title: z.string() })).withName("pt"),
     en: typefs.markdown().withMatter(z.object({ title: z.string() })).withName("en"),
+    order: typefs.textFile().withName("order").optional()
   })
   .withName();
 
