@@ -24,8 +24,8 @@ export const generateMetadata = async (props: {params: PageParams}) => {
     const pageContent = await getCollectionPageContent(props.params);
     const metadata: Metadata = {
         ...commonMetadata,
-        title: `Marcelo Firpo - ${pageContent.content.matters.title}`,
-        description: pageContent.content.asString
+        title: `Marcelo Firpo - ${pageContent.content.parsed.matters.title}`,
+        description: pageContent.content.parsed.asString
     };
     return metadata
 }
@@ -78,7 +78,7 @@ const Collection = async (props: {params: PageParams}) =>
 {
     const pageContent = await getCollectionPageContent(props.params);
     const dangerouslySetInnerHTML = {
-        __html: pageContent.content.html
+        __html: pageContent.content.parsed.html
     };
 
     return (
@@ -95,7 +95,7 @@ const Collection = async (props: {params: PageParams}) =>
             <VerticalCenterBox className="gap-y-[16px]
                                           pt-[88px]">
                 <h2 className="px-[30px] font-extrabold font-inter text-[17px] text-neutral-700 text-center">
-                    {replaceNewlines(pageContent.content.matters.title)}
+                    {replaceNewlines(pageContent.content.parsed.matters.title)}
                 </h2>
                 <div className="font-inter text-[17px] text-neutral-700 text-center whitespace-pre-wrap"
                      dangerouslySetInnerHTML={dangerouslySetInnerHTML}>
