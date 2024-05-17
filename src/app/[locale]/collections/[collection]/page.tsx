@@ -30,7 +30,7 @@ import type PropsWithClassName from "../../../../types/propsWithClassName";
 import { replaceNewlines } from "~/cms/cmsCompiler";
 
 import { getUrlFromPiece, type PieceType } from "~/cms/schemaTypes";
-import { orderPiecesByConfig } from "~/cms/ordering";
+import { orderByConfig, pieceNameProvider } from "~/cms/ordering";
 
 export const generateStaticParams = async () => {
   return await getCollectionsStaticPaths();
@@ -133,7 +133,7 @@ const Collection = async (props: { params: PageParams }) => {
   const pageContent = await getCollectionPageContent(props.params);
 
   if (pageContent.order?.parsed) {
-    orderPiecesByConfig(pageContent.pieces, pageContent.order.parsed);
+    orderByConfig(pageContent.pieces, pieceNameProvider, pageContent.order.parsed);
   }
 
   const dangerouslySetInnerHTML = {

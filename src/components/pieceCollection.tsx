@@ -5,7 +5,7 @@ import {
   getUrlFromPiece,
   type PieceType,
 } from "~/cms/schemaTypes";
-import { orderCollectionsByConfig } from "~/cms/ordering";
+import { collectionNameProvider, orderByConfig } from "~/cms/ordering";
 
 const pieceMapper =
   (locale: Locale, collectionName: string, collectionPrettyName: string) =>
@@ -27,7 +27,7 @@ export const Collections = (props: {
   orderFile?: Buffer;
 }) => {
   if (props.orderFile) {
-    orderCollectionsByConfig(props.collections, props.orderFile);
+    orderByConfig(props.collections, collectionNameProvider, props.orderFile);
   }
   const thumbnails = props.collections.map((collection) => {
     const thumbnail = collection.parsed.thumbnail.parsed.thumbnail;
