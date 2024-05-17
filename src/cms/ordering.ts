@@ -4,7 +4,7 @@ import { type CollectionType, type PieceType } from "./schemaTypes";
 
 export function orderPiecesByConfig(pieces: PieceType[], orderFile: Buffer) {
   const asString = orderFile.toString();
-  const lines = asString.split("\r\n");
+  const lines = asString.split(EOL);
 
   pieces.sort((leftElement, rightElement) => {
     let nameA: string;
