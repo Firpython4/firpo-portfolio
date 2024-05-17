@@ -1,4 +1,4 @@
-import { collections } from "./cmsSchemas";
+import { cms } from "./cmsSchemas";
 import { type CollectionsType } from "./schemaTypes";
 import { relativePath, safePath } from "./type-fs/src/fileManagement";
 
@@ -9,7 +9,7 @@ export const replaceNewlines = (text: string) => {
 };
 
 async function compileCms() {
-  const result = await collections.parse(relativePath(safePath("public")));
+  const result = await cms.parse(relativePath(safePath("public")));
   if (result.wasResultSuccessful) {
     return result.okValue;
   } else {

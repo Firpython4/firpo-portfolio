@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { typefs } from "./type-fs/src/schemas";
-import log from "~/logging";
 
 const videoWithThumbnail = typefs.object({
   url: typefs.url(),
@@ -29,15 +28,14 @@ export const collection = typefs
       .markdown()
       .withMatter(z.object({ title: z.string() }))
       .withName("en"),
-    order: typefs.textFile().withName("order").optional(),
+    order: typefs.textFile().optional(),
   })
   .withName();
 
-export const collections = typefs.object({
-  collections: typefs
-    .array(collection)
-    .withErrorHandler((error: string) =>
-      log.error(`A collection item failed loading: ${error}`),
-    ),
-  order: typefs.textFile().withName("order").optional(),
+export const cms = typefs.object({
+  collections: typefs.array(collection)
+                     .withName("collections"),
+  order: typefs.textFile()
+               .withName("order")
+               .optional(),
 });
