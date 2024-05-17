@@ -21,7 +21,7 @@ const pieceMapper =
     );
   };
 
-export const PieceCollection = (props: {
+export const Collections = (props: {
   collections: CollectionType[];
   locale: Locale;
   orderFile?: Buffer;

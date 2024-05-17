@@ -16,6 +16,10 @@ export const piece = typefs.union(
 
 const pieces = typefs.array(piece).withName("pieces");
 
+const orderFile = () => typefs.textFile()
+  .withName("order")
+  .optional();
+
 export const collection = typefs
   .object({
     pieces,
@@ -28,14 +32,12 @@ export const collection = typefs
       .markdown()
       .withMatter(z.object({ title: z.string() }))
       .withName("en"),
-    order: typefs.textFile().optional(),
+    order: orderFile(),
   })
   .withName();
 
 export const cms = typefs.object({
   collections: typefs.array(collection)
                      .withName("collections"),
-  order: typefs.textFile()
-               .withName("order")
-               .optional(),
+  order: orderFile(),
 });

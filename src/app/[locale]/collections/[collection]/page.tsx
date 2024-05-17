@@ -132,7 +132,7 @@ const BackButton = (props: { locale: Locale }) => {
 const Collection = async (props: { params: PageParams }) => {
   const pageContent = await getCollectionPageContent(props.params);
 
-  if (pageContent.order) {
+  if (pageContent.order?.parsed) {
     orderPiecesByConfig(pageContent.pieces, pageContent.order.parsed);
   }
 

@@ -3,7 +3,7 @@ import { BottomBar } from "./bottomBar";
 import ContactForm from "./contactForm";
 import { ExpositionText } from "./expositionText";
 import { Hero } from "./hero";
-import { PieceCollection } from "./pieceCollection";
+import { Collections } from "./pieceCollection";
 import { Scaffold } from "./scaffold";
 
 const HomeContent = (props: HomeProps) => (
@@ -23,7 +23,7 @@ const HomeContent = (props: HomeProps) => (
         localizedCopy={props.localizedCopy}
       />
       <div className="pt-28">
-        <PieceCollection
+        <Collections
           collections={props.collections}
           locale={props.locale}
           orderFile={props.orderFile}
