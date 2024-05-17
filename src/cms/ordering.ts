@@ -1,3 +1,4 @@
+import { EOL } from "node:os";
 import log from "../logging";
 import { type CollectionType, type PieceType } from "./schemaTypes";
 
@@ -43,7 +44,7 @@ export function orderCollectionsByConfig(
   orderFile: Buffer,
 ) {
   const asString = orderFile.toString();
-  const lines = asString.split("\r\n");
+  const lines = asString.split(EOL);
 
   collections.sort((leftElement, rightElement) => {
     const nameA = leftElement.name;
