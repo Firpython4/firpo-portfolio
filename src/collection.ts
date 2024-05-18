@@ -31,10 +31,8 @@ export async function getCollectionPageContent(params: CollectionPageParams) {
     return {
       locale,
       order: collection.parsed.order,
-      pieces: [
-        collection.parsed.thumbnail.parsed.thumbnail,
-        ...collection.parsed.pieces?.parsed ?? [],
-      ],
+      piecesWithoutThumbnail: collection.parsed.pieces?.parsed ?? [],
+      thumbnail: collection.parsed.thumbnail.parsed.thumbnail,
       content: collection.parsed[locale],
     };
   }

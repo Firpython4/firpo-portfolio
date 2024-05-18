@@ -29,6 +29,7 @@ export function orderByConfig<ElementType>(
     const aIndex = lines.indexOf(nameA);
     const bIndex = lines.indexOf(nameB);
     const correctedAIndex = aIndex === -1 ? 9999 : aIndex;
+    const correctedBIndex = bIndex === -1 ? 9999 : bIndex;
     if (aIndex === -1) {
       log.error(`No ordering found for ${nameA}`);
     }
@@ -37,6 +38,6 @@ export function orderByConfig<ElementType>(
       log.error(`No ordering found for ${nameB}`);
     }
 
-    return correctedAIndex - bIndex;
+    return correctedAIndex - correctedBIndex;
   });
 }

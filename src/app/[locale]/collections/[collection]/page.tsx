@@ -133,7 +133,11 @@ const Collection = async (props: { params: PageParams }) => {
   const pageContent = await getCollectionPageContent(props.params);
 
   if (pageContent.order?.parsed) {
-    orderByConfig(pageContent.pieces, pieceNameProvider, pageContent.order.parsed);
+    orderByConfig(
+      pageContent.piecesWithoutThumbnail,
+      pieceNameProvider,
+      pageContent.order.parsed,
+    );
   }
 
   const dangerouslySetInnerHTML = {
@@ -178,7 +182,7 @@ const Collection = async (props: { params: PageParams }) => {
                     xl:gap-y-[128px]
                     "
         >
-          {pageContent.pieces.map((piece) => (
+          {[pageContent.thumbnail, ...(pageContent.piecesWithoutThumbnail ?? [])].map((piece) => (
             <Piece piece={piece} key={getUrlFromPiece(piece)} />
           ))}
         </VerticalCenterBox>
