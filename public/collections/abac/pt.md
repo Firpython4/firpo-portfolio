@@ -1,3 +1,4 @@
 ---
-title: Associação Brasileira de Administradoras de Consórcios (ABAC)
+title: |
+    Associação Brasileira de Administradoras de Consórcios: consórcios
 ---

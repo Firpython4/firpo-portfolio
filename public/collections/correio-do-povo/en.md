@@ -1,3 +1,4 @@
 ---
-title: Correio do Povo - Brazilian Newspaper
+title: |
+    Correio do Povo - Brazilian Newspaper: classified ads
 ---

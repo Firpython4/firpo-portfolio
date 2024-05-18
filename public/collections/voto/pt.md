@@ -1,3 +1,0 @@
----
-title: Revista Voto
----

@@ -33,7 +33,7 @@ export async function getCollectionPageContent(params: CollectionPageParams) {
       order: collection.parsed.order,
       pieces: [
         collection.parsed.thumbnail.parsed.thumbnail,
-        ...collection.parsed.pieces.parsed,
+        ...collection.parsed.pieces?.parsed ?? [],
       ],
       content: collection.parsed[locale],
     };

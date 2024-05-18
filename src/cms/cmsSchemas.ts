@@ -14,7 +14,7 @@ export const piece = typefs.union(
   typefs.image("public"),
 );
 
-const pieces = typefs.array(piece).withName("pieces");
+const pieces = typefs.array(piece).withName("pieces").optional();
 
 const orderFile = () => typefs.textFile()
   .withName("order")

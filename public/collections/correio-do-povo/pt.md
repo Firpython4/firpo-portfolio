@@ -1,3 +1,4 @@
 ---
-title: Correio do Povo
+title: |
+    Correio do Povo: classificados
 ---

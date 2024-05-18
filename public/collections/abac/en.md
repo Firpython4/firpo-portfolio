@@ -1,3 +1,4 @@
 ---
-title: Brazilian Consortium Administrators Association (ABAC)
+title: |
+    Brazilian Consortium Administrators Association: consortia
 ---

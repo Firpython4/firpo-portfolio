@@ -1,3 +1,4 @@
 ---
-title: Sayerlack - Tintas e Vernizes
+title: |
+    Sayerlack: nós amamos a madeira
 ---

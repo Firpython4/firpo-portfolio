@@ -1,3 +1,4 @@
 ---
-title: Zero Hora - Brazilian Newspaper
+title: |
+    Zero Hora: life everywhere
 ---

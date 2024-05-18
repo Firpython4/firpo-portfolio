@@ -1,3 +1,4 @@
 ---
-title: STB - Student Travel Bureau
+title: |
+    STB - Student Travel Bureau: você sempre volta diferente de uma viagem
 ---

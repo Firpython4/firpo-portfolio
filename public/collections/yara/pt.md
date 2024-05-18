@@ -1,3 +1,4 @@
 ---
-title: Yara
+title: |
+    Yara: manifesto do café
 ---

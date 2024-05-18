@@ -1,3 +1,4 @@
 ---
-title: Saylerlack - Paints And Varnishes
+title: |
+    Sayerlack: we love wood
 ---

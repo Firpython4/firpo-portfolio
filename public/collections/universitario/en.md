@@ -1,3 +1,4 @@
 ---
-title: Universitário
+title: |
+    Universitário: life's much harder
 ---

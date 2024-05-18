@@ -1,3 +1,4 @@
 ---
-title: Instituto Brasileiro de Estudos e Ações em Saneamento Ambiental (Ibeasa)
+title: |
+    Instituto Brasileiro de Estudos e Ações em Saneamento Ambiental (Ibeasa): preservação de rios
 ---
