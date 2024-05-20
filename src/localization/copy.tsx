@@ -20,6 +20,7 @@ export type LocalizedCopy = {
     };
     callToAction: {
       solveYourCommunicationProblems: string;
+      getInTouch: string;
     };
     contactForm: {
       firstName: string;
@@ -60,6 +61,7 @@ export const en: LocalizedCopy = {
     },
     callToAction: {
       solveYourCommunicationProblems: `Solve your communication problems:`,
+      getInTouch: "Get in touch:"
     },
     contactForm: {
       content: "Content",
@@ -112,6 +114,7 @@ export const pt: LocalizedCopy = {
     },
     callToAction: {
       solveYourCommunicationProblems: `Resolva seus problemas de comunicação:`,
+      getInTouch: "Entre em contato:"
     },
     contactForm: {
       content: "Conteúdo",

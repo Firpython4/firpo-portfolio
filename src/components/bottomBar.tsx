@@ -8,12 +8,12 @@ export const BottomBar = (
   props: PropsWithClassName<PropsWithLocalizedCopy>,
 ) => (
   <div
-    className={`${props.className} flex flex-col items-center justify-center gap-y-[11px] md:flex-row md:gap-x-[11px]`}
+    className={`${props.className} flex flex-col items-center justify-center gap-y-[11px] md:flex-row md:gap-x-5`}
   >
     <p
-      className={`flex items-center text-center text-lg text-black xl:w-[412px] ${responsiveText} font-inter font-semibold leading-normal`}
+      className={`flex items-center text-center text-lg text-black ${responsiveText} font-inter font-semibold leading-normal`}
     >
-      {props.localizedCopy.home.callToAction.solveYourCommunicationProblems}
+      {props.localizedCopy.home.callToAction.getInTouch}
     </p>
     <NavBar
       iconPaths={{

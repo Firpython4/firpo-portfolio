@@ -29,12 +29,15 @@ const HomeContent = (props: HomeProps) => (
           orderFile={props.orderFile}
         />
       </div>
+      <h2 className="font-inter text-black font-semibold leading-normal text-medium pt-20">
+        {props.localizedCopy.home.callToAction.solveYourCommunicationProblems}
+      </h2>
       <ContactForm
-        className="pt-20"
+        className="pt-8"
         locale={props.locale}
         copy={props.localizedCopy}
       />
-      <BottomBar className="pb-24 pt-20" localizedCopy={props.localizedCopy} />
+      <BottomBar className="pb-12 pt-20" localizedCopy={props.localizedCopy} />
     </Scaffold>
   </>
 );
