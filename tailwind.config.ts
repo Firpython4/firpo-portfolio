@@ -1,5 +1,4 @@
 import plugin from "tailwindcss/plugin";
-import { fontFamily } from "tailwindcss/defaultTheme";
 import { type Config } from "tailwindcss";
 import theme from "tailwindcss/defaultTheme";
 
@@ -13,7 +12,6 @@ export default {
         large: "var(--large-font)",
       },
       fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
         inter: ["var(--font-inter)"],
         hepta_slab: ["var(--font-hepta-slab)"],
       },
@@ -28,6 +26,7 @@ export default {
     },
   },
   plugins: [
+    require("tailwindcss-animated"),
     plugin(function ({ addUtilities }) {
       addUtilities({
         ".h-responsive-screen": {

@@ -15,6 +15,8 @@ const HeroTitle = (props: PropsWithLocalizedCopy) => (
                    not-italic
                    leading-[20px]
                    tracking-[-2px]
+                   animate-fade-up
+                   animate-duration-300
                    text-white
                    mobile_sm:leading-[25px]
                    mobile_md:leading-[30px]
@@ -36,6 +38,8 @@ const HeroSubtitle = (props: PropsWithLocalizedCopy) => (
                    text-medium
                    font-bold
                    not-italic
+                   animate-fade-up
+                   animate-duration-700
                    leading-[14px]
                    text-white
                    mobile_sm:leading-[16px]
