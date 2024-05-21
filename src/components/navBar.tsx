@@ -41,6 +41,7 @@ export const NavBar = (
       <Link href={emailLink}>
         <ExportedImage
           unoptimized={true}
+          loading="eager"
           alt="email"
           className={`aspect-[39/34] ${emailIconSize}`}
           src={props.iconPaths.email}
@@ -53,6 +54,7 @@ export const NavBar = (
         <ExportedImage
           unoptimized={true}
           alt="LinkedIn"
+          loading="eager"
           className={`aspect-square ${linkedIconSize}`}
           src={props.iconPaths.linkedin}
           width={34}
