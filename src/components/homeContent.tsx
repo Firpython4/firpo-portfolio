@@ -4,7 +4,7 @@ import ContactForm from "./contactForm";
 import { ExpositionText } from "./expositionText";
 import { Hero } from "./hero";
 import { Collections } from "./pieceCollection";
-import { Scaffold } from "./scaffold";
+import Scaffold from "./scaffold";
 
 const HomeContent = (props: HomeProps) => (
   <>

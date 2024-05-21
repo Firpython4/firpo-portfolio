@@ -2,8 +2,6 @@ import { type Metadata } from "next";
 
 import ExportedImage from "next-image-export-optimizer";
 
-import { Scaffold } from "~/components/scaffold";
-
 import { VerticalCenterBox } from "~/components/verticalCenterBox";
 
 import type { YouTubeConfig } from "react-player/youtube";
@@ -31,6 +29,7 @@ import { replaceNewlines } from "~/cms/cmsCompiler";
 
 import { getUrlFromPiece, type PieceType } from "~/cms/schemaTypes";
 import { orderByConfig, pieceNameProvider } from "~/cms/ordering";
+import Scaffold from "~/components/scaffold";
 
 export const generateStaticParams = async () => {
   return await getCollectionsStaticPaths();
