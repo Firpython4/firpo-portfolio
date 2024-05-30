@@ -7,8 +7,8 @@ export async function getCollectionsStaticPaths() {
   const cms = await getOrCacheCompiledCms();
 
   return locales
-    .map((locale) =>
-      cms.collections.parsed.map((collection) => {
+    .map(locale =>
+      cms.public.parsed.collections.parsed.map((collection) => {
         return {
           collection: collection.name,
           locale: locale,
@@ -24,7 +24,7 @@ export async function getCollectionPageContent(params: CollectionPageParams) {
   const targetCollectionName = params.collection;
   const locale = params.locale;
 
-  const collection = cms.collections.parsed.find(
+  const collection = cms.public.parsed.collections.parsed.find(
     (collection) => collection.name === targetCollectionName,
   );
   if (collection) {

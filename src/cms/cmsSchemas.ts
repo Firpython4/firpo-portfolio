@@ -37,7 +37,6 @@ export const collection = typefs
   .withName();
 
 export const cms = typefs.object({
-  collections: typefs.array(collection)
-                     .withName("collections"),
+  public: typefs.object({ collections: typefs.array(collection).withName("collections") }).withName("public"),
   order: orderFile(),
 });

@@ -32,7 +32,7 @@ const Home = async (props: { params: PageParams }) => {
     <HomeContent
       locale={props.params.locale}
       localizedCopy={content.localizedCopy}
-      collections={content.cms.collections.parsed}
+      collections={content.cms.public.parsed.collections.parsed}
       orderFile={content.cms.order?.parsed}
     />
   );
