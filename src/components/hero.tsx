@@ -33,7 +33,7 @@ const HeroTitle = (props: PropsWithLocalizedCopy) => (
 
 const HeroSubtitle = (props: PropsWithLocalizedCopy) => (
   <h3
-    className="w-[30svw]
+    className="mobile_sm:w-[30svw]
                    font-hepta_slab
                    text-medium
                    font-bold
@@ -99,9 +99,11 @@ const HeroContent = (props: PropsWithLocalizedCopy) => {
     <>
       <HeroText
         className="absolute
-                             right-[21%]
+        px-3
+        mobile_sm:px-5
+                             mobile_sm:right-[21%]
                              top-[26%]
-                             w-[23%]
+                             mobile_sm:w-[23%]
                              mobile_md:top-[16%]
                              mobile_lg:top-[13%]
                              sm:top-[14%]
@@ -115,7 +117,7 @@ const HeroContent = (props: PropsWithLocalizedCopy) => {
         className="absolute
                            right-[0%]
                            top-[16px]
-                           max-sm:left-[16px]
+                           max-md:left-[16px]
                            sm:right-[14%]
                            sm:top-[5%]
                            md:right-[16%]
