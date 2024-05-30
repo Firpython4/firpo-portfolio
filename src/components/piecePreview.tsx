@@ -77,6 +77,7 @@ export const PiecePreview = (props: {
         className="h-full w-full"
         piece={piece}
         shouldPlay={isHovering}
+        collectionId={props.collectionName}
       />
     </HoverablePiecePreview>
   );
@@ -126,13 +127,14 @@ function getThumbnail(url: string, quality?: string) {
 const pieceThumbnailSizes = `100svw, screen(mobile_lg) 364px`;
 
 const PieceThumbnail = (
-  props: PropsWithClassName<{ piece: PieceType; shouldPlay: boolean }>,
+  props: PropsWithClassName<{ piece: PieceType; shouldPlay: boolean, collectionId: string }>,
 ) => {
   const piece = props.piece;
   const url = getUrlFromPiece(piece);
   if (piece.option === 2) {
     return (
       <ExportedImage
+        id={props.collectionId}
         className={`aspect-[${piece.value.width}/${piece.value.height}] object-cover ${props.className}`}
         width={piece.value.width}
         height={piece.value.height}
@@ -157,6 +159,7 @@ const PieceThumbnail = (
         return (
           <>
             <ExportedImage
+              id={props.collectionId}
               src={thumbnail}
               alt={piece.value.name}
               fill={true}
@@ -187,6 +190,7 @@ const PieceThumbnail = (
 
       return (
         <PieceVideo
+          id={props.collectionId}
           className={props.className}
           url={url}
           playing={props.shouldPlay}
@@ -201,6 +205,7 @@ const PieceThumbnail = (
       return (
         <>
           <ExportedImage
+            id={props.collectionId}
             width={piece.value.thumbnail.width}
             height={piece.value.thumbnail.height}
             src={piece.value.thumbnail.url}

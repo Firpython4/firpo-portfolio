@@ -16,6 +16,7 @@ const VimeoReactPlayerComponent = dynamic(() => import("react-player/vimeo"), {
 
 export const PieceVideo = (
   props: PropsWithClassName<{
+    id?: string;
     url: string;
     playing: boolean;
     muted: boolean;
@@ -28,7 +29,7 @@ export const PieceVideo = (
 ) => {
   if (props.url.includes("youtube")) {
     return (
-      <div style={props.style} className={props.className}>
+      <div id={props.id} style={props.style} className={props.className}>
         <YoutubeReactPlayerComponent
           width="100%"
           height="100%"
@@ -43,7 +44,7 @@ export const PieceVideo = (
     );
   } else if (props.url.includes("vimeo")) {
     return (
-      <div style={props.style} className={props.className}>
+      <div id={props.id} style={props.style} className={props.className}>
         <VimeoReactPlayerComponent
           width="100%"
           height="100%"

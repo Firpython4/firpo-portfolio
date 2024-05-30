@@ -118,10 +118,10 @@ const BackIcon = (props: PropsWithClassName) => (
   />
 );
 
-const BackButton = (props: { locale: Locale }) => {
+const BackButton = (props: { locale: Locale, collectionName: string }) => {
   return (
     <div className="aspect-square w-[31px]">
-      <LinkWithLocale href="/" locale={props.locale}>
+      <LinkWithLocale href={`/#${props.collectionName}`} locale={props.locale}>
         <BackIcon />
       </LinkWithLocale>
     </div>
@@ -155,7 +155,7 @@ const Collection = async (props: { params: PageParams }) => {
         lg:pl-[150px]
         xl:pl-[411px]"
       >
-        <BackButton locale={pageContent.locale} />
+        <BackButton locale={pageContent.locale} collectionName={props.params.collection} />
       </div>
 
       <VerticalCenterBox className="gap-y-[16px] pt-[88px]">
@@ -195,7 +195,7 @@ const Collection = async (props: { params: PageParams }) => {
                     lg:pl-[150px]
                     xl:pl-[411px]"
         >
-          <BackButton locale={pageContent.locale} />
+          <BackButton locale={pageContent.locale} collectionName={props.params.collection} />
         </div>
       </VerticalCenterBox>
     </Scaffold>
