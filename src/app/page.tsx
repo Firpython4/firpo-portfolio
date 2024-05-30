@@ -1,5 +1,5 @@
 import { type Metadata } from "next";
-import { redirect, RedirectType } from "next/navigation";
+import { permanentRedirect, RedirectType } from "next/navigation";
 import { getIndexPageContent } from "~/index";
 import { ptLocale } from "~/localization/localization";
 import commonMetadata from "../metadata";
@@ -20,7 +20,7 @@ const FallbackHome = () => {
 };
 
 const Redirector = (url: string) => {
-  redirect(url, RedirectType.replace);
+  permanentRedirect(url, RedirectType.replace);
 };
 
 export default FallbackHome;
