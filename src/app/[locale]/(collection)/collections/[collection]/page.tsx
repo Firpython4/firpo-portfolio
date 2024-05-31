@@ -19,11 +19,11 @@ import { type Locale } from "~/localization/localization";
 
 import { type CollectionPageParams } from "~/types/params";
 
-import commonMetadata from "../../../../metadata";
+import commonMetadata from "../../../../../metadata";
 
-import { getContainedByAspectRatioStyle } from "../../../../styles/styleUtilities";
+import { getContainedByAspectRatioStyle } from "../../../../../styles/styleUtilities";
 
-import type PropsWithClassName from "../../../../types/propsWithClassName";
+import type PropsWithClassName from "../../../../../types/propsWithClassName";
 
 import { replaceNewlines } from "~/cms/cmsCompiler";
 
@@ -118,7 +118,7 @@ const BackIcon = (props: PropsWithClassName) => (
   />
 );
 
-const BackButton = (props: { locale: Locale, collectionName: string }) => {
+const BackButton = (props: { locale: Locale; collectionName: string }) => {
   return (
     <div className="aspect-square w-[31px]">
       <LinkWithLocale href={`/#${props.collectionName}`} locale={props.locale}>
@@ -155,16 +155,19 @@ const Collection = async (props: { params: PageParams }) => {
         lg:pl-[150px]
         xl:pl-[411px]"
       >
-        <BackButton locale={pageContent.locale} collectionName={props.params.collection} />
+        <BackButton
+          locale={pageContent.locale}
+          collectionName={props.params.collection}
+        />
       </div>
 
       <VerticalCenterBox className="gap-y-[16px] pt-[88px]">
-        <h2 className="px-[30px] text-center font-inter text-[17px] font-extrabold text-neutral-700">
+        <h2 className="px-[30px] text-center font-inter text-2xl font-extrabold text-neutral-700">
           {replaceNewlines(pageContent.content.parsed.matters.title)}
         </h2>
 
         <div
-          className="whitespace-pre-wrap text-center font-inter text-[17px] text-neutral-700"
+          className="px-12 sm:px-20 md:px-32 xl:px-96 pt-10 whitespace-pre-wrap font-inter text-lg text-[17px] text-neutral-700"
           dangerouslySetInnerHTML={dangerouslySetInnerHTML}
         ></div>
       </VerticalCenterBox>
@@ -173,7 +176,7 @@ const Collection = async (props: { params: PageParams }) => {
         <VerticalCenterBox
           className="gap-y-[32px]
                     pb-[80px]
-                    pt-[74px]
+                    pt-20
                     sm:gap-y-[96px]
                     sm:pb-[156px]
                     md:gap-y-[128px]
@@ -181,7 +184,10 @@ const Collection = async (props: { params: PageParams }) => {
                     xl:gap-y-[128px]
                     "
         >
-          {[pageContent.thumbnail, ...(pageContent.piecesWithoutThumbnail ?? [])].map((piece) => (
+          {[
+            pageContent.thumbnail,
+            ...(pageContent.piecesWithoutThumbnail ?? []),
+          ].map((piece) => (
             <Piece piece={piece} key={getUrlFromPiece(piece)} />
           ))}
         </VerticalCenterBox>
@@ -195,7 +201,10 @@ const Collection = async (props: { params: PageParams }) => {
                     lg:pl-[150px]
                     xl:pl-[411px]"
         >
-          <BackButton locale={pageContent.locale} collectionName={props.params.collection} />
+          <BackButton
+            locale={pageContent.locale}
+            collectionName={props.params.collection}
+          />
         </div>
       </VerticalCenterBox>
     </Scaffold>
