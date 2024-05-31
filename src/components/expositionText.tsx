@@ -25,38 +25,30 @@ export const ExpositionText = (
                     xl:gap-y-[150px]`}
   >
     <p
-      className={`w-[434px]
-                        font-inter
-                        text-small
-                        font-semibold
-                        not-italic
-                        leading-[14px]
-                        text-black
-                        max-sm:max-w-[80%]
-                        md:leading-[18px]
-                        lg:leading-[22px]
-                        xl:leading-[27px]`}
+      className="sm:max-w-[434px]
+                max-sm:max-w-[80%]
+                font-inter
+                text-[17px]
+                leading-[27px]
+                text-black
+                font-semibold"
     >
       {props.localizedCopy.home.about.expositionFirst}
     </p>
     <p
-      className="w-[435px]
+      className="sm:max-w-[435px]
                         font-inter
-                        text-small
+                        text-[17px]
                         font-normal
                         not-italic
-                        leading-[14px]
+                        leading-[27px]
                         tracking-[-0.17px]
                         text-black
                         max-sm:max-w-[80%]
-                        md:leading-[18px]
-                        lg:pt-[172px]
-                        lg:leading-[22px]
-                        xl:leading-[27px]"
+                        lg:pt-[172px]"
     >
       <span
         className="pt-3
-                             text-small
                              font-semibold
                              text-black"
       >
@@ -64,9 +56,7 @@ export const ExpositionText = (
         <br />
       </span>
       <span
-        className="text-small
-                             font-normal
-                             text-black"
+        className="font-normal text-black"
       >
         {props.localizedCopy.home.about.clients}
       </span>
