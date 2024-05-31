@@ -20,18 +20,17 @@ const orderFile = () => typefs.textFile()
   .withName("order")
   .optional();
 
+const content = () => typefs
+  .markdown()
+  .withMatter(z.object({ title: z.string(), meta: z.string() }));
+
 export const collection = typefs
   .object({
     pieces,
     thumbnail: typefs.object({ thumbnail: piece }).withName("thumbnail"),
-    pt: typefs
-      .markdown()
-      .withMatter(z.object({ title: z.string() }))
+    pt: content()
       .withName("pt"),
-    en: typefs
-      .markdown()
-      .withMatter(z.object({ title: z.string() }))
-      .withName("en"),
+    en: content().withName("en"),
     order: orderFile(),
   })
   .withName();

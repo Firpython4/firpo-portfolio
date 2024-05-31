@@ -45,7 +45,7 @@ export const generateMetadata = async (props: { params: PageParams }) => {
 
     title: `Marcelo Firpo - ${pageContent.content.parsed.matters.title}`,
 
-    description: pageContent.content.parsed.asString,
+    description: pageContent.content.parsed.matters.meta,
   };
 
   return metadata;
