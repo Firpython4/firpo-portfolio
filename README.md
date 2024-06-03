@@ -10,6 +10,7 @@ This is a static portfolio website for my dad. I made it as thanks for all the l
   - The App Router has better support for `output: export`
   - Zero Javascript by default. Since most of the site is static, this ensures that no unnecessary Javascript is shipped to the client.
 - I'm using Tailwind. This ensures that styling is colocated, and that I can scaffold styles and even animations quickly
+  - It also has excellent defaults and ensures that my designs stay consistent and responsive     
 - I'm using the file system itself as my content management system. This makes it very easy for designers to add new works, and to always have the history available
 - I'm using TypeScript. Coming from type-safe languages such as C#, Java, and C++, I believe very strongly that type-safety is essential for software maintainability.
 
