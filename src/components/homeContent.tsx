@@ -29,8 +29,8 @@ const HomeContent = (props: HomeProps) => (
           orderFile={props.orderFile}
         />
       </div>
-      <h2 className="font-inter text-center text-black font-semibold leading-normal text-[0.8rem] mobile-sm:text-sm mobile_md:text-md mobile_lg:text-xl sm:text-3xl pt-20">
-        {props.localizedCopy.home.callToAction.solveYourCommunicationProblems}
+      <h2 className="mobile-sm:text-sm mobile_md:text-md pt-20 text-center font-inter text-[0.8rem] font-semibold leading-normal text-black mobile_lg:text-xl sm:text-3xl">
+        {props.localizedCopy.home.callToAction.howCanIHelpYou}
       </h2>
       <ContactForm
         className="pt-8"

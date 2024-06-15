@@ -19,7 +19,7 @@ export type LocalizedCopy = {
       expositionFirst: string;
     };
     callToAction: {
-      solveYourCommunicationProblems: string;
+      howCanIHelpYou: string;
       getInTouch: string;
     };
     contactForm: {
@@ -42,7 +42,7 @@ export const en: LocalizedCopy = {
     },
     hero: {
       name: `Marcelo Firpo`,
-      subtitle: `CMO, Creative Director, Creative Consultant, Copywriter, Screenwriter`,
+      subtitle: `CMO, Creative Director, Creative Consultant, Copywriter, Screenwriter, Songwriter`,
     },
     about: {
       expositionFirst: `I have more than 30 years of experience in communication, advertising, and branding. I've been awarded at multiple festivals.
@@ -60,8 +60,8 @@ export const en: LocalizedCopy = {
                 Passo Fundo, Bento Gonçalves, Gravataí, Santa Maria, and Rio Grande.`,
     },
     callToAction: {
-      solveYourCommunicationProblems: `Solve your communication problems:`,
-      getInTouch: "Get in touch:"
+      howCanIHelpYou: `How can I help you?`,
+      getInTouch: "Get in touch:",
     },
     contactForm: {
       content: "Content",
@@ -88,7 +88,7 @@ export const pt: LocalizedCopy = {
     },
     hero: {
       name: `Marcelo Firpo`,
-      subtitle: `CMO, Diretor de Criação, Consultor Criativo, Redator, Roteirista`,
+      subtitle: `CMO, Diretor de Criação, Consultor Criativo, Redator, Roteirista, Cantautor`,
     },
     about: {
       expositionFirst: `Tenho
@@ -113,8 +113,8 @@ export const pt: LocalizedCopy = {
                 e as seguintes prefeituras: Porto Alegre, Passo Fundo, Bento Gonçalves, Gravataí, Santa Maria e Rio Grande.`,
     },
     callToAction: {
-      solveYourCommunicationProblems: `Resolva seus problemas de comunicação:`,
-      getInTouch: "Entre em contato:"
+      howCanIHelpYou: `Como posso te ajudar?`,
+      getInTouch: "Entre em contato:",
     },
     contactForm: {
       content: "Conteúdo",
