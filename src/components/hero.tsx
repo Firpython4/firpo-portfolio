@@ -118,6 +118,7 @@ const HeroContent = (props: PropsWithLocalizedCopy) => {
       <NavBar
         iconPaths={iconPaths}
         className="absolute
+        max-mobile_xsm:hidden
                            right-[0%]
                            top-[16px]
                            max-md:left-[16px]
