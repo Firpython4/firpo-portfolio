@@ -9,15 +9,15 @@ import { type PropsWithChildren } from "react";
 const HeroTitle = (props: PropsWithLocalizedCopy) => (
   <h2
     className="shrink-0
+                   animate-fade-up
                    font-hepta_slab
                    text-large
                    font-semibold
                    not-italic
                    leading-[20px]
                    tracking-[-2px]
-                   animate-fade-up
-                   animate-duration-300
                    text-white
+                   animate-duration-300
                    mobile_sm:leading-[25px]
                    mobile_md:leading-[30px]
                    mobile_lg:leading-[40px]
@@ -33,27 +33,22 @@ const HeroTitle = (props: PropsWithLocalizedCopy) => (
 
 const HeroSubtitle = (props: PropsWithLocalizedCopy) => (
   <h3
-    className="mobile_sm:w-[30svw]
+    className="
+                    animate-fade-up
                    font-hepta_slab
                    text-medium
                    font-bold
                    not-italic
-                   animate-fade-up
-                   animate-duration-700
                    leading-[14px]
                    text-white
+                   animate-duration-700
+                   max-[210px]:hidden
                    mobile_sm:leading-[16px]
-                   mobile_md:w-[160px]
                    mobile_md:leading-[20px]
-                   mobile_lg:w-[200px]
                    mobile_lg:leading-[25px]
-                   sm:w-[280px]
                    sm:leading-[30px]
-                   md:w-[300px]
                    md:leading-[40px]
-                   lg:w-[400px]
-                   lg:leading-[50px]
-                   xl:w-[500px]"
+                   lg:leading-[50px]"
   >
     {props.localizedCopy.home.hero.subtitle}
   </h3>
@@ -62,6 +57,7 @@ const HeroSubtitle = (props: PropsWithLocalizedCopy) => (
 const HeroText = (props: PropsWithClassName<PropsWithLocalizedCopy>) => (
   <div
     className={`flex
+        max-mobile_xsm:text-center
         flex-col
         gap-y-2
         mobile_lg:gap-y-3
@@ -99,17 +95,22 @@ const HeroContent = (props: PropsWithLocalizedCopy) => {
     <>
       <HeroText
         className="absolute
+        top-[26%]
         px-3
-        mobile_sm:px-5
-                             mobile_sm:right-[21%]
-                             top-[26%]
-                             mobile_sm:w-[23%]
-                             mobile_md:top-[16%]
-                             mobile_lg:top-[13%]
-                             sm:top-[14%]
-                             md:top-[16%]
-                             lg:top-[20%]
-                             xl:top-[27%]"
+        mobile_sm:px-0
+        mobile_sm:right-[2%]
+        mobile_sm:w-[50%]
+        mobile_md:top-[20%]
+        mobile_lg:right-[5%]
+        mobile_lg:w-[47%]
+        sm:top-[20%]
+        md:right-[8%]
+        md:top-[16%]
+        md:w-[36%]
+        lg:right-[11%]
+        lg:top-[20%]
+        xl:top-[27%]
+        xl:max-w-[32%]"
         localizedCopy={props.localizedCopy}
       />
       <NavBar
