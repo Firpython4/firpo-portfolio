@@ -95,14 +95,16 @@ const HeroContent = (props: PropsWithLocalizedCopy) => {
     <>
       <HeroText
         className="absolute
-        top-[26%]
+        py-[10%]
+        mobile_xsm:top-[26%]
+        mobile_xsm:py-0
         px-3
         mobile_sm:px-0
         mobile_sm:right-[2%]
         mobile_sm:w-[50%]
         mobile_md:top-[20%]
-        mobile_lg:right-[5%]
-        mobile_lg:w-[47%]
+        mobile_lg:right-[2%]
+        mobile_lg:w-[57%]
         sm:top-[20%]
         md:right-[8%]
         md:top-[16%]
