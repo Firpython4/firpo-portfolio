@@ -1,3 +1,4 @@
+detran-rs-pets
 detran-rs-mensagens-de-texto
 hps-porto-alegre-doacao-de-sangue
 internacional-intershop
