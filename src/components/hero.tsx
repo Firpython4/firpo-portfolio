@@ -36,7 +36,11 @@ const HeroSubtitle = (props: PropsWithLocalizedCopy) => (
     className="
                     animate-fade-up
                    font-hepta_slab
-                   text-medium
+                   text-[0.5rem]
+                   mobile_lg:text-[0.8rem]
+                   sm:text-[1.5rem]
+                   lg:text-[1.75rem]
+                   xl:text-[2rem]
                    font-bold
                    not-italic
                    leading-[14px]
@@ -103,13 +107,14 @@ const HeroContent = (props: PropsWithLocalizedCopy) => {
         mobile_sm:right-[2%]
         mobile_sm:w-[50%]
         mobile_md:top-[20%]
-        mobile_lg:right-[2%]
-        mobile_lg:w-[57%]
+        mobile_lg:right-0
+        mobile_lg:w-[58%]
         sm:top-[20%]
-        md:right-[8%]
+        md:right-[4%]
         md:top-[16%]
-        md:max-w-[36%]
-        lg:right-[11%]
+        md:max-w-[46%]
+        lg:max-w-[40%]
+        lg:right-[8%]
         lg:top-[20%]
         xl:top-[27%]"
         localizedCopy={props.localizedCopy}
