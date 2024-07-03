@@ -108,11 +108,10 @@ const HeroContent = (props: PropsWithLocalizedCopy) => {
         sm:top-[20%]
         md:right-[8%]
         md:top-[16%]
-        md:w-[36%]
+        md:max-w-[36%]
         lg:right-[11%]
         lg:top-[20%]
-        xl:top-[27%]
-        xl:max-w-[32%]"
+        xl:top-[27%]"
         localizedCopy={props.localizedCopy}
       />
       <NavBar
