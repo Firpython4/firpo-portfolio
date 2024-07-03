@@ -11,7 +11,7 @@ export const BottomBar = (
     className={`${props.className} flex flex-col items-center justify-center gap-y-[11px] md:flex-row md:gap-x-5`}
   >
     <p
-      className={`flex items-center text-center text-lg text-black ${responsiveText} font-inter font-semibold leading-normal`}
+      className={`flex items-center text-center text-lg text-black ${responsiveText} font-inter font-medium leading-normal`}
     >
       {props.localizedCopy.home.callToAction.getInTouch}
     </p>
