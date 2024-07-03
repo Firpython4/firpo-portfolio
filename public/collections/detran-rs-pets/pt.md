@@ -1,6 +1,6 @@
 ---
 title: |
     DetranRS - Pets
-meta: Traffic campaign, automotive parts.
+meta: Campanha de trânsito, peças automotivas.
 ---
-Campaign for DetranRS, the traffic department of the Brazilian state of Rio Grande do Sul, promotes a website with semi-new automotive parts guaranteed to be of good origin. As explained at the end of the video, using pets was just a sneaky resource to attract attention.
+Campanha para o DetranRS, departamento de trânsito do estado brasileiro do Rio Grande do Sul, divulgando um site com peças automotivas seminovas e com garantia de boa procedência. Como explicado no final do vídeo, o uso dos pets foi só um recurso espertinho para chamar a atenção.
