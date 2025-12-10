@@ -12,15 +12,6 @@ This is a static portfolio website for my dad. I made it as thanks for all the l
 - I'm using Tailwind. This ensures that styling is colocated, and that I can scaffold styles quickly
 - I'm using the file system itself as my content management system. This makes it very easy for designers to add new works, and to always have the history available
 
-## Roadmap
-
-Next steps are basically:
-
-- Add a contact form to the home page
-- Replace embedded video players with their lite counterparts to reduce bundle size.
-
-## T3 Stack
-
 This project is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
 To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
 
