@@ -31,8 +31,6 @@ You can check out the [create-t3-app GitHub repository](https://github.com/t3-os
 
 ## Technologies
 
-These are the main technologies used in this project.
-
 - [Next.js](https://nextjs.org)
 - [Tailwind CSS](https://tailwindcss.com)
 - [Remark.js](https://github.com/remarkjs)
