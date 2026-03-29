@@ -9,14 +9,19 @@ const RootLayout = (
   props: PropsWithChildren<{ params: { locale: Locale } }>,
 ) => {
   return (
-    <html lang={props.params.locale} className={`${inter.variable} ${heptaSlab.variable}`}>
+    <html
+      lang={props.params.locale}
+      className={`${inter.variable} ${heptaSlab.variable}`}
+    >
       <body className="relative">
         {props.children}
-        <LocaleSwitcher className="max-[200px]:hidden text-white absolute top-4 right-4 md:top-8 md:right-8 lg:right-12 lg:top-12 iconify-color" locale={props.params.locale}/>
-        </body>
+        <LocaleSwitcher
+          className="iconify-color absolute right-[clamp(70px,18vw,180px)] top-4 text-white max-[200px]:hidden md:top-6 lg:top-12"
+          locale={props.params.locale}
+        />
+      </body>
     </html>
   );
 };
 
 export default RootLayout;
-

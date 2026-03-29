@@ -5,9 +5,9 @@ import {
   type FieldPath,
   type FieldValues,
   type RegisterOptions,
+  type UseFormRegisterReturn,
   useForm,
   type UseFormProps,
-  type UseFormRegister,
 } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -46,7 +46,8 @@ const ContactFormValues = (errors: ContactFormErrors) => {
 
 export type ContactFormType = z.infer<ReturnType<typeof ContactFormValues>>;
 
-const formBorderClassNames = "border-2 border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors duration-200";
+const formBorderClassNames =
+  "border-2 border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors duration-200";
 const formClassNames = `h-8 px-3 py-5 ${formBorderClassNames}`;
 
 function FormItem<
@@ -55,9 +56,12 @@ function FormItem<
 >(
   props: PropsWithClassName<{
     placeholder: string;
-    register: UseFormRegister<FieldValuesType>;
+    register: (
+      name: FieldNameType,
+      options?: RegisterOptions<FieldValuesType, FieldNameType>,
+    ) => UseFormRegisterReturn;
     name: FieldNameType;
-    options?: RegisterOptions;
+    options?: RegisterOptions<FieldValuesType, FieldNameType>;
     errors: FieldErrors<FieldValuesType>;
   }>,
 ) {
@@ -95,9 +99,12 @@ function FormArea<
   props: PropsWithClassName<{
     gridClassNames?: string;
     placeholder: string;
-    register: UseFormRegister<FieldValuesType>;
+    register: (
+      name: FieldNameType,
+      options?: RegisterOptions<FieldValuesType, FieldNameType>,
+    ) => UseFormRegisterReturn;
     name: FieldNameType;
-    options?: RegisterOptions;
+    options?: RegisterOptions<FieldValuesType, FieldNameType>;
     errors: FieldErrors<FieldValuesType>;
   }>,
 ) {
@@ -211,7 +218,7 @@ const ContactForm = (
           />
         </div>
         <input
-          className={`${formBorderClassNames} py-2 px-6 text-lg w-[clamp(80px,20vw,150px)] cursor-pointer bg-white hover:bg-gray-50 transition-colors duration-200 font-medium`}
+          className={`${formBorderClassNames} w-[clamp(80px,20vw,150px)] cursor-pointer bg-white px-6 py-2 text-lg font-medium transition-colors duration-200 hover:bg-gray-50`}
           type="submit"
           value={props.copy.home.contactForm.send}
           lang={props.locale}

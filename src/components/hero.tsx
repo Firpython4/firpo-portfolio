@@ -41,7 +41,7 @@ const HeroSubtitle = (props: PropsWithLocalizedCopy) => (
 
 const HeroText = (props: PropsWithClassName<PropsWithLocalizedCopy>) => (
   <div
-    className={`flex max-[200px]:text-center flex-col gap-y-[clamp(8px,3vw,40px)] ${props.className}`}
+    className={`flex flex-col gap-y-[clamp(8px,3vw,40px)] max-[200px]:text-center ${props.className}`}
   >
     <HeroTitle localizedCopy={props.localizedCopy} />
     <HeroSubtitle localizedCopy={props.localizedCopy} />
@@ -71,21 +71,21 @@ const HeroContent = (props: PropsWithLocalizedCopy) => {
     <>
       <HeroText
         className="absolute
-                    py-[clamp(5%,10%,15%)]
-                    top-[clamp(16%,20%,27%)]
                     right-0
-                    w-[clamp(50%,58%,60%)]"
+                    top-[clamp(16%,20%,27%)]
+                    w-[clamp(42%,50%,52%)]
+                    py-[clamp(5%,10%,15%)]"
         localizedCopy={props.localizedCopy}
       />
       <NavBar
         iconPaths={iconPaths}
         className="absolute
-                   top-4
                    right-4
+                   top-4
+                   md:right-8
                    md:top-6
-                   md:right-[4%]
-                   lg:right-[8%]
-                   lg:top-[10%]"
+                   lg:right-12
+                   lg:top-12"
       />
     </>
   );

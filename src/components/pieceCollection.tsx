@@ -39,7 +39,7 @@ export const Collections = (props: {
   });
 
   return (
-    <div className="grid gap-1 [grid-template-columns:repeat(auto-fit,minmax(clamp(280px,40vw,500px),1fr))]">
+    <div className="grid gap-[clamp(8px,2vw,24px)] [grid-template-columns:repeat(auto-fit,minmax(clamp(160px,35vw,400px),1fr))]">
       {thumbnails}
     </div>
   );
