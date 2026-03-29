@@ -1,3 +1,5 @@
+"use client";
+
 import { type Locale } from "~/localization/localization";
 import { PiecePreview } from "./piecePreview";
 import {
@@ -5,42 +7,65 @@ import {
   getUrlFromPiece,
   type PieceType,
 } from "~/cms/schemaTypes";
-import { collectionNameProvider, orderByConfig } from "~/cms/ordering";
+import { VirtualGrid } from "./virtualGrid";
+
+interface CollectionItem {
+  piece: PieceType;
+  locale: Locale;
+  collectionName: string;
+  collectionPrettyName: string;
+  key: string;
+}
 
 const pieceMapper =
   (locale: Locale, collectionName: string, collectionPrettyName: string) =>
-  (piece: PieceType) => {
-    return (
-      <PiecePreview
-        piece={piece}
-        key={getUrlFromPiece(piece)}
-        locale={locale}
-        collectionName={collectionName}
-        collectionPrettyName={collectionPrettyName}
-      />
-    );
+  (piece: PieceType): CollectionItem => {
+    return {
+      piece,
+      locale,
+      collectionName,
+      collectionPrettyName,
+      key: getUrlFromPiece(piece),
+    };
   };
 
 export const Collections = (props: {
   collections: CollectionType[];
   locale: Locale;
-  orderFile?: Buffer;
 }) => {
-  if (props.orderFile) {
-    orderByConfig(props.collections, collectionNameProvider, props.orderFile);
-  }
-  const thumbnails = props.collections.map((collection) => {
-    const thumbnail = collection.parsed.thumbnail.parsed.thumbnail;
-    return pieceMapper(
-      props.locale,
-      collection.name,
-      collection.parsed[props.locale].parsed.matters.title,
-    )(thumbnail);
-  });
+  const thumbnails: CollectionItem[] = props.collections.flatMap(
+    (collection) => {
+      const thumbnail = collection.parsed.thumbnail.parsed.thumbnail;
+      return [
+        pieceMapper(
+          props.locale,
+          collection.name,
+          collection.parsed[props.locale].parsed.matters.title,
+        )(thumbnail),
+      ];
+    },
+  );
+
+  const minItemWidth = 320;
+  const maxItemWidth = 800;
+  const gap = 24;
 
   return (
-    <div className="grid gap-[clamp(8px,2vw,24px)] [grid-template-columns:repeat(auto-fit,minmax(clamp(160px,35vw,400px),1fr))]">
-      {thumbnails}
-    </div>
+    <VirtualGrid
+      items={thumbnails}
+      minItemWidth={minItemWidth}
+      maxItemWidth={maxItemWidth}
+      gap={gap}
+      className="w-full"
+      renderItem={(item) => (
+        <PiecePreview
+          piece={item.piece}
+          key={item.key}
+          locale={item.locale}
+          collectionName={item.collectionName}
+          collectionPrettyName={item.collectionPrettyName}
+        />
+      )}
+    />
   );
 };

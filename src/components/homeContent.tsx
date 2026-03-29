@@ -16,11 +16,7 @@ const HomeContent = (props: HomeProps) => (
         localizedCopy={props.localizedCopy}
       />
       <div className="px-[clamp(12px,4vw,80px)] pt-[clamp(2rem,6vw,7rem)]">
-        <Collections
-          collections={props.collections}
-          locale={props.locale}
-          orderFile={props.orderFile}
-        />
+        <Collections collections={props.collections} locale={props.locale} />
       </div>
       <h2 className="px-[clamp(12px,4vw,80px)] pt-[clamp(2rem,6vw,5rem)] text-center font-inter text-[clamp(0.8rem,2vw,3rem)] font-medium leading-normal text-black">
         {props.localizedCopy.home.callToAction.howCanIHelpYou}

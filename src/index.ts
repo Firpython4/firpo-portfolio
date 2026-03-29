@@ -6,7 +6,6 @@ import { type CollectionType } from "./cms/schemaTypes";
 export type HomeProps = {
   collections: CollectionType[];
   localizedCopy: LocalizedCopy;
-  orderFile?: Buffer;
   locale: Locale;
 };
 

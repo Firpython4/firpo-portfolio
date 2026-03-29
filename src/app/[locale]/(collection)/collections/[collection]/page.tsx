@@ -4,8 +4,6 @@ import ExportedImage from "next-image-export-optimizer";
 
 import { VerticalCenterBox } from "~/components/verticalCenterBox";
 
-import type { YouTubeConfig } from "react-player/youtube";
-
 import {
   getCollectionPageContent,
   getCollectionsStaticPaths,
@@ -13,23 +11,19 @@ import {
 
 import LinkWithLocale from "~/components/LinkWithLocale";
 
-import { PieceVideo } from "~/components/PieceVideo";
-
 import { type Locale } from "~/localization/localization";
 
 import { type CollectionPageParams } from "~/types/params";
 
 import commonMetadata from "../../../../../metadata";
 
-import { getContainedByAspectRatioStyle } from "../../../../../styles/styleUtilities";
-
 import type PropsWithClassName from "../../../../../types/propsWithClassName";
 
 import { replaceNewlines } from "~/cms/cmsCompiler";
 
-import { getUrlFromPiece, type PieceType } from "~/cms/schemaTypes";
 import { orderByConfig, pieceNameProvider } from "~/cms/ordering";
 import Scaffold from "~/components/scaffold";
+import { CollectionPieces } from "~/components/collectionPieces";
 
 export const generateStaticParams = async () => {
   return await getCollectionsStaticPaths();
@@ -49,62 +43,6 @@ export const generateMetadata = async (props: { params: PageParams }) => {
   };
 
   return metadata;
-};
-
-const Piece = (props: PropsWithClassName<{ piece: PieceType }>) => {
-  const piece = props.piece;
-
-  if (piece.option === 2) {
-    const style = getContainedByAspectRatioStyle(
-      "90vw",
-      "90svh",
-      piece.value.width,
-      piece.value.height,
-    );
-
-    return (
-      <ExportedImage
-        key={piece.value.url}
-        style={style}
-        className={`${props.className}
-
-                aspect-[${piece.value.width}/${piece.value.height}]`}
-        src={piece.value.url}
-        width={piece.value.width}
-        height={piece.value.height}
-        alt={piece.value.name}
-        sizes={`${piece.value.width.toString()}px`}
-      />
-    );
-  } else {
-    const youTubeConfig: YouTubeConfig = {
-      playerVars: {
-        controls: 1,
-
-        disablekb: 0,
-
-        modestbranding: 1,
-
-        showinfo: 1,
-      },
-    };
-
-    const style = getContainedByAspectRatioStyle("90vw", "90svh", 16, 9);
-
-    const url = getUrlFromPiece(piece);
-
-    return (
-      <PieceVideo
-        className={props.className}
-        style={style}
-        playing={false}
-        url={url}
-        youtubeConfig={youTubeConfig}
-        muted={false}
-        controls={true}
-      />
-    );
-  }
 };
 
 const BackIcon = (props: PropsWithClassName) => (
@@ -167,7 +105,7 @@ const Collection = async (props: { params: PageParams }) => {
         </h2>
 
         <div
-          className="px-12 sm:px-20 md:px-32 xl:px-96 pt-10 whitespace-pre-wrap font-inter text-lg text-[17px] text-neutral-700"
+          className="whitespace-pre-wrap px-12 pt-10 font-inter text-[17px] text-lg text-neutral-700 sm:px-20 md:px-32 xl:px-96"
           dangerouslySetInnerHTML={dangerouslySetInnerHTML}
         ></div>
       </VerticalCenterBox>
@@ -184,12 +122,12 @@ const Collection = async (props: { params: PageParams }) => {
                     xl:gap-y-[128px]
                     "
         >
-          {[
-            pageContent.thumbnail,
-            ...(pageContent.piecesWithoutThumbnail ?? []),
-          ].map((piece) => (
-            <Piece piece={piece} key={getUrlFromPiece(piece)} />
-          ))}
+          <CollectionPieces
+            pieces={[
+              pageContent.thumbnail,
+              ...(pageContent.piecesWithoutThumbnail ?? []),
+            ]}
+          />
         </VerticalCenterBox>
 
         <div
