@@ -16,11 +16,8 @@ export default {
         hepta_slab: ["var(--font-hepta-slab)"],
       },
       screens: {
-        mobile_smallest: "120px",
-        mobile_xsm: "200px",
-        mobile_sm: "320px",
-        mobile_md: "375px",
-        mobile_lg: "425px",
+        md: "768px",
+        lg: "1024px",
       },
     },
   },

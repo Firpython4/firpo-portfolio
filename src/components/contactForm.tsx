@@ -46,7 +46,7 @@ const ContactFormValues = (errors: ContactFormErrors) => {
 
 export type ContactFormType = z.infer<ReturnType<typeof ContactFormValues>>;
 
-const formBorderClassNames = "border-2 border-gray-400 rounded-md";
+const formBorderClassNames = "border-2 border-gray-300 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors duration-200";
 const formClassNames = `h-8 px-3 py-5 ${formBorderClassNames}`;
 
 function FormItem<
@@ -211,7 +211,7 @@ const ContactForm = (
           />
         </div>
         <input
-          className={`${formBorderClassNames} py-1 px-3 text-lg w-[80px] sm:w-[120px] cursor-pointer`}
+          className={`${formBorderClassNames} py-2 px-6 text-lg w-[clamp(80px,20vw,150px)] cursor-pointer bg-white hover:bg-gray-50 transition-colors duration-200 font-medium`}
           type="submit"
           value={props.copy.home.contactForm.send}
           lang={props.locale}

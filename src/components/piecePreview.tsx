@@ -39,16 +39,14 @@ const HoverablePiecePreview = forwardRef<
                             p-6
                             text-center
                             font-inter
-                            text-[12px]
+                            text-[clamp(12px,3vw,24px)]
                             font-medium
                             text-white
                             opacity-0
                             transition-opacity
                             duration-150
                             ease-in
-                            group-hover:opacity-100
-                            mobile_md:text-[22px]
-                            sm:text-[24px]"
+                            group-hover:opacity-100"
       >
         {props.collectionName}
       </div>

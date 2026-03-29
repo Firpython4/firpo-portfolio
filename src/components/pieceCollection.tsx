@@ -39,10 +39,8 @@ export const Collections = (props: {
   });
 
   return (
-    <>
-      <div className="grid grid-cols-1 gap-1 lg:grid-cols-2 xl:grid-cols-3">
-        {thumbnails}
-      </div>
-    </>
+    <div className="grid gap-1 [grid-template-columns:repeat(auto-fit,minmax(clamp(280px,40vw,500px),1fr))]">
+      {thumbnails}
+    </div>
   );
 };
