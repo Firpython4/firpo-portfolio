@@ -6,7 +6,7 @@ import type PropsWithClassName from "~/types/propsWithClassName";
 
 interface VirtualListProps<T> {
   items: T[];
-  renderItem: (item: T, index: number) => React.ReactNode;
+  renderItem: (item: T, index: number, gap?: number) => React.ReactNode;
   estimateSize?: number;
   overscan?: number;
   className?: string;
@@ -58,7 +58,7 @@ export function VirtualList<T>(props: PropsWithClassName<VirtualListProps<T>>) {
               boxSizing: "border-box",
             }}
           >
-            {props.renderItem(item, virtualItem.index)}
+            {props.renderItem(item, virtualItem.index, gap)}
           </div>
         );
       })}

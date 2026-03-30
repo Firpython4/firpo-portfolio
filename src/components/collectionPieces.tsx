@@ -8,16 +8,22 @@ import { getContainedByAspectRatioStyle } from "~/styles/styleUtilities";
 import type PropsWithClassName from "~/types/propsWithClassName";
 import { VirtualList } from "./virtualList";
 
-const Piece = (props: PropsWithClassName<{ piece: PieceType }>) => {
+const Piece = (
+  props: PropsWithClassName<{ piece: PieceType; gap?: number }>,
+) => {
   const piece = props.piece;
+  const gapStyle = props.gap ? { marginBottom: `${props.gap}px` } : {};
 
   if (piece.option === 2) {
-    const style = getContainedByAspectRatioStyle(
-      "90vw",
-      "90svh",
-      piece.value.width,
-      piece.value.height,
-    );
+    const style = {
+      ...getContainedByAspectRatioStyle(
+        "90vw",
+        "90svh",
+        piece.value.width,
+        piece.value.height,
+      ),
+      ...gapStyle,
+    };
 
     return (
       <ExportedImage
@@ -41,7 +47,10 @@ const Piece = (props: PropsWithClassName<{ piece: PieceType }>) => {
       },
     };
 
-    const style = getContainedByAspectRatioStyle("90vw", "90svh", 16, 9);
+    const style = {
+      ...getContainedByAspectRatioStyle("90vw", "90svh", 16, 9),
+      ...gapStyle,
+    };
     const url = getUrlFromPiece(piece);
 
     return (
@@ -58,15 +67,19 @@ const Piece = (props: PropsWithClassName<{ piece: PieceType }>) => {
   }
 };
 
-export const CollectionPieces = (props: { pieces: PieceType[] }) => {
+export const CollectionPieces = (props: {
+  pieces: PieceType[];
+  gap?: number;
+}) => {
   return (
     <VirtualList
       items={props.pieces}
       estimateSize={500}
       overscan={3}
       className="w-full"
-      renderItem={(piece, _index) => (
-        <Piece piece={piece} key={getUrlFromPiece(piece)} />
+      gap={props.gap}
+      renderItem={(piece, _index, gap) => (
+        <Piece piece={piece} key={getUrlFromPiece(piece)} gap={gap} />
       )}
     />
   );
