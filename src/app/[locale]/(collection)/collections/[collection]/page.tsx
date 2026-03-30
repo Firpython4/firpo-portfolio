@@ -100,12 +100,12 @@ const Collection = async (props: { params: PageParams }) => {
       </div>
 
       <VerticalCenterBox className="gap-y-[16px] pt-[88px]">
-        <h2 className="px-[30px] text-center font-inter text-2xl font-extrabold text-neutral-700">
+        <h2 className="px-[30px] text-center font-display text-2xl font-extrabold text-neutral-700">
           {replaceNewlines(pageContent.content.parsed.matters.title)}
         </h2>
 
         <div
-          className="whitespace-pre-wrap px-12 pt-10 font-inter text-[17px] text-lg text-neutral-700 sm:px-20 md:px-32 xl:px-96"
+          className="whitespace-pre-wrap px-12 pt-10 font-display text-[17px] text-lg text-neutral-700 sm:px-20 md:px-32 xl:px-96"
           dangerouslySetInnerHTML={dangerouslySetInnerHTML}
         ></div>
       </VerticalCenterBox>
