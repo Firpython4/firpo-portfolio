@@ -51,6 +51,8 @@ export function VirtualList<T>(props: PropsWithClassName<VirtualListProps<T>>) {
               left: 0,
               width: "100%",
               transform: `translateY(${virtualItem.start}px)`,
+              display: "flex",
+              justifyContent: "center",
             }}
           >
             {props.renderItem(item, virtualItem.index)}

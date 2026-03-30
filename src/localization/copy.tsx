@@ -16,6 +16,7 @@ export type LocalizedCopy = {
     about: {
       clients: string;
       someAttendedClients: string;
+      somePieces: string;
       expositionFirst: string;
       selectedWork: string;
     };
@@ -59,7 +60,7 @@ export const en: LocalizedCopy = {
                 Record, Moinhos de Vento Hospital, Rio Grande do Sul Government, Santa Catarina Government, Daer, Sulgás, Detran, CEEE,
                 Corsan, Zaffari Group, Angeloni Supermarkets, Renner Paints, Sayerlack, Selenium Loudspeakers, Oxford Ceramics,
                 Student Travel Bureau, Colombo Stores, Fiat Dealership Network, Porto Alegre City Hall, Passo Fundo City Hall, Bento Gonçalves City Hall, Gravataí City Hall, Santa Maria City Hall, Rio Grande City Hall`,
-      selectedWork: `Selected Work:`
+      selectedWork: `Selected Work:`,
     },
     callToAction: {
       howCanIHelpYou: `How can I help you?`,
@@ -113,8 +114,8 @@ export const pt: LocalizedCopy = {
                 Hospital Moinhos de Vento, Governo do Rio Grande do Sul, Governo de Santa Catarina, Daer, Sulgás, Detran, CEEE,
                 Corsan, Grupo Zaffari, Supermercados Angeloni, Tintas Renner, Sayerlack, Selenium, Cerâmicas Oxford,
                 Student Travel Bureau, Lojas Colombo Stores, Rede de Concessionárias Fiat,
-                Prefeitura de Porto Alegre, Prefeitura de Passo Fundo, Prefeitura de Bento Gonçalves, Prefeitura de Gravataí, Prefeitura de Santa Maria e Prefeitura de Rio Grande.`,
-      selectedWork: `Trabalhos selecionados:`
+                Prefeitura de Porto Alegre, Prefeitura de Passo Fundo, Prefeitura de Bento Gonçalves, Prefeitura de Gravataí, Prefeitura de Santa Maria, Prefeitura de Rio Grande`,
+      selectedWork: `Trabalhos selecionados:`,
     },
     callToAction: {
       howCanIHelpYou: `Como posso te ajudar?`,

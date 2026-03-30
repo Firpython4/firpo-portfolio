@@ -2,7 +2,13 @@
 
 import ExportedImage from "next-image-export-optimizer";
 
-import { forwardRef, useRef, type PropsWithChildren } from "react";
+import {
+  forwardRef,
+  useRef,
+  useState,
+  useEffect,
+  type PropsWithChildren,
+} from "react";
 import { type YouTubeConfig } from "react-player/youtube";
 import { useHover } from "usehooks-ts";
 import { type Locale } from "~/localization/localization";
@@ -43,7 +49,7 @@ const HoverablePiecePreview = forwardRef<
                         duration-300
                         group-hover:opacity-100"
         >
-          <span className="font-display text-lg italic text-white">
+          <span className="px-6 py-4 font-hepta_slab text-[clamp(0.75rem,2vw,1.25rem)] font-semibold text-white">
             {props.collectionName}
           </span>
         </div>
@@ -62,6 +68,22 @@ export const PiecePreview = (props: {
   const piece = props.piece;
   const ref = useRef<HTMLAnchorElement>(null);
   const isHovering = useHover(ref);
+  const [shouldPlay, setShouldPlay] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (isHovering) {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => setShouldPlay(true), 150);
+    } else {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => setShouldPlay(false), 300);
+    }
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [isHovering]);
+
   return (
     <HoverablePiecePreview
       locale={props.locale}
@@ -72,7 +94,7 @@ export const PiecePreview = (props: {
       <PieceThumbnail
         className="h-full w-full"
         piece={piece}
-        shouldPlay={isHovering}
+        shouldPlay={shouldPlay}
         collectionId={props.collectionName}
       />
     </HoverablePiecePreview>
@@ -123,7 +145,11 @@ function getThumbnail(url: string, quality?: string) {
 const pieceThumbnailSizes = `100svw, screen(mobile_lg) 364px`;
 
 const PieceThumbnail = (
-  props: PropsWithClassName<{ piece: PieceType; shouldPlay: boolean, collectionId: string }>,
+  props: PropsWithClassName<{
+    piece: PieceType;
+    shouldPlay: boolean;
+    collectionId: string;
+  }>,
 ) => {
   const piece = props.piece;
   const url = getUrlFromPiece(piece);
@@ -146,6 +172,14 @@ const PieceThumbnail = (
         disablekb: 1,
         modestbranding: 1,
         showinfo: 0,
+        rel: 0,
+        iv_load_policy: 3,
+        cc_load_policy: 0,
+        fs: 0,
+        playsinline: 1,
+      },
+      embedOptions: {
+        hideFullscreenButton: true,
       },
     };
 
