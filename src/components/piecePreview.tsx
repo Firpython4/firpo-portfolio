@@ -23,34 +23,32 @@ const HoverablePiecePreview = forwardRef<
 >((props: HoverablePieceProps, ref) => {
   return (
     <LinkWithLocale
-      className="group relative flex aspect-[364/205] max-h-[205px] max-w-[364px] items-center overflow-hidden"
+      className="group relative block overflow-hidden bg-surface shadow-sm transition-all duration-300 hover:shadow-lg"
       href={props.url}
       ref={ref}
       locale={props.locale}
     >
-      <div
-        className="absolute
-                            flex
-                            h-full
-                            w-full
-                            items-center
-                            justify-center whitespace-pre-wrap
-                            bg-black/70
-                            p-6
-                            text-center
-                            font-inter
-                            text-[clamp(12px,3vw,24px)]
-                            font-medium
-                            text-white
-                            opacity-0
-                            transition-opacity
-                            duration-150
-                            ease-in
-                            group-hover:opacity-100"
-      >
-        {props.collectionName}
+      <div className="relative aspect-[16/10] overflow-hidden">
+        <div
+          className="absolute
+                        inset-0
+                        z-10
+                        flex
+                        items-center
+                        justify-center
+                        bg-charcoal/80
+                        opacity-0
+                        backdrop-blur-[2px]
+                        transition-opacity
+                        duration-300
+                        group-hover:opacity-100"
+        >
+          <span className="font-display text-lg italic text-white">
+            {props.collectionName}
+          </span>
+        </div>
+        {props.children}
       </div>
-      {props.children}
     </LinkWithLocale>
   );
 });

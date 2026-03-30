@@ -15,7 +15,7 @@ export function LocaleSwitcher({className, locale}: PropsWithClassName<{locale: 
  
   return (
     <>
-      <button className={`${className} tracking-wide font-inter text-sm md:text-md lg:text-lg`} onClick={() => switchLocale(locale === "en" ? "pt" : "en")}>{locale === "pt" ? "English" : "Português"}</button>
+      <button className={`${className} font-body text-sm`} onClick={() => switchLocale(locale === "en" ? "pt" : "en")}>{locale === "pt" ? "EN" : "PT"}</button>
     </>
   )
 }

@@ -12,8 +12,18 @@ export default {
         large: "var(--large-font)",
       },
       fontFamily: {
-        inter: ["var(--font-inter)"],
+        display: ["var(--font-playfair)"],
+        body: ["var(--font-dm-sans)"],
         hepta_slab: ["var(--font-hepta-slab)"],
+        inter: ["var(--font-inter)"],
+      },
+      colors: {
+        background: "#F7F5F2",
+        surface: "#FFFFFF",
+        charcoal: "#1C1C1C",
+        "charcoal-muted": "#7A7A7A",
+        sienna: "#A0522D",
+        "sienna-dark": "#8B4513",
       },
       screens: {
         md: "768px",

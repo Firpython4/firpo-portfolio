@@ -11,22 +11,32 @@ const HomeContent = (props: HomeProps) => (
     <Scaffold>
       <Hero localizedCopy={props.localizedCopy} />
       <ExpositionText
-        className="px-[clamp(12px,4vw,80px)] pt-[clamp(10px,5vw,118px)]"
+        className="px-[clamp(16px,5vw,80px)] py-12 lg:py-16"
         locale={props.locale}
         localizedCopy={props.localizedCopy}
       />
-      <div className="px-[clamp(12px,4vw,80px)] pt-[clamp(2rem,6vw,7rem)]">
-        <Collections collections={props.collections} locale={props.locale} />
-      </div>
-      <h2 className="px-[clamp(12px,4vw,80px)] pt-[clamp(2rem,6vw,5rem)] text-center font-inter text-[clamp(0.8rem,2vw,3rem)] font-medium leading-normal text-black">
-        {props.localizedCopy.home.callToAction.howCanIHelpYou}
-      </h2>
-      <ContactForm
-        className="px-[clamp(12px,4vw,80px)] pt-8"
-        locale={props.locale}
-        copy={props.localizedCopy}
+      <section className="px-[clamp(16px,5vw,80px)] py-12">
+        <h2 className="mb-8 text-center font-display text-xl font-normal italic text-charcoal lg:mb-12 lg:text-2xl">
+          {props.localizedCopy.home.about.selectedWork}
+        </h2>
+        <div className="min-h-[200px] px-4">
+          <Collections collections={props.collections} locale={props.locale} />
+        </div>
+      </section>
+      <section className="px-[clamp(16px,5vw,80px)] py-12">
+        <h2 className="mb-8 text-center font-display text-xl font-normal text-charcoal lg:text-2xl">
+          {props.localizedCopy.home.callToAction.howCanIHelpYou}
+        </h2>
+        <ContactForm
+          className="mx-auto max-w-2xl"
+          locale={props.locale}
+          copy={props.localizedCopy}
+        />
+      </section>
+      <BottomBar
+        className="px-[clamp(16px,5vw,80px)] pb-12 pt-8"
+        localizedCopy={props.localizedCopy}
       />
-      <BottomBar className="pb-12 pt-20" localizedCopy={props.localizedCopy} />
     </Scaffold>
   </>
 );

@@ -1,5 +1,7 @@
 import { type PropsWithChildren } from "react";
 import { LocaleSwitcher } from "~/components/localeSwitcher";
+import { playfairDisplay } from "~/fonts/playfairDisplay";
+import { dmSans } from "~/fonts/dmSans";
 import { heptaSlab } from "~/fonts/heptaSlab";
 import { inter } from "~/fonts/inter";
 import { type Locale } from "~/localization/localization";
@@ -11,12 +13,12 @@ const RootLayout = (
   return (
     <html
       lang={props.params.locale}
-      className={`${inter.variable} ${heptaSlab.variable}`}
+      className={`${playfairDisplay.variable} ${dmSans.variable} ${heptaSlab.variable} ${inter.variable}`}
     >
-      <body className="relative">
+      <body className="relative bg-background text-charcoal antialiased">
         {props.children}
         <LocaleSwitcher
-          className="iconify-color absolute right-[clamp(70px,18vw,180px)] top-4 text-white max-[200px]:hidden md:top-6 lg:top-12"
+          className="absolute right-[clamp(70px,18vw,180px)] top-4 font-body text-sm tracking-wide text-white max-[200px]:hidden md:top-6 lg:top-12"
           locale={props.params.locale}
         />
       </body>

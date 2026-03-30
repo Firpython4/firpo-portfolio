@@ -9,11 +9,13 @@ input {
 
 :root {
   /* Colors */
-  --color-bg: #fafafa;
-  --color-text: #1a1a1a;
-  --color-text-muted: #666666;
-  --color-accent: #2563eb;
-  --color-border: #e5e5e5;
+  --color-bg: #F7F5F2;
+  --color-surface: #FFFFFF;
+  --color-text: #1C1C1C;
+  --color-text-muted: #7A7A7A;
+  --color-accent: #A0522D;
+  --color-accent-dark: #8B4513;
+  --color-border: #E8E6E3;
   --color-white: #ffffff;
 
   /* Typography - Fluid scale */
@@ -56,4 +58,5 @@ input {
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
+  font-family: var(--font-dm-sans);
 }

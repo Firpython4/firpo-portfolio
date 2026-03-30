@@ -1,10 +1,8 @@
 import type { PropsWithChildren } from "react";
-import { VerticalCenterBox } from "./verticalCenterBox";
+
 const Scaffold = (props: PropsWithChildren) => (
-  <main
-    className={`flex flex-col justify-center overflow-hidden bg-white`}
-  >
-    <VerticalCenterBox>{props.children}</VerticalCenterBox>
+  <main className="flex min-h-screen flex-col">
+    {props.children}
   </main>
 );
 

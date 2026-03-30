@@ -1,16 +1,13 @@
 import ExportedImage from "next-image-export-optimizer";
 import background from "../../public/firpo-color.png";
 import { type PropsWithLocalizedCopy } from "../types/misc";
-import type PropsWithClassName from "../types/propsWithClassName";
 import { VerticalCenterBox } from "./verticalCenterBox";
 import { NavBar } from "./navBar";
-import { type PropsWithChildren } from "react";
 
 const HeroTitle = (props: PropsWithLocalizedCopy) => (
   <h2
-    className="shrink-0
+    className="font-hepta_slab
                    animate-fade-up
-                   font-hepta_slab
                    text-large
                    font-semibold
                    not-italic
@@ -25,8 +22,8 @@ const HeroTitle = (props: PropsWithLocalizedCopy) => (
 
 const HeroSubtitle = (props: PropsWithLocalizedCopy) => (
   <h3
-    className="animate-fade-up
-               font-hepta_slab
+    className="font-hepta_slab
+               animate-fade-up
                text-[clamp(0.5rem,2vw,2rem)]
                font-bold
                not-italic
@@ -39,25 +36,12 @@ const HeroSubtitle = (props: PropsWithLocalizedCopy) => (
   </h3>
 );
 
-const HeroText = (props: PropsWithClassName<PropsWithLocalizedCopy>) => (
+const HeroText = (props: PropsWithLocalizedCopy & { className?: string }) => (
   <div
     className={`flex flex-col gap-y-[clamp(8px,3vw,40px)] max-[200px]:text-center ${props.className}`}
   >
     <HeroTitle localizedCopy={props.localizedCopy} />
     <HeroSubtitle localizedCopy={props.localizedCopy} />
-  </div>
-);
-
-const HeroBackground = (props: PropsWithClassName<PropsWithChildren>) => (
-  <div className={props.className}>
-    <ExportedImage
-      src={background}
-      alt="Marcelo Firpo"
-      priority={true}
-      fetchPriority="high"
-      sizes="100svw"
-    />
-    {props.children}
   </div>
 );
 
@@ -91,6 +75,18 @@ const HeroContent = (props: PropsWithLocalizedCopy) => {
   );
 };
 
+const HeroBackground = () => (
+  <div className="relative top-[-2%] lg:top-[-11%]">
+    <ExportedImage
+      src={background}
+      alt="Marcelo Firpo"
+      priority={true}
+      fetchPriority="high"
+      sizes="100svw"
+    />
+  </div>
+);
+
 export const Hero = (props: PropsWithLocalizedCopy) => (
   <VerticalCenterBox
     className="w-responsive
@@ -99,7 +95,7 @@ export const Hero = (props: PropsWithLocalizedCopy) => (
                overflow-hidden
                max-h-responsive-screen"
   >
-    <HeroBackground className="relative top-[-2%] lg:top-[-11%]" />
+    <HeroBackground />
     <HeroContent localizedCopy={props.localizedCopy} />
   </VerticalCenterBox>
 );

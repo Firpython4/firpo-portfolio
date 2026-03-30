@@ -17,6 +17,7 @@ export type LocalizedCopy = {
       clients: string;
       someAttendedClients: string;
       expositionFirst: string;
+      selectedWork: string;
     };
     callToAction: {
       howCanIHelpYou: string;
@@ -50,14 +51,15 @@ export const en: LocalizedCopy = {
                 As Creative Director, I worked with major brands in the Brazilian market in segments such as banking/finance, energy, public administration, healthcare, education, services, and retail.
                 Working happily from Lisbon, Portugal, I offer services in projects related to creativity (branding, campaigns, actions, creative direction, copywriting) and text production in general (audiovisual entertainment-related projects are especially welcome).`,
       someAttendedClients: `Some customers served:`,
+      somePieces: `Some pieces:`,
       clients: `Telefónica Group, Petrobras, Vivo, Braskem Group, Edenred, Aegea Group, Banrisul, Gerdau Group, Midea-Carrier,
                 Springer, GRU Airport, Husqvarna, Massey Ferguson, John Deere, RBS Group, Zero Hora newspaper, Ramarim Shoes,
                 Klabin Group, Sicredi, Abicalçados, Sistema FIERGS, Paquetá, Gaston, Nutrella, Laghetto Hotels, Piccadilly Shoes,
                 Yara, Sescoop, Voopter, Op'n'Go, Miolo Wines, Oxiteno Chemicals, Senac, Fecomércio, SC Internacional, UCS, Correio do Povo,
                 Record, Moinhos de Vento Hospital, Rio Grande do Sul Government, Santa Catarina Government, Daer, Sulgás, Detran, CEEE,
                 Corsan, Zaffari Group, Angeloni Supermarkets, Renner Paints, Sayerlack, Selenium Loudspeakers, Oxford Ceramics,
-                Student Travel Bureau, Colombo Stores, Fiat Dealership Network, and the following city halls: Porto Alegre,
-                Passo Fundo, Bento Gonçalves, Gravataí, Santa Maria, and Rio Grande.`,
+                Student Travel Bureau, Colombo Stores, Fiat Dealership Network, Porto Alegre City Hall, Passo Fundo City Hall, Bento Gonçalves City Hall, Gravataí City Hall, Santa Maria City Hall, Rio Grande City Hall`,
+      selectedWork: `Selected Work:`
     },
     callToAction: {
       howCanIHelpYou: `How can I help you?`,
@@ -103,14 +105,16 @@ export const pt: LocalizedCopy = {
                 direção de criação, redação) e produção textual em geral (projetos na área de entretenimento
                 audiovisual são especialmente bem-vindos).`,
       someAttendedClients: `Alguns clientes atendidos:`,
+      somePieces: `Alguns trabalhos:`,
       clients: `Grupo Telefónica, Petrobras, Vivo, Grupo Braskem, Edenred, Aegea, Banrisul, Grupo Gerdau, Midea-Carrier,
                 Springer, GRU Airport, Husqvarna, Massey Ferguson, John Deere, Grupo RBS, Zero Hora, Ramarim, Klabin, Sicredi,
                 Abicalçados, Sistema FIERGS, Paquetá, Gaston, Nutrella, Laghetto Hotéis, Piccadilly, Yara, Sescoop, Voopter,
                 Op'n'Go, Vinhos Miolo, Oxiteno, Senac, Fecomércio, SC Internacional, UCS, Correio do Povo, Record,
                 Hospital Moinhos de Vento, Governo do Rio Grande do Sul, Governo de Santa Catarina, Daer, Sulgás, Detran, CEEE,
                 Corsan, Grupo Zaffari, Supermercados Angeloni, Tintas Renner, Sayerlack, Selenium, Cerâmicas Oxford,
-                Student Travel Bureau, Lojas Colombo Stores, Rede de Concessionárias Fiat
-                e as seguintes prefeituras: Porto Alegre, Passo Fundo, Bento Gonçalves, Gravataí, Santa Maria e Rio Grande.`,
+                Student Travel Bureau, Lojas Colombo Stores, Rede de Concessionárias Fiat,
+                Prefeitura de Porto Alegre, Prefeitura de Passo Fundo, Prefeitura de Bento Gonçalves, Prefeitura de Gravataí, Prefeitura de Santa Maria e Prefeitura de Rio Grande.`,
+      selectedWork: `Trabalhos selecionados:`
     },
     callToAction: {
       howCanIHelpYou: `Como posso te ajudar?`,
