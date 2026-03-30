@@ -197,9 +197,11 @@ const PieceThumbnail = (
               unoptimized={true}
               className={`${props.className}
                                   absolute
+                                  z-20
                                   object-cover
                                   opacity-100
                                   transition-opacity
+                                  delay-[250ms]
                                   duration-300
                                   ease-in-out
                                   group-hover:opacity-0`}
@@ -243,9 +245,11 @@ const PieceThumbnail = (
             sizes={pieceThumbnailSizes}
             className={`${props.className}
                               absolute
+                              z-20
                               object-cover
                               opacity-100
                               transition-opacity
+                              delay-[250ms]
                               duration-300
                               ease-in-out
                               group-hover:opacity-0`}
@@ -259,6 +263,7 @@ const PieceThumbnail = (
             youtubeConfig={youTubeConfig}
             muted={true}
             controls={false}
+            hideOverlay={true}
           />
         </>
       );
