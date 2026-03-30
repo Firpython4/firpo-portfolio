@@ -1,6 +1,6 @@
 import { cms } from "./cmsSchemas";
 import { type CollectionsType } from "./schemaTypes";
-import { relativePath, safePath } from "./type-fs/src/fileManagement";
+import { relativePath, toPath } from "@firpy/type-fs";
 
 export const replaceNewlines = (text: string) => {
   const literalNewLine = "\\n";
@@ -9,7 +9,7 @@ export const replaceNewlines = (text: string) => {
 };
 
 async function compileCms() {
-  const result = await cms.parse(relativePath(safePath("")));
+  const result = await cms.parse(relativePath(toPath("")));
   if (result.wasResultSuccessful) {
     return result.okValue;
   } else {

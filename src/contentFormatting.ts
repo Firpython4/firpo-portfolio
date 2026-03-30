@@ -4,7 +4,7 @@ import { remark } from "remark";
 import html from "remark-html";
 import strip from "strip-markdown";
 import type { Locale } from "./localization/localization";
-import { getPath } from "./cms/type-fs/src/fileManagement";
+import { getPath } from "@firpy/type-fs";
 
 const toContentObject: (
   locale: Locale,
@@ -19,7 +19,7 @@ const toContentObject: (
     },
   ]
 > = async (locale: Locale, content: Dirent) => {
-  const contentFile: Buffer = await fileSystem.readFile(getPath(content));
+  const contentFile: Buffer = await fileSystem.readFile(getPath(content, "."));
   const matterResult: matter.GrayMatterFile<Buffer> = matter(contentFile);
   const processedContent = await remark()
     .use(html)
