@@ -10,15 +10,17 @@ interface VirtualListProps<T> {
   estimateSize?: number;
   overscan?: number;
   className?: string;
+  gap?: number;
 }
 
 export function VirtualList<T>(props: PropsWithClassName<VirtualListProps<T>>) {
   const parentRef = useRef<HTMLDivElement>(null);
 
+  const gap = props.gap ?? 0;
   const virtualizer = useVirtualizer({
     count: props.items.length,
     getScrollElement: () => document.documentElement,
-    estimateSize: () => props.estimateSize ?? 400,
+    estimateSize: () => (props.estimateSize ?? 400) + gap,
     overscan: props.overscan ?? 3,
     getItemKey: (index) => index,
   });
@@ -45,14 +47,15 @@ export function VirtualList<T>(props: PropsWithClassName<VirtualListProps<T>>) {
                 virtualizer.measureElement(el);
               }
             }}
+            className="flex justify-center"
             style={{
               position: "absolute",
               top: 0,
               left: 0,
               width: "100%",
               transform: `translateY(${virtualItem.start}px)`,
-              display: "flex",
-              justifyContent: "center",
+              paddingBottom: `${gap}px`,
+              boxSizing: "border-box",
             }}
           >
             {props.renderItem(item, virtualItem.index)}

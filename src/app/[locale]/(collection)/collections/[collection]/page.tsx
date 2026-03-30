@@ -87,7 +87,7 @@ const Collection = async (props: { params: PageParams }) => {
         className="
         pl-[40px]
         pt-[44px]
-        w-responsive-screen
+        w-full
         sm:pl-[50px]
         md:pl-[100px]
         lg:pl-[150px]
@@ -123,6 +123,7 @@ const Collection = async (props: { params: PageParams }) => {
                     "
         >
           <CollectionPieces
+            gap={80}
             pieces={[
               pageContent.thumbnail,
               ...(pageContent.piecesWithoutThumbnail ?? []),
@@ -133,7 +134,7 @@ const Collection = async (props: { params: PageParams }) => {
         <div
           className="pb-[74px]
                     pl-[40px]
-                    w-responsive-screen
+                    w-full
                     sm:pl-[50px]
                     md:pl-[100px]
                     lg:pl-[150px]
