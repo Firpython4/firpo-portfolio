@@ -45,24 +45,17 @@ export const generateMetadata = async (props: { params: PageParams }) => {
   return metadata;
 };
 
+import { ArrowLeft } from "lucide-react";
+
 const BackIcon = (props: PropsWithClassName) => (
-  <ExportedImage
-    className={props.className}
-    alt="home"
-    src="/icons/back-icon.svg"
-    width={31}
-    height={31}
-    sizes="31px"
-  />
+  <ArrowLeft className={props.className} />
 );
 
 const BackButton = (props: { locale: Locale; collectionName: string }) => {
   return (
-    <div className="aspect-square w-[31px]">
-      <LinkWithLocale href={`/#${props.collectionName}`} locale={props.locale}>
-        <BackIcon />
-      </LinkWithLocale>
-    </div>
+    <LinkWithLocale href={`/#${props.collectionName}`} locale={props.locale}>
+      <BackIcon className="h-8 w-8 text-neutral-700" />
+    </LinkWithLocale>
   );
 };
 
