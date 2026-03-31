@@ -4,18 +4,24 @@ import { usePathname, useRouter } from "next/navigation";
 import { type Locale } from "~/localization/localization";
 import type PropsWithClassName from "~/types/propsWithClassName";
 
-export function LocaleSwitcher({className, locale}: PropsWithClassName<{locale: Locale}>) {
-  const pathname = usePathname()
+export function LocaleSwitcher({
+  className,
+  locale,
+}: PropsWithClassName<{ locale: Locale }>) {
+  const pathname = usePathname();
   const router = useRouter();
- 
+
   function switchLocale(newLocale: Locale) {
-    const newPath = pathname.replace(locale, newLocale)
-    router.replace(newPath, {scroll: false})
+    const newPath = pathname.replace(locale, newLocale);
+    router.replace(newPath, { scroll: false });
   }
- 
+
   return (
-    <>
-      <button className={`${className} font-body text-sm`} onClick={() => switchLocale(locale === "en" ? "pt" : "en")}>{locale === "pt" ? "EN" : "PT"}</button>
-    </>
-  )
+    <button
+      className={`${className} flex items-center justify-center font-body text-base`}
+      onClick={() => switchLocale(locale === "en" ? "pt" : "en")}
+    >
+      {locale === "pt" ? "EN" : "PT"}
+    </button>
+  );
 }
