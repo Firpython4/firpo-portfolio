@@ -1,10 +1,10 @@
 import getOrCacheCompiledCms from "./cms/cmsCompiler";
 import { getLocalizedCopy, type Locale } from "./localization/localization";
 import { type LocalizedCopy } from "./localization/copy";
-import { type CollectionType } from "./cms/schemaTypes";
+import { type SerializableCollectionLocalized } from "./types/serializableTypes";
 
 export type HomeProps = {
-  collections: CollectionType[];
+  collections: SerializableCollectionLocalized[];
   localizedCopy: LocalizedCopy;
   locale: Locale;
 };
@@ -12,8 +12,18 @@ export type HomeProps = {
 export async function getIndexPageContent(locale: Locale) {
   const cms = await getOrCacheCompiledCms();
 
+  const collections: SerializableCollectionLocalized[] =
+    cms.public.parsed.collections.parsed.map((col) => {
+      return {
+        name: col.name,
+        thumbnail: col.parsed.thumbnail.parsed.thumbnail,
+        pieces: col.parsed.pieces?.parsed,
+        localizedTitle: col.parsed[locale].parsed.matters.title,
+      };
+    });
+
   return {
-    cms,
+    collections,
     localizedCopy: getLocalizedCopy(locale),
   };
 }

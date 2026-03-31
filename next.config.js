@@ -8,10 +8,10 @@ await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
 const config = {
-  webpack: (config) => {
-    config.resolve.alias["~"] = path.resolve("./src");
-
-    return config;
+  turbopack: {
+    resolveAlias: {
+      "~": path.resolve("./src"),
+    },
   },
   reactStrictMode: true,
   output: "export",

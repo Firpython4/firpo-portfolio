@@ -16,8 +16,9 @@ export const generateStaticParams = () => {
   });
 };
 
-export const generateMetadata = async (props: { params: LocalePageParams }) => {
-  const pageContent = await getIndexPageContent(props.params.locale);
+export const generateMetadata = async (props: { params: Promise<LocalePageParams> }) => {
+  const params = await props.params;
+  const pageContent = await getIndexPageContent(params.locale);
   const metadata: Metadata = {
     ...commonMetadata,
     title:
@@ -27,21 +28,14 @@ export const generateMetadata = async (props: { params: LocalePageParams }) => {
   return metadata;
 };
 
-const Home = async (props: { params: PageParams }) => {
-  const content = await getIndexPageContent(props.params.locale);
-  const collections = [...content.cms.public.parsed.collections.parsed];
-  if (content.cms.order?.parsed) {
-    orderByConfig(
-      collections,
-      collectionNameProvider,
-      content.cms.order.parsed,
-    );
-  }
+const Home = async (props: { params: Promise<PageParams> }) => {
+  const params = await props.params;
+  const content = await getIndexPageContent(params.locale);
   return (
     <HomeContent
-      locale={props.params.locale}
+      locale={params.locale}
       localizedCopy={content.localizedCopy}
-      collections={collections}
+      collections={content.collections}
     />
   );
 };

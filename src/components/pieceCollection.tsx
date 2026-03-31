@@ -2,12 +2,9 @@
 
 import { type Locale } from "~/localization/localization";
 import { PiecePreview } from "./piecePreview";
-import {
-  type CollectionType,
-  getUrlFromPiece,
-  type PieceType,
-} from "~/cms/schemaTypes";
+import { getUrlFromPiece, type PieceType } from "~/cms/schemaTypes";
 import { VirtualGrid } from "./virtualGrid";
+import { type SerializableCollectionLocalized } from "~/types/serializableTypes";
 
 interface CollectionItem {
   piece: PieceType;
@@ -30,18 +27,17 @@ const pieceMapper =
   };
 
 export const Collections = (props: {
-  collections: CollectionType[];
+  collections: SerializableCollectionLocalized[];
   locale: Locale;
 }) => {
   const thumbnails: CollectionItem[] = props.collections.flatMap(
     (collection) => {
-      const thumbnail = collection.parsed.thumbnail.parsed.thumbnail;
       return [
         pieceMapper(
           props.locale,
           collection.name,
-          collection.parsed[props.locale].parsed.matters.title,
-        )(thumbnail),
+          collection.localizedTitle,
+        )(collection.thumbnail),
       ];
     },
   );

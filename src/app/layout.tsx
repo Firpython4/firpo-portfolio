@@ -1,17 +1,19 @@
 import { type PropsWithChildren } from "react";
-import { heptaSlab } from "~/fonts/heptaSlab";
-import { inter } from "~/fonts/inter";
 import { playfairDisplay } from "~/fonts/playfairDisplay";
 import { dmSans } from "~/fonts/dmSans";
+import { heptaSlab } from "~/fonts/heptaSlab";
+import { inter } from "~/fonts/inter";
 import "~/styles/globals.css";
 
 const RootLayout = (props: PropsWithChildren) => {
   return (
     <html
       lang="pt"
-      className={`${inter.variable} ${heptaSlab.variable} ${playfairDisplay.variable} ${dmSans.variable}`}
+      className={`${playfairDisplay.variable} ${dmSans.variable} ${heptaSlab.variable} ${inter.variable}`}
     >
-      <body>{props.children}</body>
+      <body className="relative bg-background text-charcoal antialiased">
+        {props.children}
+      </body>
     </html>
   );
 };

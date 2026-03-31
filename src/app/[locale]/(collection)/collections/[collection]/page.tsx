@@ -31,8 +31,9 @@ export const generateStaticParams = async () => {
 
 type PageParams = CollectionPageParams;
 
-export const generateMetadata = async (props: { params: PageParams }) => {
-  const pageContent = await getCollectionPageContent(props.params);
+export const generateMetadata = async (props: { params: Promise<PageParams> }) => {
+  const params = await props.params;
+  const pageContent = await getCollectionPageContent(params);
 
   const metadata: Metadata = {
     ...commonMetadata,
@@ -59,8 +60,9 @@ const BackButton = (props: { locale: Locale; collectionName: string }) => {
   );
 };
 
-const Collection = async (props: { params: PageParams }) => {
-  const pageContent = await getCollectionPageContent(props.params);
+const Collection = async (props: { params: Promise<PageParams> }) => {
+  const params = await props.params;
+  const pageContent = await getCollectionPageContent(params);
 
   if (pageContent.order?.parsed) {
     orderByConfig(
@@ -88,7 +90,7 @@ const Collection = async (props: { params: PageParams }) => {
       >
         <BackButton
           locale={pageContent.locale}
-          collectionName={props.params.collection}
+          collectionName={params.collection}
         />
       </div>
 
@@ -135,7 +137,7 @@ const Collection = async (props: { params: PageParams }) => {
         >
           <BackButton
             locale={pageContent.locale}
-            collectionName={props.params.collection}
+            collectionName={params.collection}
           />
         </div>
       </VerticalCenterBox>
