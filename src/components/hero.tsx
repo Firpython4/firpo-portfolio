@@ -6,8 +6,8 @@ import { NavBar } from "./navBar";
 
 const HeroTitle = (props: PropsWithLocalizedCopy) => (
   <h2
-    className="font-hepta_slab
-                   animate-fade-up
+    className="animate-fade-up
+                   font-display
                    text-large
                    font-semibold
                    not-italic
@@ -22,8 +22,8 @@ const HeroTitle = (props: PropsWithLocalizedCopy) => (
 
 const HeroSubtitle = (props: PropsWithLocalizedCopy) => (
   <h3
-    className="font-hepta_slab
-               animate-fade-up
+    className="animate-fade-up
+               font-display
                text-[clamp(0.5rem,2vw,2rem)]
                font-bold
                not-italic
