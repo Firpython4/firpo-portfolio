@@ -194,7 +194,6 @@ const PieceThumbnail = (
               alt={piece.value.name}
               fill={true}
               sizes={pieceThumbnailSizes}
-              unoptimized={true}
               className={`${props.className}
                                   absolute
                                   z-20
