@@ -1,6 +1,8 @@
 import { getCollectionsStaticPaths } from "../collection";
 import getUrl from "../url";
 
+export const dynamic = "force-static";
+
 const sitemap = async () => {
   const paths = await getCollectionsStaticPaths();
   return paths.map((paramSet) => {
