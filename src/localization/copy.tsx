@@ -91,7 +91,7 @@ export const pt: LocalizedCopy = {
     },
     hero: {
       name: `Marcelo Firpo`,
-      subtitle: `CMO, Diretor de Criação, Consultor Criativo, Redator, Roteirista, Cantautor`,
+      subtitle: `CMO, Diretor de Criação, Consultor Criativo, Redator, Roteirista, Compositor`,
     },
     about: {
       expositionFirst: `Tenho
