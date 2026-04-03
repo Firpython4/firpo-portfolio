@@ -3,7 +3,7 @@ import { type PropsWithLocalizedCopy } from "~/types/misc";
 import type PropsWithClassName from "../types/propsWithClassName";
 
 const ClientTag = ({ name }: { name: string }) => (
-  <span className="inline-block border border-charcoal/20 px-3 py-1 font-body text-xs tracking-wide text-charcoal-muted transition-colors hover:border-sienna hover:text-sienna">
+  <span className="inline-block border border-charcoal/50 px-3 py-1 font-body text-xs tracking-wide text-charcoal transition-colors hover:border-sienna hover:text-sienna">
     {name.trim()}
   </span>
 );
@@ -41,7 +41,7 @@ export const ExpositionText = (
                      font-medium
                      uppercase
                      tracking-[0.15em]
-                     text-charcoal-muted"
+                     text-charcoal"
         >
           {props.localizedCopy.home.about.someAttendedClients}
         </p>
