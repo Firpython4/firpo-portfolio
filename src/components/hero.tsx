@@ -40,7 +40,7 @@ const HeroText = (props: PropsWithLocalizedCopy & { className?: string }) => (
   <div
     className={`flex flex-col items-center gap-y-[clamp(8px,3vw,40px)] max-[200px]:text-center ${props.className}`}
   >
-    <div className="w-full max-w-[calc(100%-40px)] rounded-lg border border-white/20 bg-black/40 px-4 py-2 backdrop-blur-md sm:max-w-[calc(100%-80px)] sm:px-8 sm:py-4">
+    <div className="w-full max-w-[calc(100%-40px)] rounded-lg border border-white/20 bg-black/10 px-4 py-2 backdrop-blur-md sm:max-w-[calc(100%-80px)] sm:px-8 sm:py-4">
       <div className="flex flex-col">
         <h2
           className="w-full
