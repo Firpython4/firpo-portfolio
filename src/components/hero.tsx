@@ -38,10 +38,43 @@ const HeroSubtitle = (props: PropsWithLocalizedCopy) => (
 
 const HeroText = (props: PropsWithLocalizedCopy & { className?: string }) => (
   <div
-    className={`flex flex-col gap-y-[clamp(8px,3vw,40px)] max-[200px]:text-center ${props.className}`}
+    className={`flex flex-col items-center gap-y-[clamp(8px,3vw,40px)] max-[200px]:text-center ${props.className}`}
   >
-    <HeroTitle localizedCopy={props.localizedCopy} />
-    <HeroSubtitle localizedCopy={props.localizedCopy} />
+    <div className="w-full max-w-[calc(100%-40px)] rounded-lg border border-white/20 bg-black/40 px-4 py-2 backdrop-blur-md sm:max-w-[calc(100%-80px)] sm:px-8 sm:py-4">
+      <div className="flex flex-col">
+        <h2
+          className="w-full
+                         animate-fade-up
+                         text-center
+                         font-display
+                         text-large
+                         font-semibold
+                         not-italic
+                         leading-[clamp(20px,5vw,98px)]
+                         tracking-[clamp(-2px,-3vw,-3.745px)]
+                         text-white
+                         animate-duration-300"
+        >
+          {props.localizedCopy.home.hero.name}
+        </h2>
+        <h3
+          className="mt-4
+                     w-full
+                     animate-fade-up
+                     text-center
+                     font-display
+                     text-[clamp(0.5rem,2vw,2rem)]
+                     font-bold
+                     not-italic
+                     leading-[clamp(14px,4vw,50px)]
+                     text-white
+                     animate-duration-700
+                     max-[210px]:hidden"
+        >
+          {props.localizedCopy.home.hero.subtitle}
+        </h3>
+      </div>
+    </div>
   </div>
 );
 
