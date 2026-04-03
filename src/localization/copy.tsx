@@ -113,7 +113,7 @@ export const pt: LocalizedCopy = {
                 Op'n'Go, Vinhos Miolo, Oxiteno, Senac, Fecomércio, SC Internacional, UCS, Correio do Povo, Record,
                 Hospital Moinhos de Vento, Governo do Rio Grande do Sul, Governo de Santa Catarina, Daer, Sulgás, Detran, CEEE,
                 Corsan, Grupo Zaffari, Supermercados Angeloni, Tintas Renner, Sayerlack, Selenium, Cerâmicas Oxford,
-                Student Travel Bureau, Lojas Colombo Stores, Rede de Concessionárias Fiat,
+                Student Travel Bureau, Lojas Colombo, Rede de Concessionárias Fiat,
                 Prefeitura de Porto Alegre, Prefeitura de Passo Fundo, Prefeitura de Bento Gonçalves, Prefeitura de Gravataí, Prefeitura de Santa Maria, Prefeitura de Rio Grande`,
       selectedWork: `Trabalhos selecionados:`,
     },
