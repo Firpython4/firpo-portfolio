@@ -1,31 +1,20 @@
 import ExportedImage from "next-image-export-optimizer";
 import background from "../../public/firpo-color.png";
 import { type PropsWithLocalizedCopy } from "../types/misc";
-import type PropsWithClassName from "../types/propsWithClassName";
 import { VerticalCenterBox } from "./verticalCenterBox";
 import { NavBar } from "./navBar";
-import { type PropsWithChildren } from "react";
 
 const HeroTitle = (props: PropsWithLocalizedCopy) => (
   <h2
-    className="shrink-0
-                   animate-fade-up
-                   font-hepta_slab
+    className="animate-fade-up
+                   font-display
                    text-large
                    font-semibold
                    not-italic
-                   leading-[20px]
-                   tracking-[-2px]
+                   leading-[clamp(20px,5vw,98px)]
+                   tracking-[clamp(-2px,-3vw,-3.745px)]
                    text-white
-                   animate-duration-300
-                   mobile_sm:leading-[25px]
-                   mobile_md:leading-[30px]
-                   mobile_lg:leading-[40px]
-                   mobile_lg:tracking-[-3.745px]
-                   sm:leading-[50px]
-                   md:leading-[60px]
-                   lg:leading-[80px]
-                   xl:leading-[98px]"
+                   animate-duration-300"
   >
     {props.localizedCopy.home.hero.name}
   </h2>
@@ -33,59 +22,59 @@ const HeroTitle = (props: PropsWithLocalizedCopy) => (
 
 const HeroSubtitle = (props: PropsWithLocalizedCopy) => (
   <h3
-    className="
-                    animate-fade-up
-                   font-hepta_slab
-                   text-[0.5rem]
-                   mobile_lg:text-[0.8rem]
-                   sm:text-[1.5rem]
-                   lg:text-[1.75rem]
-                   xl:text-[2rem]
-                   font-bold
-                   not-italic
-                   leading-[14px]
-                   text-white
-                   animate-duration-700
-                   max-[210px]:hidden
-                   mobile_sm:leading-[16px]
-                   mobile_md:leading-[20px]
-                   mobile_lg:leading-[25px]
-                   sm:leading-[30px]
-                   md:leading-[40px]
-                   lg:leading-[50px]"
+    className="animate-fade-up
+               font-display
+               text-[clamp(0.5rem,2vw,2rem)]
+               font-bold
+               not-italic
+               leading-[clamp(14px,4vw,50px)]
+               text-white
+               animate-duration-700
+               max-[210px]:hidden"
   >
     {props.localizedCopy.home.hero.subtitle}
   </h3>
 );
 
-const HeroText = (props: PropsWithClassName<PropsWithLocalizedCopy>) => (
+const HeroText = (props: PropsWithLocalizedCopy & { className?: string }) => (
   <div
-    className={`flex
-        max-mobile_xsm:text-center
-        flex-col
-        gap-y-2
-        mobile_lg:gap-y-3
-        sm:gap-y-4
-        md:gap-y-5
-        lg:gap-y-8
-        xl:gap-y-10
-        ${props.className}`}
+    className={`flex flex-col items-center gap-y-[clamp(8px,3vw,40px)] max-[200px]:text-center ${props.className}`}
   >
-    <HeroTitle localizedCopy={props.localizedCopy} />
-    <HeroSubtitle localizedCopy={props.localizedCopy} />
-  </div>
-);
-
-const HeroBackground = (props: PropsWithClassName<PropsWithChildren>) => (
-  <div className={props.className}>
-    <ExportedImage
-      src={background}
-      alt="Marcelo Firpo"
-      priority={true}
-      fetchPriority="high"
-      sizes="100svw"
-    />
-    {props.children}
+    <div className="w-full max-w-[calc(100%-40px)] rounded-lg border border-white/20 bg-black/10 px-4 py-2 backdrop-blur-md sm:max-w-[calc(100%-80px)] sm:px-8 sm:py-4">
+      <div className="flex flex-col">
+        <h2
+          className="w-full
+                         animate-fade-up
+                         text-center
+                         font-display
+                         text-large
+                         font-semibold
+                         not-italic
+                         leading-[clamp(20px,5vw,98px)]
+                         tracking-[clamp(-2px,-3vw,-3.745px)]
+                         text-white
+                         animate-duration-300"
+        >
+          {props.localizedCopy.home.hero.name}
+        </h2>
+        <h3
+          className="mt-4
+                     w-full
+                     animate-fade-up
+                     text-center
+                     font-display
+                     text-[clamp(0.5rem,2vw,2rem)]
+                     font-bold
+                     not-italic
+                     leading-[clamp(14px,4vw,50px)]
+                     text-white
+                     animate-duration-700
+                     max-[210px]:hidden"
+        >
+          {props.localizedCopy.home.hero.subtitle}
+        </h3>
+      </div>
+    </div>
   </div>
 );
 
@@ -99,62 +88,47 @@ const HeroContent = (props: PropsWithLocalizedCopy) => {
     <>
       <HeroText
         className="absolute
-        py-[10%]
-        mobile_xsm:top-[26%]
-        mobile_xsm:py-0
-        px-3
-        mobile_sm:px-0
-        mobile_sm:right-[2%]
-        mobile_sm:w-[50%]
-        mobile_md:top-[20%]
-        mobile_lg:right-0
-        mobile_lg:w-[58%]
-        sm:top-[20%]
-        md:right-[4%]
-        md:top-[16%]
-        md:max-w-[46%]
-        lg:max-w-[40%]
-        lg:right-[8%]
-        lg:top-[20%]
-        xl:top-[27%]"
+                    right-0
+                    top-[clamp(16%,20%,27%)]
+                    w-[clamp(42%,50%,52%)]
+                    py-[clamp(5%,10%,15%)]"
         localizedCopy={props.localizedCopy}
       />
       <NavBar
         iconPaths={iconPaths}
         className="absolute
-        max-mobile_xsm:hidden
-                           right-[0%]
-                           top-[16px]
-                           max-md:left-[16px]
-                           sm:right-[14%]
-                           sm:top-[5%]
-                           md:right-[16%]
-                           md:top-[6%]
-                           lg:right-[18%]
-                           lg:top-[10%]
-                           xl:right-[21.56%]
-                           xl:top-[12.6%]"
+                   right-4
+                   top-4
+                   md:right-8
+                   md:top-6
+                   lg:right-12
+                   lg:top-12"
       />
     </>
   );
 };
 
+const HeroBackground = () => (
+  <div className="relative top-[-2%] lg:top-[-11%]">
+    <ExportedImage
+      src={background}
+      alt="Marcelo Firpo"
+      priority={true}
+      fetchPriority="high"
+      sizes="100svw"
+    />
+  </div>
+);
+
 export const Hero = (props: PropsWithLocalizedCopy) => (
   <VerticalCenterBox
     className="w-responsive
-                                  relative
-                                  min-h-[180px]
-                                  overflow-hidden
-                                  max-h-responsive-screen
-                                  mobile_sm:min-h-[200px]
-                                  mobile_md:min-h-[210px]
-                                  mobile_lg:min-h-[225px]
-                                  sm:min-h-[330px]
-                                  md:min-h-[400px]
-                                  lg:min-h-[510px]
-                                  xl:min-h-[600px]"
+               relative
+               min-h-[clamp(180px,30vw,600px)]
+               overflow-hidden
+               max-h-responsive-screen"
   >
-    <HeroBackground className="relative top-[-2%] lg:top-[-11%]" />
+    <HeroBackground />
     <HeroContent localizedCopy={props.localizedCopy} />
   </VerticalCenterBox>
 );

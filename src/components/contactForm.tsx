@@ -5,9 +5,9 @@ import {
   type FieldPath,
   type FieldValues,
   type RegisterOptions,
+  type UseFormRegisterReturn,
   useForm,
   type UseFormProps,
-  type UseFormRegister,
 } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -46,8 +46,7 @@ const ContactFormValues = (errors: ContactFormErrors) => {
 
 export type ContactFormType = z.infer<ReturnType<typeof ContactFormValues>>;
 
-const formBorderClassNames = "border-2 border-gray-400 rounded-md";
-const formClassNames = `h-8 px-3 py-5 ${formBorderClassNames}`;
+const inputBaseClass = "w-full border-0 border-b-2 border-charcoal/20 bg-transparent py-3 font-body text-charcoal placeholder-charcoal/40 focus:border-sienna focus:outline-none focus:ring-0 transition-colors duration-200";
 
 function FormItem<
   FieldValuesType extends FieldValues,
@@ -55,37 +54,30 @@ function FormItem<
 >(
   props: PropsWithClassName<{
     placeholder: string;
-    register: UseFormRegister<FieldValuesType>;
+    register: (
+      name: FieldNameType,
+      options?: RegisterOptions<FieldValuesType, FieldNameType>,
+    ) => UseFormRegisterReturn;
     name: FieldNameType;
-    options?: RegisterOptions;
+    options?: RegisterOptions<FieldValuesType, FieldNameType>;
     errors: FieldErrors<FieldValuesType>;
   }>,
 ) {
   const errorMessages = props.errors[props.name]?.message;
-  if (typeof errorMessages == "string") {
-    return (
-      <div className={`flex flex-col ${props.className}`}>
-        {<p className="text-red-400">{errorMessages}</p>}
-        <input
-          className={`${formClassNames}`}
-          type="text"
-          placeholder={props.placeholder}
-          {...props.register(props.name, props.options)}
-        />
-      </div>
-    );
-  } else {
-    return (
-      <>
-        <input
-          className={`${props.className} mt-[1.5rem] ${formClassNames}`}
-          type="text"
-          placeholder={props.placeholder}
-          {...props.register(props.name, props.options)}
-        />
-      </>
-    );
-  }
+  
+  return (
+    <div className={`flex flex-col ${props.className}`}>
+      {typeof errorMessages == "string" && (
+        <p className="text-xs text-red-500 mb-1">{errorMessages}</p>
+      )}
+      <input
+        className={inputBaseClass}
+        type="text"
+        placeholder={props.placeholder}
+        {...props.register(props.name, props.options)}
+      />
+    </div>
+  );
 }
 
 function FormArea<
@@ -93,37 +85,30 @@ function FormArea<
   FieldNameType extends FieldPath<FieldValuesType>,
 >(
   props: PropsWithClassName<{
-    gridClassNames?: string;
     placeholder: string;
-    register: UseFormRegister<FieldValuesType>;
+    register: (
+      name: FieldNameType,
+      options?: RegisterOptions<FieldValuesType, FieldNameType>,
+    ) => UseFormRegisterReturn;
     name: FieldNameType;
-    options?: RegisterOptions;
+    options?: RegisterOptions<FieldValuesType, FieldNameType>;
     errors: FieldErrors<FieldValuesType>;
   }>,
 ) {
   const errorMessages = props.errors[props.name]?.message;
-  if (typeof errorMessages == "string") {
-    return (
-      <div className={`flex flex-col ${props.gridClassNames}`}>
-        {<p className="text-red-400">{errorMessages}</p>}
-        <textarea
-          className={`${formBorderClassNames} h-full ${props.className}`}
-          placeholder={props.placeholder}
-          {...props.register(props.name, props.options)}
-        />
-      </div>
-    );
-  } else {
-    return (
-      <>
-        <textarea
-          className={`${props.className} mt-[1.5rem] ${props.gridClassNames} ${formBorderClassNames}`}
-          placeholder={props.placeholder}
-          {...props.register(props.name, props.options)}
-        />
-      </>
-    );
-  }
+  
+  return (
+    <div className={`flex flex-col ${props.className}`}>
+      {typeof errorMessages == "string" && (
+        <p className="text-xs text-red-500 mb-1">{errorMessages}</p>
+      )}
+      <textarea
+        className={`${inputBaseClass} resize-none min-h-[120px]`}
+        placeholder={props.placeholder}
+        {...props.register(props.name, props.options)}
+      />
+    </div>
+  );
 }
 
 const ContactForm = (
@@ -160,33 +145,34 @@ const ContactForm = (
   };
 
   return (
-    <div
-      className={`${props.className} flex flex-col items-center gap-y-6 font-inter`}
+    <section
+      className={`${props.className} flex flex-col items-center`}
     >
       {isSubmitSuccessful && (
-        <p className="text-green-500">{contactForm.submitSuccessful}</p>
+        <p className="text-sienna font-body">{contactForm.submitSuccessful}</p>
       )}
       <form
-        className="relative flex flex-col items-center gap-y-8 px-3"
+        className="w-full max-w-md"
         onSubmit={handleSubmit(submitContactForm)}
       >
-        <div className="grid grid-cols-2 grid-rows-6 gap-x-3 gap-y-4">
+        <div className="flex flex-col gap-8">
+          <div className="grid grid-cols-2 gap-8">
+            <FormItem
+              placeholder={contactForm.firstName}
+              name="First Name"
+              register={register}
+              options={{ required: true }}
+              errors={errors}
+            />
+            <FormItem
+              placeholder={contactForm.lastName}
+              name="Last Name"
+              register={register}
+              options={{ required: true }}
+              errors={errors}
+            />
+          </div>
           <FormItem
-            placeholder={contactForm.firstName}
-            name="First Name"
-            register={register}
-            options={{ required: true }}
-            errors={errors}
-          />
-          <FormItem
-            placeholder={contactForm.lastName}
-            name="Last Name"
-            register={register}
-            options={{ required: true }}
-            errors={errors}
-          />
-          <FormItem
-            className="col-span-2"
             placeholder={contactForm.email}
             name="Email"
             register={register}
@@ -194,15 +180,12 @@ const ContactForm = (
             errors={errors}
           />
           <FormItem
-            className="col-span-2"
             placeholder={contactForm.subject}
             name={"Subject"}
             register={register}
             errors={errors}
           />
           <FormArea
-            gridClassNames="col-span-2 row-span-4"
-            className="resize-none px-2 py-1"
             placeholder={contactForm.content}
             name="Content"
             register={register}
@@ -210,14 +193,16 @@ const ContactForm = (
             errors={errors}
           />
         </div>
-        <input
-          className={`${formBorderClassNames} py-1 px-3 text-lg w-[80px] sm:w-[120px] cursor-pointer`}
-          type="submit"
-          value={props.copy.home.contactForm.send}
-          lang={props.locale}
-        />
+        <div className="mt-8 flex justify-center">
+          <input
+            className="cursor-pointer border border-charcoal px-8 py-3 font-body text-sm font-medium uppercase tracking-widest text-charcoal transition-all duration-200 hover:bg-charcoal hover:text-white"
+            type="submit"
+            value={props.copy.home.contactForm.send}
+            lang={props.locale}
+          />
+        </div>
       </form>
-    </div>
+    </section>
   );
 };
 

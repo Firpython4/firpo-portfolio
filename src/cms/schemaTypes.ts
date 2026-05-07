@@ -1,5 +1,5 @@
 import { type collection, type cms, type piece } from "./cmsSchemas";
-import { type InferOk } from "./type-fs/src/types";
+import { type InferOk } from "@firpy/type-fs";
 
 export type PieceType = InferOk<typeof piece>;
 export type CollectionType = InferOk<typeof collection>;

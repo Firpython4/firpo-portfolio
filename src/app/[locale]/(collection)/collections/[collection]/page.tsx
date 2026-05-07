@@ -4,8 +4,6 @@ import ExportedImage from "next-image-export-optimizer";
 
 import { VerticalCenterBox } from "~/components/verticalCenterBox";
 
-import type { YouTubeConfig } from "react-player/youtube";
-
 import {
   getCollectionPageContent,
   getCollectionsStaticPaths,
@@ -13,23 +11,19 @@ import {
 
 import LinkWithLocale from "~/components/LinkWithLocale";
 
-import { PieceVideo } from "~/components/PieceVideo";
-
 import { type Locale } from "~/localization/localization";
 
 import { type CollectionPageParams } from "~/types/params";
 
 import commonMetadata from "../../../../../metadata";
 
-import { getContainedByAspectRatioStyle } from "../../../../../styles/styleUtilities";
-
 import type PropsWithClassName from "../../../../../types/propsWithClassName";
 
 import { replaceNewlines } from "~/cms/cmsCompiler";
 
-import { getUrlFromPiece, type PieceType } from "~/cms/schemaTypes";
 import { orderByConfig, pieceNameProvider } from "~/cms/ordering";
 import Scaffold from "~/components/scaffold";
+import { CollectionPieces } from "~/components/collectionPieces";
 
 export const generateStaticParams = async () => {
   return await getCollectionsStaticPaths();
@@ -37,8 +31,9 @@ export const generateStaticParams = async () => {
 
 type PageParams = CollectionPageParams;
 
-export const generateMetadata = async (props: { params: PageParams }) => {
-  const pageContent = await getCollectionPageContent(props.params);
+export const generateMetadata = async (props: { params: Promise<PageParams> }) => {
+  const params = await props.params;
+  const pageContent = await getCollectionPageContent(params);
 
   const metadata: Metadata = {
     ...commonMetadata,
@@ -51,85 +46,23 @@ export const generateMetadata = async (props: { params: PageParams }) => {
   return metadata;
 };
 
-const Piece = (props: PropsWithClassName<{ piece: PieceType }>) => {
-  const piece = props.piece;
-
-  if (piece.option === 2) {
-    const style = getContainedByAspectRatioStyle(
-      "90vw",
-      "90svh",
-      piece.value.width,
-      piece.value.height,
-    );
-
-    return (
-      <ExportedImage
-        key={piece.value.url}
-        style={style}
-        className={`${props.className}
-
-                aspect-[${piece.value.width}/${piece.value.height}]`}
-        src={piece.value.url}
-        width={piece.value.width}
-        height={piece.value.height}
-        alt={piece.value.name}
-        sizes={`${piece.value.width.toString()}px`}
-      />
-    );
-  } else {
-    const youTubeConfig: YouTubeConfig = {
-      playerVars: {
-        controls: 1,
-
-        disablekb: 0,
-
-        modestbranding: 1,
-
-        showinfo: 1,
-      },
-    };
-
-    const style = getContainedByAspectRatioStyle("90vw", "90svh", 16, 9);
-
-    const url = getUrlFromPiece(piece);
-
-    return (
-      <PieceVideo
-        className={props.className}
-        style={style}
-        playing={false}
-        url={url}
-        youtubeConfig={youTubeConfig}
-        muted={false}
-        controls={true}
-      />
-    );
-  }
-};
+import { ArrowLeft } from "lucide-react";
 
 const BackIcon = (props: PropsWithClassName) => (
-  <ExportedImage
-    className={props.className}
-    alt="home"
-    src="/icons/back-icon.svg"
-    width={31}
-    height={31}
-    sizes="31px"
-  />
+  <ArrowLeft className={props.className} />
 );
 
 const BackButton = (props: { locale: Locale; collectionName: string }) => {
   return (
-    <div className="aspect-square w-[31px]">
-      <LinkWithLocale href={`/#${props.collectionName}`} locale={props.locale}>
-        <BackIcon />
-      </LinkWithLocale>
-    </div>
+    <LinkWithLocale href={`/#${props.collectionName}`} locale={props.locale}>
+      <BackIcon className="h-8 w-8 text-neutral-700" />
+    </LinkWithLocale>
   );
 };
 
-const Collection = async (props: { params: PageParams }) => {
-  const pageContent = await getCollectionPageContent(props.params);
+const Collection = async (props: { params: Promise<PageParams> }) => {
+  const params = await props.params;
+  const pageContent = await getCollectionPageContent(params);
 
   if (pageContent.order?.parsed) {
     orderByConfig(
@@ -149,7 +82,7 @@ const Collection = async (props: { params: PageParams }) => {
         className="
         pl-[40px]
         pt-[44px]
-        w-responsive-screen
+        w-full
         sm:pl-[50px]
         md:pl-[100px]
         lg:pl-[150px]
@@ -157,17 +90,17 @@ const Collection = async (props: { params: PageParams }) => {
       >
         <BackButton
           locale={pageContent.locale}
-          collectionName={props.params.collection}
+          collectionName={params.collection}
         />
       </div>
 
       <VerticalCenterBox className="gap-y-[16px] pt-[88px]">
-        <h2 className="px-[30px] text-center font-inter text-2xl font-extrabold text-neutral-700">
+        <h2 className="px-[30px] text-center font-display text-2xl font-extrabold text-neutral-700">
           {replaceNewlines(pageContent.content.parsed.matters.title)}
         </h2>
 
         <div
-          className="px-12 sm:px-20 md:px-32 xl:px-96 pt-10 whitespace-pre-wrap font-inter text-lg text-[17px] text-neutral-700"
+          className="whitespace-pre-wrap px-12 pt-10 font-display text-[17px] text-lg text-neutral-700 sm:px-20 md:px-32 xl:px-96"
           dangerouslySetInnerHTML={dangerouslySetInnerHTML}
         ></div>
       </VerticalCenterBox>
@@ -184,18 +117,19 @@ const Collection = async (props: { params: PageParams }) => {
                     xl:gap-y-[128px]
                     "
         >
-          {[
-            pageContent.thumbnail,
-            ...(pageContent.piecesWithoutThumbnail ?? []),
-          ].map((piece) => (
-            <Piece piece={piece} key={getUrlFromPiece(piece)} />
-          ))}
+          <CollectionPieces
+            gap={80}
+            pieces={[
+              pageContent.thumbnail,
+              ...(pageContent.piecesWithoutThumbnail ?? []),
+            ]}
+          />
         </VerticalCenterBox>
 
         <div
           className="pb-[74px]
                     pl-[40px]
-                    w-responsive-screen
+                    w-full
                     sm:pl-[50px]
                     md:pl-[100px]
                     lg:pl-[150px]
@@ -203,7 +137,7 @@ const Collection = async (props: { params: PageParams }) => {
         >
           <BackButton
             locale={pageContent.locale}
-            collectionName={props.params.collection}
+            collectionName={params.collection}
           />
         </div>
       </VerticalCenterBox>

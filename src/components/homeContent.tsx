@@ -11,33 +11,32 @@ const HomeContent = (props: HomeProps) => (
     <Scaffold>
       <Hero localizedCopy={props.localizedCopy} />
       <ExpositionText
-        className="pt-[10px]
-                                   mobile_sm:pt-[25px]
-                                   mobile_md:pt-[40px]
-                                   mobile_lg:pt-[55px]
-                                   sm:pt-[70px]
-                                   md:pt-[85px]
-                                   lg:pt-[100px]
-                                   xl:pt-[118px]"
+        className="px-[clamp(16px,5vw,80px)] py-12 lg:py-16"
         locale={props.locale}
         localizedCopy={props.localizedCopy}
       />
-      <div className="pt-28">
-        <Collections
-          collections={props.collections}
+      <section className="px-[clamp(16px,5vw,80px)] py-12">
+        <h2 className="mb-8 text-center font-display text-xl font-normal italic text-charcoal lg:mb-12 lg:text-2xl">
+          {props.localizedCopy.home.about.selectedWork}
+        </h2>
+        <div className="min-h-[200px] px-4">
+          <Collections collections={props.collections} locale={props.locale} />
+        </div>
+      </section>
+      <section className="px-[clamp(16px,5vw,80px)] py-12">
+        <h2 className="mb-8 text-center font-display text-xl font-normal text-charcoal lg:text-2xl">
+          {props.localizedCopy.home.callToAction.howCanIHelpYou}
+        </h2>
+        <ContactForm
+          className="mx-auto max-w-2xl"
           locale={props.locale}
-          orderFile={props.orderFile}
+          copy={props.localizedCopy}
         />
-      </div>
-      <h2 className="mobile-sm:text-sm mobile_md:text-md pt-20 text-center font-inter text-[0.8rem] font-medium leading-normal text-black mobile_lg:text-xl sm:text-3xl">
-        {props.localizedCopy.home.callToAction.howCanIHelpYou}
-      </h2>
-      <ContactForm
-        className="pt-8"
-        locale={props.locale}
-        copy={props.localizedCopy}
+      </section>
+      <BottomBar
+        className="px-[clamp(16px,5vw,80px)] pb-12 pt-8"
+        localizedCopy={props.localizedCopy}
       />
-      <BottomBar className="pb-12 pt-20" localizedCopy={props.localizedCopy} />
     </Scaffold>
   </>
 );

@@ -2,7 +2,13 @@
 
 import ExportedImage from "next-image-export-optimizer";
 
-import { forwardRef, useRef, type PropsWithChildren } from "react";
+import {
+  forwardRef,
+  useRef,
+  useState,
+  useEffect,
+  type PropsWithChildren,
+} from "react";
 import { type YouTubeConfig } from "react-player/youtube";
 import { useHover } from "usehooks-ts";
 import { type Locale } from "~/localization/localization";
@@ -23,36 +29,32 @@ const HoverablePiecePreview = forwardRef<
 >((props: HoverablePieceProps, ref) => {
   return (
     <LinkWithLocale
-      className="group relative flex aspect-[364/205] max-h-[205px] max-w-[364px] items-center overflow-hidden"
+      className="group relative block overflow-hidden bg-surface shadow-sm transition-all duration-300 hover:shadow-lg"
       href={props.url}
       ref={ref}
       locale={props.locale}
     >
-      <div
-        className="absolute
-                            flex
-                            h-full
-                            w-full
-                            items-center
-                            justify-center whitespace-pre-wrap
-                            bg-black/70
-                            p-6
-                            text-center
-                            font-inter
-                            text-[12px]
-                            font-medium
-                            text-white
-                            opacity-0
-                            transition-opacity
-                            duration-150
-                            ease-in
-                            group-hover:opacity-100
-                            mobile_md:text-[22px]
-                            sm:text-[24px]"
-      >
-        {props.collectionName}
+      <div className="relative aspect-[16/10] overflow-hidden">
+        <div
+          className="absolute
+                        inset-0
+                        z-10
+                        flex
+                        items-center
+                        justify-center
+                        bg-charcoal/80
+                        opacity-0
+                        backdrop-blur-[2px]
+                        transition-opacity
+                        duration-300
+                        group-hover:opacity-100"
+        >
+          <span className="px-6 py-4 font-hepta_slab text-[clamp(0.75rem,2vw,1.25rem)] font-semibold text-white">
+            {props.collectionName}
+          </span>
+        </div>
+        {props.children}
       </div>
-      {props.children}
     </LinkWithLocale>
   );
 });
@@ -66,6 +68,22 @@ export const PiecePreview = (props: {
   const piece = props.piece;
   const ref = useRef<HTMLAnchorElement>(null);
   const isHovering = useHover(ref);
+  const [shouldPlay, setShouldPlay] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (isHovering) {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => setShouldPlay(true), 150);
+    } else {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => setShouldPlay(false), 300);
+    }
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [isHovering]);
+
   return (
     <HoverablePiecePreview
       locale={props.locale}
@@ -76,7 +94,7 @@ export const PiecePreview = (props: {
       <PieceThumbnail
         className="h-full w-full"
         piece={piece}
-        shouldPlay={isHovering}
+        shouldPlay={shouldPlay}
         collectionId={props.collectionName}
       />
     </HoverablePiecePreview>
@@ -127,7 +145,11 @@ function getThumbnail(url: string, quality?: string) {
 const pieceThumbnailSizes = `100svw, screen(mobile_lg) 364px`;
 
 const PieceThumbnail = (
-  props: PropsWithClassName<{ piece: PieceType; shouldPlay: boolean, collectionId: string }>,
+  props: PropsWithClassName<{
+    piece: PieceType;
+    shouldPlay: boolean;
+    collectionId: string;
+  }>,
 ) => {
   const piece = props.piece;
   const url = getUrlFromPiece(piece);
@@ -150,6 +172,14 @@ const PieceThumbnail = (
         disablekb: 1,
         modestbranding: 1,
         showinfo: 0,
+        rel: 0,
+        iv_load_policy: 3,
+        cc_load_policy: 0,
+        fs: 0,
+        playsinline: 1,
+      },
+      embedOptions: {
+        hideFullscreenButton: true,
       },
     };
 
@@ -164,12 +194,13 @@ const PieceThumbnail = (
               alt={piece.value.name}
               fill={true}
               sizes={pieceThumbnailSizes}
-              unoptimized={true}
               className={`${props.className}
                                   absolute
+                                  z-20
                                   object-cover
                                   opacity-100
                                   transition-opacity
+                                  delay-[250ms]
                                   duration-300
                                   ease-in-out
                                   group-hover:opacity-0`}
@@ -213,9 +244,11 @@ const PieceThumbnail = (
             sizes={pieceThumbnailSizes}
             className={`${props.className}
                               absolute
+                              z-20
                               object-cover
                               opacity-100
                               transition-opacity
+                              delay-[250ms]
                               duration-300
                               ease-in-out
                               group-hover:opacity-0`}
@@ -229,6 +262,7 @@ const PieceThumbnail = (
             youtubeConfig={youTubeConfig}
             muted={true}
             controls={false}
+            hideOverlay={true}
           />
         </>
       );

@@ -25,6 +25,7 @@ export const PieceVideo = (
     width?: number;
     height?: number;
     youtubeConfig: YouTubeConfig;
+    hideOverlay?: boolean;
   }>,
 ) => {
   if (props.url.includes("youtube")) {
@@ -40,6 +41,9 @@ export const PieceVideo = (
           playing={props.playing}
           config={props.youtubeConfig}
         />
+        {props.hideOverlay && (
+          <div className="pointer-events-none absolute inset-0 z-10" />
+        )}
       </div>
     );
   } else if (props.url.includes("vimeo")) {
@@ -54,6 +58,9 @@ export const PieceVideo = (
           loop={true}
           playing={props.playing}
         />
+        {props.hideOverlay && (
+          <div className="pointer-events-none absolute inset-0 z-10" />
+        )}
       </div>
     );
   }
