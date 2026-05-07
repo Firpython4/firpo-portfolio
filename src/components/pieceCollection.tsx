@@ -26,11 +26,18 @@ const pieceMapper =
     };
   };
 
-export const Collections = (props: {
+export const CollectionsList = (props: {
   collections: SerializableCollectionLocalized[];
   locale: Locale;
 }) => {
-  const thumbnails: CollectionItem[] = props.collections.flatMap(
+  const sortedCollections = [...props.collections].sort((a, b) => {
+    if (a.order === undefined && b.order === undefined) return 0;
+    if (a.order === undefined) return 1;
+    if (b.order === undefined) return -1;
+    return a.order - b.order;
+  });
+
+  const thumbnails = sortedCollections.flatMap(
     (collection) => {
       return [
         pieceMapper(

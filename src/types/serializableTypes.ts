@@ -13,6 +13,8 @@ export type SerializableCollectionLocalized = {
   thumbnail: PieceType;
   pieces?: PieceType[];
   localizedTitle: string;
+  order?: number;
+  orderById?: number;
 };
 
 export type HomeProps = {

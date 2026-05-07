@@ -12,6 +12,14 @@ export type HomeProps = {
 export async function getIndexPageContent(locale: Locale) {
   const cms = await getOrCacheCompiledCms();
 
+  const orderContent = cms.order?.parsed?.toString();
+  const orderMap = new Map<string, number>();
+  if (orderContent) {
+    orderContent.split("\n").forEach((name, index) => {
+      orderMap.set(name.trim(), index);
+    });
+  }
+
   const collections: SerializableCollectionLocalized[] =
     cms.public.parsed.collections.parsed.map((col) => {
       return {
@@ -19,6 +27,7 @@ export async function getIndexPageContent(locale: Locale) {
         thumbnail: col.parsed.thumbnail.parsed.thumbnail,
         pieces: col.parsed.pieces?.parsed,
         localizedTitle: col.parsed[locale].parsed.matters.title,
+        order: orderMap.get(col.name),
       };
     });
 

@@ -3,7 +3,7 @@ import { BottomBar } from "./bottomBar";
 import ContactForm from "./contactForm";
 import { ExpositionText } from "./expositionText";
 import { Hero } from "./hero";
-import { Collections } from "./pieceCollection";
+import { CollectionsList } from "./pieceCollection";
 import Scaffold from "./scaffold";
 
 const HomeContent = (props: HomeProps) => (
@@ -20,7 +20,7 @@ const HomeContent = (props: HomeProps) => (
           {props.localizedCopy.home.about.selectedWork}
         </h2>
         <div className="min-h-[200px] px-4">
-          <Collections collections={props.collections} locale={props.locale} />
+          <CollectionsList collections={props.collections} locale={props.locale} />
         </div>
       </section>
       <section className="px-[clamp(16px,5vw,80px)] py-12">
