@@ -22,7 +22,7 @@ export const generateMetadata = async (props: { params: Promise<LocalePageParams
   const metadata: Metadata = {
     ...commonMetadata,
     title:
-      "Marcelo Firpo: CMO, Diretor de Criação, Consultor Criativo, Redator, Roteirista",
+      "Marcelo Firpo: Diretor de Criação, Consultor Criativo, Redator, Roteirista",
     description: pageContent.localizedCopy.home.meta.description,
   };
   return metadata;

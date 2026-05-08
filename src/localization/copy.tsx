@@ -40,11 +40,11 @@ export type LocalizedCopy = {
 export const en: LocalizedCopy = {
   home: {
     meta: {
-      description: `Marcelo Firpo's Portfolio, a CMO, Creative Director, Creative Consultant, Copywriter, and Screenwriter. I have more than 30 years of experience in communication, advertising, and branding. I've been awarded at multiple festivals. Get in touch now.`,
+      description: `Marcelo Firpo's Portfolio, a Creative Director, Creative Consultant, Copywriter, and Screenwriter. I have more than 30 years of experience in communication, advertising, and branding. I've been awarded at multiple festivals. Get in touch now.`,
     },
     hero: {
       name: `Marcelo Firpo`,
-      subtitle: `CMO, Creative Director, Creative Consultant, Copywriter, Screenwriter, Songwriter`,
+      subtitle: `Creative Director, Creative Consultant, Copywriter, Screenwriter, Songwriter`,
     },
     about: {
 expositionFirst: `Big brands need to translate complex contexts into simple yet powerful concepts.
@@ -94,11 +94,11 @@ Does your brand need more clarity? I can help.`,
 export const pt: LocalizedCopy = {
   home: {
     meta: {
-      description: `Portfolio de Marcelo Firpo: CMO, Diretor de Criação, Consultor Criativo, Redator, Roteirista. Tenho mais de 30 de experiência em comunicação, publicidade e branding, e já fui premiado em múltiplos festivais. Entre em contato agora.`,
+      description: `Portfolio de Marcelo Firpo: Diretor de Criação, Consultor Criativo, Redator, Roteirista. Tenho mais de 30 de experiência em comunicação, publicidade e branding, e já fui premiado em múltiplos festivais. Entre em contato agora.`,
     },
     hero: {
       name: `Marcelo Firpo`,
-      subtitle: `CMO, Diretor de Criação, Consultor Criativo, Redator, Roteirista, Compositor`,
+      subtitle: `Diretor de Criação, Consultor Criativo, Redator, Roteirista, Compositor`,
     },
     about: {
       expositionFirst: `Grandes marcas precisam traduzir contextos complexos na forma de conceitos simples, mas poderosos.
