@@ -32,9 +32,8 @@ const HeroText = (props: PropsWithLocalizedCopy & { className?: string }) => (
                      text-left
                      font-display
                      text-[clamp(0.5rem,2vw,2rem)]
-                     font-bold
                      not-italic
-                     leading-[clamp(14px,4vw,50px)]
+                     leading-[clamp(14px,2vw,50px)]
                      text-white
                      animate-duration-700
                      max-[210px]:hidden"

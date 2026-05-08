@@ -12,8 +12,8 @@ export default {
         large: "var(--large-font)",
       },
       fontFamily: {
-        display: ["var(--font-playfair)"],
-        body: ["var(--font-dm-sans)"],
+        display: ["var(--font-inter)"],
+        body: ["var(--font-inter)"],
         hepta_slab: ["var(--font-hepta-slab)"],
         inter: ["var(--font-inter)"],
       },
