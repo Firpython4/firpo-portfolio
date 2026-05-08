@@ -4,38 +4,6 @@ import { type PropsWithLocalizedCopy } from "../types/misc";
 import { VerticalCenterBox } from "./verticalCenterBox";
 import { NavBar } from "./navBar";
 
-const HeroTitle = (props: PropsWithLocalizedCopy) => (
-  <h2
-    className="animate-fade-up
-                   font-display
-                   text-large
-                   font-semibold
-                   not-italic
-                   leading-[clamp(20px,5vw,98px)]
-                   tracking-[clamp(-2px,-3vw,-3.745px)]
-                   text-white
-                   animate-duration-300"
-  >
-    {props.localizedCopy.home.hero.name}
-  </h2>
-);
-
-const HeroSubtitle = (props: PropsWithLocalizedCopy) => (
-  <h3
-    className="animate-fade-up
-               font-display
-               text-[clamp(0.5rem,2vw,2rem)]
-               font-bold
-               not-italic
-               leading-[clamp(14px,4vw,50px)]
-               text-white
-               animate-duration-700
-               max-[210px]:hidden"
-  >
-    {props.localizedCopy.home.hero.subtitle}
-  </h3>
-);
-
 const HeroText = (props: PropsWithLocalizedCopy & { className?: string }) => (
   <div
     className={`flex flex-col items-center gap-y-[clamp(8px,3vw,40px)] max-[200px]:text-center ${props.className}`}
@@ -45,7 +13,7 @@ const HeroText = (props: PropsWithLocalizedCopy & { className?: string }) => (
         <h2
           className="w-full
                          animate-fade-up
-                         text-center
+                         text-left
                          font-display
                          text-large
                          font-semibold
@@ -61,7 +29,7 @@ const HeroText = (props: PropsWithLocalizedCopy & { className?: string }) => (
           className="mt-4
                      w-full
                      animate-fade-up
-                     text-center
+                     text-left
                      font-display
                      text-[clamp(0.5rem,2vw,2rem)]
                      font-bold
