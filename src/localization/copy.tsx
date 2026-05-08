@@ -47,10 +47,17 @@ export const en: LocalizedCopy = {
       subtitle: `CMO, Creative Director, Creative Consultant, Copywriter, Screenwriter, Songwriter`,
     },
     about: {
-      expositionFirst: `I have more than 30 years of experience in communication, advertising, and branding. I've been awarded at multiple festivals.
-                As CMO, I am responsible for marketing and prospecting strategies for a global IT and data solutions company, serving clients in the US, Europe, and LATAM.
-                As Creative Director, I worked with major brands in the Brazilian market in segments such as banking/finance, energy, public administration, healthcare, education, services, and retail.
-                Working happily from Lisbon, Portugal, I offer services in projects related to creativity (branding, campaigns, actions, creative direction, copywriting) and text production in general (audiovisual entertainment-related projects are especially welcome).`,
+expositionFirst: `Big brands need to translate complex contexts into simple yet powerful concepts.
+
+And that's exactly what I enjoy most.
+
+With an extensive background in creative direction and branding, awarded at multiple festivals and tested across diverse industries, I've learned to transform what is dense and difficult into clear, efficient campaigns and concepts that move people and deliver results for brands.
+
+This ability took me beyond creation. I had a long experience at a global data and AI solutions startup, where I was responsible for marketing and growth strategies across markets in the United States, Europe, and Latin America.
+
+Today I work from Lisbon on creative strategy, branding, content, and advertising projects.
+
+Does your brand need more clarity? I can help.`,
       someAttendedClients: `Some customers served:`,
       somePieces: `Some pieces:`,
       clients: `Telefónica Group, Petrobras, Vivo, Braskem Group, Edenred, Aegea Group, Banrisul, Gerdau Group, Midea-Carrier,
@@ -94,17 +101,17 @@ export const pt: LocalizedCopy = {
       subtitle: `CMO, Diretor de Criação, Consultor Criativo, Redator, Roteirista, Compositor`,
     },
     about: {
-      expositionFirst: `Tenho
-                mais de 30 anos de experiência em comunicação, publicidade e branding, e já fui premiado em múltiplos
-                festivais.
-                Como CMO, sou o responsável pelo marketing e estratégias de prospecção de uma empresa
-                global de soluções de TI e dados, atendendo a clientes nos EUA, Europa e LATAM.
-                Como Diretor de
-                Criação, trabalhei com grandes marcas do mercado brasileiro em segmentos como financeiro, energia,
-                administração pública, saúde, educação, serviços e varejo.Trabalhando feliz a partir de Lisboa,
-                Portugal, ofereço serviços em projetos relacionados a criatividade (branding, campanhas, ações,
-                direção de criação, redação) e produção textual em geral (projetos na área de entretenimento
-                audiovisual são especialmente bem-vindos).`,
+      expositionFirst: `Grandes marcas precisam traduzir contextos complexos na forma de conceitos simples, mas poderosos.
+
+E isso é o que eu mais gosto de fazer.
+
+Com uma trajetória extensa em criação e branding, premiação em diversos festivais e testada em segmentos dos mais variados, aprendi a transformar o que é denso e difícil em conceitos e campanhas claros e eficientes, que mobilizam as pessoas e geram resultados para as marcas.
+
+Essa capacidade me levou além da criação. Tive uma longa experiência numa startup global de soluções de dados e IA, na qual fui o responsável pelo marketing e por estratégias de crescimento em mercados nos Estados Unidos, Europa e América Latina. 
+
+Hoje trabalho a partir de Lisboa em projetos de estratégia criativa, branding, conteúdo e publicidade.
+
+Sua marca precisa de mais clareza? Eu posso ajudar.`,
       someAttendedClients: `Alguns clientes atendidos:`,
       somePieces: `Alguns trabalhos:`,
       clients: `Grupo Telefónica, Petrobras, Vivo, Grupo Braskem, Edenred, Aegea, Banrisul, Grupo Gerdau, Midea-Carrier,

@@ -23,7 +23,7 @@ export const ExpositionText = (
     >
       <div className="lg:w-1/2">
         <p
-          className="font-display
+          className="whitespace-pre-line font-display
                      text-[clamp(1rem,2.5vw,1.5rem)]
                      font-normal
                      leading-[1.6]
