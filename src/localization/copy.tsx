@@ -40,7 +40,7 @@ export type LocalizedCopy = {
 export const en: LocalizedCopy = {
   home: {
     meta: {
-      description: `Marcelo Firpo's Portfolio, a Creative Director, Creative Consultant, Copywriter, and Screenwriter. I have more than 30 years of experience in communication, advertising, and branding. I've been awarded at multiple festivals. Get in touch now.`,
+      description: `Marcelo Firpo: creative director, creative consultant, copywriter, screenwriter and composer. Extensive experience in communication and branding, working with brands from the most diverse sectors.`,
     },
     hero: {
       name: `Marcelo Firpo`,
@@ -94,7 +94,7 @@ Does your brand need more clarity? I can help.`,
 export const pt: LocalizedCopy = {
   home: {
     meta: {
-      description: `Portfolio de Marcelo Firpo: Diretor de Criação, Consultor Criativo, Redator, Roteirista. Tenho mais de 30 de experiência em comunicação, publicidade e branding, e já fui premiado em múltiplos festivais. Entre em contato agora.`,
+      description: `Marcelo Firpo: diretor de criação, consultor criativo, redator, roteirista e compositor. Longa experiência em comunicação e branding, atendendo a marcas dos mais diferentes segmentos.`,
     },
     hero: {
       name: `Marcelo Firpo`,
