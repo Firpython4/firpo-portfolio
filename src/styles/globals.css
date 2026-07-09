@@ -1,62 +1,57 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-input {
-  display: block;
-  width: 100%;
+@theme {
+  --font-sans: var(--font-raleway);
+  --font-serif: var(--font-raleway-heading);
+  --color-ink: #4081a1;
+  --color-dawn: #F5F3ED;
+  --color-sunrise: #FCC03E;
+  --color-seafoam: #9a0f38;
+  --color-mist: #E5E2DB;
 }
 
 :root {
-  /* Colors */
-  --color-bg: #F7F5F2;
-  --color-surface: #FFFFFF;
-  --color-text: #1C1C1C;
-  --color-text-muted: #7A7A7A;
-  --color-accent: #A0522D;
-  --color-accent-dark: #8B4513;
-  --color-border: #E8E6E3;
-  --color-white: #ffffff;
-
-  /* Typography - Fluid scale */
-  --text-xs: clamp(0.75rem, 1vw, 0.875rem);
-  --text-sm: clamp(0.875rem, 1.5vw, 1rem);
-  --text-base: clamp(1rem, 2vw, 1.25rem);
-  --text-lg: clamp(1.25rem, 3vw, 1.5rem);
-  --text-xl: clamp(1.5rem, 4vw, 2rem);
-  --text-2xl: clamp(2rem, 6vw, 3rem);
-  --text-3xl: clamp(2.5rem, 8vw, 4rem);
-  --text-4xl: clamp(3rem, 10vw, 6rem);
-
-  /* Legacy fluid typography (for existing components) */
-  --small-font: clamp(0.5rem, 1vw, 1rem);
-  --medium-font: clamp(0.5rem, 3vw, 2.75rem);
-  --large-font: clamp(1.5rem, 6vw, 6.7rem);
-
-  /* Spacing - 8px base */
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-6: 1.5rem;
-  --space-8: 2rem;
-  --space-10: 2.5rem;
-  --space-12: 3rem;
-  --space-16: 4rem;
-  --space-20: 5rem;
-  --space-24: 6rem;
-
-  /* Fluid spacing for larger gaps */
-  --space-fluid-xs: clamp(0.5rem, 2vw, 1rem);
-  --space-fluid-sm: clamp(1rem, 3vw, 1.5rem);
-  --space-fluid-md: clamp(1.5rem, 5vw, 3rem);
-  --space-fluid-lg: clamp(3rem, 8vw, 6rem);
-  --space-fluid-xl: clamp(5rem, 12vw, 10rem);
+  --background: var(--color-dawn);
+  --foreground: var(--color-ink);
 }
 
-/* Apply colors */
 body {
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  font-family: var(--font-inter);
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-raleway), sans-serif;
+  overflow-x: hidden;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideOut {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.menu-slide-in {
+  animation: slideIn 0.3s ease forwards;
+}
+
+.menu-slide-out {
+  animation: slideOut 0.3s ease forwards;
 }

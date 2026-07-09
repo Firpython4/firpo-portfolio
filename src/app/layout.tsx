@@ -1,14 +1,14 @@
 import { type PropsWithChildren } from "react";
-import { inter } from "~/fonts/inter";
+import { raleway, ralewayHeading } from "~/fonts/raleway";
 import "~/styles/globals.css";
 
 const RootLayout = (props: PropsWithChildren) => {
   return (
     <html
       lang="pt"
-      className={`${inter.variable}`}
+      className={`${raleway.variable} ${ralewayHeading.variable}`}
     >
-      <body className="relative bg-background text-charcoal antialiased">
+      <body className="relative bg-dawn text-ink antialiased">
         {props.children}
       </body>
     </html>

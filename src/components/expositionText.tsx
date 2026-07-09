@@ -3,7 +3,7 @@ import { type PropsWithLocalizedCopy } from "~/types/misc";
 import type PropsWithClassName from "../types/propsWithClassName";
 
 const ClientTag = ({ name }: { name: string }) => (
-  <span className="inline-block border border-charcoal/50 px-3 py-1 font-body text-xs tracking-wide text-charcoal transition-colors hover:border-sienna hover:text-sienna">
+  <span className="inline-block border border-ink/30 px-3 py-[0.35rem] font-sans text-[0.7rem] tracking-wide text-ink transition-colors hover:border-sunrise hover:text-sunrise">
     {name.trim()}
   </span>
 );
@@ -18,16 +18,14 @@ export const ExpositionText = (
   const clientList = parseClients(props.localizedCopy.home.about.clients);
 
   return (
-    <section
-      className={`${props.className} flex w-full flex-col gap-10 lg:flex-row lg:gap-16`}
-    >
+    <div className="flex w-full flex-col gap-10 lg:flex-row lg:gap-16">
       <div className="lg:w-1/2">
         <p
-          className="whitespace-pre-line font-display
-                     text-[clamp(1rem,2.5vw,1.5rem)]
+          className="whitespace-pre-line font-sans
+                     text-[clamp(1rem,1.5vw,1.15rem)]
                      font-normal
-                     leading-[1.6]
-                     text-charcoal"
+                     leading-[1.65]
+                     text-[#5A5855]"
         >
           {props.localizedCopy.home.about.expositionFirst}
         </p>
@@ -36,12 +34,12 @@ export const ExpositionText = (
       <div className="lg:w-1/2 lg:pt-8">
         <p
           className="mb-6
-                     font-body
-                     text-xs
+                     font-sans
+                     text-[0.65rem]
                      font-medium
                      uppercase
-                     tracking-[0.15em]
-                     text-charcoal"
+                     tracking-[0.18em]
+                     text-mist"
         >
           {props.localizedCopy.home.about.someAttendedClients}
         </p>
@@ -51,6 +49,6 @@ export const ExpositionText = (
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 };

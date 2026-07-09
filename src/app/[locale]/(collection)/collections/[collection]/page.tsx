@@ -1,9 +1,5 @@
 import { type Metadata } from "next";
 
-import ExportedImage from "next-image-export-optimizer";
-
-import { VerticalCenterBox } from "~/components/verticalCenterBox";
-
 import {
   getCollectionPageContent,
   getCollectionsStaticPaths,
@@ -17,13 +13,14 @@ import { type CollectionPageParams } from "~/types/params";
 
 import commonMetadata from "../../../../../metadata";
 
-import type PropsWithClassName from "../../../../../types/propsWithClassName";
-
 import { replaceNewlines } from "~/cms/cmsCompiler";
 
 import { orderByConfig, pieceNameProvider } from "~/cms/ordering";
 import Scaffold from "~/components/scaffold";
 import { CollectionPieces } from "~/components/collectionPieces";
+import { SiteNav } from "~/components/siteNav";
+import { Reveal } from "~/components/Reveal";
+import { emailLink } from "~/config";
 
 export const generateStaticParams = async () => {
   return await getCollectionsStaticPaths();
@@ -48,14 +45,10 @@ export const generateMetadata = async (props: { params: Promise<PageParams> }) =
 
 import { ArrowLeft } from "lucide-react";
 
-const BackIcon = (props: PropsWithClassName) => (
-  <ArrowLeft className={props.className} />
-);
-
-const BackButton = (props: { locale: Locale; collectionName: string }) => {
+const BackButton = (props: { locale: Locale; collectionName: string; className?: string }) => {
   return (
     <LinkWithLocale href={`/#${props.collectionName}`} locale={props.locale}>
-      <BackIcon className="h-8 w-8 text-neutral-700" />
+      <ArrowLeft className={`h-6 w-6 text-ink hover:text-sunrise transition-colors ${props.className}`} />
     </LinkWithLocale>
   );
 };
@@ -76,47 +69,42 @@ const Collection = async (props: { params: Promise<PageParams> }) => {
     __html: pageContent.content.parsed.html,
   };
 
+  const locale = pageContent.locale as Locale;
+
   return (
-    <Scaffold>
-      <div
-        className="
-        pl-[40px]
-        pt-[44px]
-        w-full
-        sm:pl-[50px]
-        md:pl-[100px]
-        lg:pl-[150px]
-        xl:pl-[411px]"
-      >
-        <BackButton
-          locale={pageContent.locale}
-          collectionName={params.collection}
-        />
-      </div>
+    <>
+      <SiteNav
+        navLinks={locale === "pt"
+          ? [{ label: "Início", href: "/" }]
+          : [{ label: "Home", href: "/" }]
+        }
+        ctaLabel={locale === "pt" ? "Contacto" : "Contact"}
+        ctaHref={emailLink}
+        locale={locale}
+      />
+      <Scaffold>
+        <div className="py-16 lg:py-32 px-6 lg:px-12 bg-dawn">
+          <div className="max-w-[70ch] mx-auto">
+            <Reveal>
+              <BackButton
+                locale={locale}
+                collectionName={params.collection}
+                className="mb-8 lg:mb-12"
+              />
+            </Reveal>
+            <Reveal>
+              <h2 className="font-serif font-semibold text-[clamp(1.8rem,4vw,3.6rem)] text-ink leading-[1.1] tracking-tight">
+                {replaceNewlines(pageContent.content.parsed.matters.title)}
+              </h2>
+            </Reveal>
+            <div
+              className="mt-6 lg:mt-8 font-sans text-[clamp(1rem,1.5vw,1.15rem)] text-[#5A5855] leading-[1.65] max-w-[70ch]"
+              dangerouslySetInnerHTML={dangerouslySetInnerHTML}
+            />
+          </div>
+        </div>
 
-      <VerticalCenterBox className="gap-y-[16px] pt-[88px]">
-        <h2 className="px-[30px] text-center font-display text-2xl font-extrabold text-neutral-700">
-          {replaceNewlines(pageContent.content.parsed.matters.title)}
-        </h2>
-
-        <div
-          className="whitespace-pre-wrap px-12 pt-10 font-display text-[17px] text-lg text-neutral-700 sm:px-20 md:px-32 xl:px-96"
-          dangerouslySetInnerHTML={dangerouslySetInnerHTML}
-        ></div>
-      </VerticalCenterBox>
-
-      <VerticalCenterBox className="gap-y-[30px]">
-        <VerticalCenterBox
-          className="gap-y-[32px]
-                    pb-[80px]
-                    pt-20
-                    sm:gap-y-[96px]
-                    sm:pb-[156px]
-                    md:gap-y-[128px]
-                    lg:gap-y-[128px]
-                    xl:gap-y-[128px]
-                    "
-        >
+        <div className="py-16 lg:py-32 px-6 lg:px-12 bg-dawn flex flex-col items-center">
           <CollectionPieces
             gap={80}
             pieces={[
@@ -124,24 +112,24 @@ const Collection = async (props: { params: Promise<PageParams> }) => {
               ...(pageContent.piecesWithoutThumbnail ?? []),
             ]}
           />
-        </VerticalCenterBox>
-
-        <div
-          className="pb-[74px]
-                    pl-[40px]
-                    w-full
-                    sm:pl-[50px]
-                    md:pl-[100px]
-                    lg:pl-[150px]
-                    xl:pl-[411px]"
-        >
-          <BackButton
-            locale={pageContent.locale}
-            collectionName={params.collection}
-          />
+          <div className="mt-12 lg:mt-20">
+            <BackButton
+              locale={locale}
+              collectionName={params.collection}
+            />
+          </div>
         </div>
-      </VerticalCenterBox>
-    </Scaffold>
+
+        <footer className="py-6 lg:py-8 px-6 lg:px-12 bg-ink flex flex-col md:flex-row items-center justify-between gap-4 md:gap-0 border-t border-white/[0.06]">
+          <div className="font-serif text-[1rem] lg:text-[1.1rem] text-dawn">
+            Marcelo Firpo
+          </div>
+          <div className="text-[1rem] text-mist opacity-50">
+            © {new Date().getFullYear()} Marcelo Firpo
+          </div>
+        </footer>
+      </Scaffold>
+    </>
   );
 };
 

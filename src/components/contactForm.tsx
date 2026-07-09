@@ -46,7 +46,7 @@ const ContactFormValues = (errors: ContactFormErrors) => {
 
 export type ContactFormType = z.infer<ReturnType<typeof ContactFormValues>>;
 
-const inputBaseClass = "w-full border-0 border-b-2 border-charcoal/20 bg-transparent py-3 font-body text-charcoal placeholder-charcoal/40 focus:border-sienna focus:outline-none focus:ring-0 transition-colors duration-200";
+const inputBaseClass = "w-full border-0 border-b-2 border-ink/20 bg-transparent py-3 font-sans text-ink placeholder-ink/40 focus:border-sunrise focus:outline-none focus:ring-0 transition-colors duration-200";
 
 function FormItem<
   FieldValuesType extends FieldValues,
@@ -64,7 +64,7 @@ function FormItem<
   }>,
 ) {
   const errorMessages = props.errors[props.name]?.message;
-  
+
   return (
     <div className={`flex flex-col ${props.className}`}>
       {typeof errorMessages == "string" && (
@@ -96,7 +96,7 @@ function FormArea<
   }>,
 ) {
   const errorMessages = props.errors[props.name]?.message;
-  
+
   return (
     <div className={`flex flex-col ${props.className}`}>
       {typeof errorMessages == "string" && (
@@ -111,9 +111,9 @@ function FormArea<
   );
 }
 
-const ContactForm = (
+export function ContactForm(
   props: PropsWithClassName<{ locale: Locale; copy: LocalizedCopy }>,
-) => {
+) {
   const formProps: UseFormProps<ContactFormType> = {
     resolver: zodResolver(
       ContactFormValues(props.copy.home.contactForm.errors),
@@ -149,14 +149,14 @@ const ContactForm = (
       className={`${props.className} flex flex-col items-center`}
     >
       {isSubmitSuccessful && (
-        <p className="text-sienna font-body">{contactForm.submitSuccessful}</p>
+        <p className="text-ink font-sans">{contactForm.submitSuccessful}</p>
       )}
       <form
         className="w-full max-w-md"
         onSubmit={handleSubmit(submitContactForm)}
       >
-        <div className="flex flex-col gap-8">
-          <div className="grid grid-cols-2 gap-8">
+        <div className="flex flex-col gap-6">
+          <div className="grid grid-cols-2 gap-6">
             <FormItem
               placeholder={contactForm.firstName}
               name="First Name"
@@ -193,9 +193,9 @@ const ContactForm = (
             errors={errors}
           />
         </div>
-        <div className="mt-8 flex justify-center">
+        <div className="mt-6 flex justify-start">
           <input
-            className="cursor-pointer border border-charcoal px-8 py-3 font-body text-sm font-medium uppercase tracking-widest text-charcoal transition-all duration-200 hover:bg-charcoal hover:text-white"
+            className="cursor-pointer bg-ink text-dawn px-6 lg:px-8 py-3 lg:py-4 font-sans text-[clamp(0.75rem,1.25vw,1rem)] font-medium no-underline rounded-[2px] hover:bg-dawn hover:text-ink transition-all"
             type="submit"
             value={props.copy.home.contactForm.send}
             lang={props.locale}
@@ -204,6 +204,4 @@ const ContactForm = (
       </form>
     </section>
   );
-};
-
-export default ContactForm;
+}

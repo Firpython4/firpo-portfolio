@@ -4,7 +4,6 @@ import { getIndexPageContent } from "../../../index";
 import { type LocalePageParams } from "~/types/params";
 import { locales } from "../../../localization/localization";
 import commonMetadata from "../../../metadata";
-import { collectionNameProvider, orderByConfig } from "~/cms/ordering";
 
 type PageParams = LocalePageParams;
 

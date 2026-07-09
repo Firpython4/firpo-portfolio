@@ -29,7 +29,7 @@ const HoverablePiecePreview = forwardRef<
 >((props: HoverablePieceProps, ref) => {
   return (
     <LinkWithLocale
-      className="group relative block overflow-hidden bg-surface shadow-sm transition-all duration-300 hover:shadow-lg"
+      className="group relative block overflow-hidden bg-dawn transition-all duration-300 hover:bg-white"
       href={props.url}
       ref={ref}
       locale={props.locale}
@@ -42,14 +42,14 @@ const HoverablePiecePreview = forwardRef<
                         flex
                         items-center
                         justify-center
-                        bg-charcoal/80
+                        bg-ink/80
                         opacity-0
                         backdrop-blur-[2px]
                         transition-opacity
                         duration-300
                         group-hover:opacity-100"
         >
-          <span className="px-6 py-4 font-hepta_slab text-[clamp(0.75rem,2vw,1.25rem)] font-semibold text-white">
+          <span className="px-6 py-4 font-serif text-[clamp(0.75rem,2vw,1.25rem)] font-semibold text-dawn">
             {props.collectionName}
           </span>
         </div>
