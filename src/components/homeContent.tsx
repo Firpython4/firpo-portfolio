@@ -10,21 +10,13 @@ import Scaffold from "./scaffold";
 import { emailLink } from "~/config";
 import { type Locale } from "~/localization/localization";
 
-function getNavLinks(locale: Locale) {
-  if (locale === "pt") {
-    return [
-      { label: "Trabalhos", href: "#work" },
-      { label: "Contacto", href: "#contact" },
-    ];
-  }
+function getNavLinks(locale: Locale, localizedCopy: HomeProps["localizedCopy"]) {
+  const work = localizedCopy.home.about.selectedWork.replace(":", "");
+  const contact = locale === "pt" ? "Contacto" : "Contact";
   return [
-    { label: "Work", href: "#work" },
-    { label: "Contact", href: "#contact" },
+    { label: work, href: "#work" },
+    { label: contact, href: "#contact" },
   ];
-}
-
-function getCtaLabel(locale: Locale) {
-  return locale === "pt" ? "Falar comigo" : "Get in touch";
 }
 
 const HomeContent = (props: HomeProps) => {
@@ -33,8 +25,8 @@ const HomeContent = (props: HomeProps) => {
   return (
     <>
       <SiteNav
-        navLinks={getNavLinks(locale)}
-        ctaLabel={getCtaLabel(locale)}
+        navLinks={getNavLinks(locale, props.localizedCopy)}
+        ctaLabel={props.localizedCopy.home.callToAction.getInTouch}
         ctaHref={emailLink}
         locale={locale}
       />
@@ -43,13 +35,9 @@ const HomeContent = (props: HomeProps) => {
 
         <Section
           bg="dawn"
-          tag={locale === "pt" ? "Sobre" : "About"}
-          title={locale === "pt" ? "Clareza que comunica." : "Clarity that communicates."}
-          intro={locale === "pt"
-            ? "Grandes marcas precisam traduzir contextos complexos na forma de conceitos simples, mas poderosos."
-            : "Big brands need to translate complex contexts into simple yet powerful concepts."}
+          title=""
           introSize="normal"
-          introMaxW="max-w-[52ch]"
+          introMaxW="max-w-[70ch]"
           introColor="text-[#5A5855]"
           introClassName="mb-10 lg:mb-16"
         >
@@ -62,9 +50,9 @@ const HomeContent = (props: HomeProps) => {
         <Section
           id="work"
           bg="dawn"
-          tag={locale === "pt" ? "Portfolio" : "Portfolio"}
-          title={locale === "pt" ? "Trabalhos selecionados." : "Selected work."}
-          introMaxW="max-w-[52ch]"
+          tag=""
+          title={props.localizedCopy.home.about.selectedWork}
+          titleSize="large"
           className="pt-0"
         >
           <div className="min-h-[200px] px-4">
@@ -76,19 +64,12 @@ const HomeContent = (props: HomeProps) => {
           id="contact"
           bg="sunrise"
           tag=""
-          title={locale === "pt" ? "Vamos conversar?" : "Let's talk?"}
+          title={props.localizedCopy.home.callToAction.howCanIHelpYou}
           titleSize="large"
           titleColor="text-ink"
-          titleMaxW="max-w-[20ch]"
+          titleMaxW="max-w-[40ch]"
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start mt-8 lg:mt-12">
-            <Reveal>
-              <p className="text-[clamp(1rem,1.8vw,1.3rem)] text-ink/70 leading-[1.65] max-w-[40ch] font-medium">
-                {locale === "pt"
-                  ? "Estou sempre aberto a novos projetos, parcerias e desafios criativos."
-                  : "I'm always open to new projects, partnerships, and creative challenges."}
-              </p>
-            </Reveal>
             <Reveal>
               <ContactForm
                 locale={locale}
