@@ -39,7 +39,7 @@ export const ExpositionText = (
                      font-medium
                      uppercase
                      tracking-[0.18em]
-                     text-mist"
+                     text-ink"
         >
           {props.localizedCopy.home.about.someAttendedClients}
         </p>
