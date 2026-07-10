@@ -46,7 +46,7 @@ const ContactFormValues = (errors: ContactFormErrors) => {
 
 export type ContactFormType = z.infer<ReturnType<typeof ContactFormValues>>;
 
-const inputBaseClass = "w-full border-0 border-b-2 border-ink/20 bg-transparent py-3 font-sans text-ink placeholder-ink/40 focus:border-sunrise focus:outline-none focus:ring-0 transition-colors duration-200";
+const inputBaseClass = "w-full border-0 border-b-2 border-ink bg-transparent py-3 font-sans text-ink placeholder-ink/60 focus:border-sunrise focus:outline-none focus:ring-0 transition-colors duration-200";
 
 function FormItem<
   FieldValuesType extends FieldValues,
