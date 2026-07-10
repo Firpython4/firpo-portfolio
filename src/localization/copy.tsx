@@ -71,7 +71,7 @@ Does your brand need more clarity? I can help.`,
     },
     callToAction: {
       howCanIHelpYou: `How can I help you?`,
-      getInTouch: "Get in touch:",
+      getInTouch: "Get in touch",
     },
     contactForm: {
       content: "Content",
@@ -126,7 +126,7 @@ Sua marca precisa de mais clareza? Eu posso ajudar.`,
     },
     callToAction: {
       howCanIHelpYou: `Como posso te ajudar?`,
-      getInTouch: "Entre em contato:",
+      getInTouch: "Entre em contato",
     },
     contactForm: {
       content: "Conteúdo",
