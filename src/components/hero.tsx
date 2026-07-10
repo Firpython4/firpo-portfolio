@@ -24,7 +24,7 @@ export const Hero = (props: PropsWithLocalizedCopy) => (
           </h1>
         </Reveal>
         <Reveal delay={550}>
-          <p className="font-sans font-semibold text-[clamp(1.2rem,1.8vw,1.5rem)] text-ink/70 max-w-[44ch] leading-[1.7] tracking-tight pb-4 lg:pb-6">
+          <p className="font-sans font-semibold text-[clamp(1.2rem,1.8vw,1.5rem)] text-ink/70 max-w-[44ch] leading-[1] tracking-tight pb-4 lg:pb-6">
             {props.localizedCopy.home.hero.subtitle}
           </p>
         </Reveal>
