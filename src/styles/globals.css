@@ -3,10 +3,10 @@
 @theme {
   --font-sans: var(--font-raleway);
   --font-serif: var(--font-raleway-heading);
-  --color-ink: #4081a1;
+  --color-ink: #4081A1;
   --color-dawn: #F5F3ED;
-  --color-sunrise: #FCC03E;
-  --color-seafoam: #9a0f38;
+  --color-sunrise: #FFBC00;
+  --color-seafoam: #9A0F38;
   --color-mist: #E5E2DB;
 }
 
