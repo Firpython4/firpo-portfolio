@@ -105,7 +105,7 @@ export const pt: LocalizedCopy = {
 
 E isso é o que eu mais gosto de fazer.
 
-Com uma trajetória extensa em criação e branding, premiação em diversos festivais e testada em segmentos dos mais variados, aprendi a transformar o que é denso e difícil em conceitos e campanhas claros e eficientes, que mobilizam as pessoas e geram resultados para as marcas.
+Com uma trajetória extensa em criação e branding, premiada em diversos festivais e testada em segmentos dos mais variados, aprendi a transformar o que é denso e difícil em conceitos e campanhas claros e eficientes, que mobilizam as pessoas e geram resultados para as marcas.
 
 Essa capacidade me levou além da criação. Tive uma longa experiência numa startup global de soluções de dados e IA, na qual fui o responsável pelo marketing e por estratégias de crescimento em mercados nos Estados Unidos, Europa e América Latina. 
 
