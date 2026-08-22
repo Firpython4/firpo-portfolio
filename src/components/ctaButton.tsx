@@ -4,6 +4,8 @@ interface CtaButtonProps {
   href: string;
   variant?: "sunrise" | "ink";
   className?: string;
+  target?: string;
+  rel?: string;
   children: ReactNode;
 }
 
@@ -12,10 +14,12 @@ const variantClasses: Record<string, string> = {
   ink: "bg-ink text-dawn hover:bg-dawn hover:text-ink",
 };
 
-export function CtaButton({ href, variant = "ink", className = "", children }: CtaButtonProps) {
+export function CtaButton({ href, variant = "ink", className = "", target, rel, children }: CtaButtonProps) {
   return (
     <a
       href={href}
+      target={target}
+      rel={rel}
       className={`inline-flex items-center gap-3 ${variantClasses[variant]} py-3 lg:py-4 px-6 lg:px-8 text-[clamp(0.75rem,1.25vw,1rem)] font-medium no-underline rounded-[2px] hover:-translate-y-0.5 transition-all ${className}`}
     >
       {children}

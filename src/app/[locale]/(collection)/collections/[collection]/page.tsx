@@ -20,7 +20,7 @@ import Scaffold from "~/components/scaffold";
 import { CollectionPieces } from "~/components/collectionPieces";
 import { SiteNav } from "~/components/siteNav";
 import { Reveal } from "~/components/Reveal";
-import { emailLink } from "~/config";
+import { googleFormLink } from "~/config";
 
 export const generateStaticParams = async () => {
   return await getCollectionsStaticPaths();
@@ -79,7 +79,7 @@ const Collection = async (props: { params: Promise<PageParams> }) => {
           : [{ label: "Home", href: "/" }]
         }
         ctaLabel={locale === "pt" ? "Entre em contato" : "Contact"}
-        ctaHref={emailLink}
+        ctaHref={googleFormLink}
         locale={locale}
       />
       <Scaffold>

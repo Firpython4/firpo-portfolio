@@ -75,6 +75,10 @@ export function SiteNav({ navLinks, ctaLabel, ctaHref, locale }: SiteNavProps) {
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
 
+  const ctaIsExternal = ctaHref.startsWith("http");
+  const ctaTarget = ctaIsExternal ? "_blank" : undefined;
+  const ctaRel = ctaIsExternal ? "noopener noreferrer" : undefined;
+
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 lg:px-12 py-4 lg:py-5 bg-dawn/90 backdrop-blur-xl border-b border-mist/35">
@@ -94,6 +98,8 @@ export function SiteNav({ navLinks, ctaLabel, ctaHref, locale }: SiteNavProps) {
           ))}
           <a
             href={ctaHref}
+            target={ctaTarget}
+            rel={ctaRel}
             className="text-[clamp(0.7rem,1vw,0.8rem)] text-dawn no-underline bg-ink px-[1.4rem] py-[0.55rem] rounded-[2px] opacity-100 hover:bg-sunrise hover:text-ink transition-colors"
           >
             {ctaLabel}
@@ -161,6 +167,8 @@ export function SiteNav({ navLinks, ctaLabel, ctaHref, locale }: SiteNavProps) {
             ))}
             <a
               href={ctaHref}
+              target={ctaTarget}
+              rel={ctaRel}
               onClick={closeMenu}
               className="text-lg text-ink no-underline hover:text-sunrise transition-colors"
             >

@@ -5,9 +5,9 @@ import { Reveal } from "./Reveal";
 import { Hero } from "./hero";
 import { ExpositionText } from "./expositionText";
 import { CollectionsList } from "./pieceCollection";
-import { ContactForm } from "./contactForm";
+import { CtaButton } from "./ctaButton";
 import Scaffold from "./scaffold";
-import { emailLink } from "~/config";
+import { googleFormLink } from "~/config";
 import { type Locale } from "~/localization/localization";
 
 function getNavLinks(locale: Locale, localizedCopy: HomeProps["localizedCopy"]) {
@@ -27,7 +27,7 @@ const HomeContent = (props: HomeProps) => {
       <SiteNav
         navLinks={getNavLinks(locale, props.localizedCopy)}
         ctaLabel={props.localizedCopy.home.callToAction.getInTouch}
-        ctaHref={emailLink}
+        ctaHref={googleFormLink}
         locale={locale}
       />
       <Scaffold>
@@ -69,12 +69,16 @@ const HomeContent = (props: HomeProps) => {
           titleColor="text-ink"
           titleMaxW="max-w-[40ch]"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start mt-8 lg:mt-12">
+          <div className="flex justify-start mt-8 lg:mt-12">
             <Reveal>
-              <ContactForm
-                locale={locale}
-                copy={props.localizedCopy}
-              />
+              <CtaButton
+                href={googleFormLink}
+                variant="ink"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {props.localizedCopy.home.callToAction.getInTouch}
+              </CtaButton>
             </Reveal>
           </div>
         </Section>

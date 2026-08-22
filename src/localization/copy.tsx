@@ -1,9 +1,3 @@
-export type ContactFormErrors = {
-  thisFieldIsMandatory: string;
-  invalidEmail: string;
-  thisFieldIsTooLong: string;
-};
-
 export type LocalizedCopy = {
   home: {
     meta: {
@@ -23,16 +17,6 @@ export type LocalizedCopy = {
     callToAction: {
       howCanIHelpYou: string;
       getInTouch: string;
-    };
-    contactForm: {
-      firstName: string;
-      lastName: string;
-      email: string;
-      subject: string;
-      content: string;
-      send: string;
-      submitSuccessful: string;
-      errors: ContactFormErrors;
     };
   };
 };
@@ -73,21 +57,6 @@ Does your brand need more clarity? I can help.`,
       howCanIHelpYou: `How can I help you?`,
       getInTouch: "Get in touch",
     },
-    contactForm: {
-      content: "Content",
-      email: "Email",
-      firstName: "First name",
-      lastName: "Last name",
-      subject: "Subject",
-      send: "Send",
-      submitSuccessful:
-        "Your message has been sent successfully, thanks for reaching out!",
-      errors: {
-        invalidEmail: "Please insert a valid email.",
-        thisFieldIsTooLong: "This field is too long.",
-        thisFieldIsMandatory: "This field is mandatory.",
-      },
-    },
   },
 };
 
@@ -127,21 +96,6 @@ Sua marca precisa de mais clareza? Eu posso ajudar.`,
     callToAction: {
       howCanIHelpYou: `Como posso te ajudar?`,
       getInTouch: "Entre em contato",
-    },
-    contactForm: {
-      content: "Conteúdo",
-      subject: "Assunto",
-      email: "E-mail",
-      firstName: "Nome",
-      lastName: "Sobrenome",
-      send: "Enviar",
-      submitSuccessful:
-        "A sua mensagem foi enviada com sucesso. Obrigado por entrar em contato!",
-      errors: {
-        invalidEmail: "Por favor insira um e-mail válido.",
-        thisFieldIsMandatory: "Este campo é mandatório.",
-        thisFieldIsTooLong: "Este campo é muito longo",
-      },
     },
   },
 };
