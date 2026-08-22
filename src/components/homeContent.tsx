@@ -12,7 +12,7 @@ import { type Locale } from "~/localization/localization";
 
 function getNavLinks(locale: Locale, localizedCopy: HomeProps["localizedCopy"]) {
   const work = localizedCopy.home.about.selectedWork.replace(":", "");
-  const contact = locale === "pt" ? "Contacto" : "Contact";
+  const contact = locale === "pt" ? "Contato" : "Contact";
   return [
     { label: work, href: "#work" },
     { label: contact, href: "#contact" },

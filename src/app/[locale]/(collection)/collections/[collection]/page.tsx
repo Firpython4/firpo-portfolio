@@ -78,7 +78,7 @@ const Collection = async (props: { params: Promise<PageParams> }) => {
           ? [{ label: "Início", href: "/" }]
           : [{ label: "Home", href: "/" }]
         }
-        ctaLabel={locale === "pt" ? "Contacto" : "Contact"}
+        ctaLabel={locale === "pt" ? "Contato" : "Contact"}
         ctaHref={emailLink}
         locale={locale}
       />
