@@ -10,13 +10,9 @@ import Scaffold from "./scaffold";
 import { googleFormLink } from "~/config";
 import { type Locale } from "~/localization/localization";
 
-function getNavLinks(locale: Locale, localizedCopy: HomeProps["localizedCopy"]) {
+function getNavLinks(localizedCopy: HomeProps["localizedCopy"]) {
   const work = localizedCopy.home.about.selectedWork.replace(":", "");
-  const contact = locale === "pt" ? "Contato" : "Contact";
-  return [
-    { label: work, href: "#work" },
-    { label: contact, href: "#contact" },
-  ];
+  return [{ label: work, href: "#work" }];
 }
 
 const HomeContent = (props: HomeProps) => {
@@ -25,7 +21,7 @@ const HomeContent = (props: HomeProps) => {
   return (
     <>
       <SiteNav
-        navLinks={getNavLinks(locale, props.localizedCopy)}
+        navLinks={getNavLinks(props.localizedCopy)}
         ctaLabel={props.localizedCopy.home.callToAction.getInTouch}
         ctaHref={googleFormLink}
         locale={locale}
