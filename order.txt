@@ -7,7 +7,6 @@ internacional-intershop
 daer-rs-insubstituivel
 internacional-bicampeao-libertadores
 secretaria-municipal-de-saude-porto-alegre
-banrisul-o-grande-banco-do-sul
 daer-rs-voce-ainda-tem-muitos-veroes
 internacional-festa-gigante
 banrisul-90-anos
@@ -28,7 +27,6 @@ stb
 bmw
 unimed-vacina-gripe
 vida-urgente
-unimed-prevencao-a-obesidade
 voto-bandeiras-de-partidos
 unimed-patrocinio-orquestra
 voto-todo-mundo-e-um-pouco-politico
