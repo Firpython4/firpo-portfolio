@@ -25,9 +25,9 @@ universitario
 zero-hora
 stb
 bmw
-unimed-vacina-gripe
 vida-urgente
 voto-bandeiras-de-partidos
-unimed-patrocinio-orquestra
 voto-todo-mundo-e-um-pouco-politico
 yara
+unimed-vacina-gripe
+unimed-patrocinio-orquestra
